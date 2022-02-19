@@ -1,0 +1,16 @@
+version: '2'
+volumes:
+  node_modules:
+services:
+  ember:
+    image: danlynn/ember-cli:4.1.1
+    volumes:
+      - .:/myapp
+      - node_modules:/myapp/node_modules
+      - .bash_history:/root/.bash_history
+    tmpfs:
+      - /myapp/tmp
+    ports:
+      - "4200:4200"
+      - "7020:7020"
+      - "7357:7357"

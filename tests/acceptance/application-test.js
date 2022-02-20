@@ -71,4 +71,43 @@ module('Acceptance | application', function (hooks) {
       .dom('[data-test-user-week-duration]')
       .hasText('01:05:15', 'should show computed user week duration');
   });
+
+  test('shows monthly user summary when authenticated', async function (assert) {
+    const user = await this.utils.authenticate();
+
+    const monthEntries = [
+      this.server.create('entry', {
+        user,
+        startedAt: moment().startOf('month').add(5, 'm').toDate(),
+        stoppedAt: moment().startOf('month').add(15, 'm').toDate(),
+      }),
+      this.server.create('entry', {
+        user,
+        startedAt: moment().startOf('month').add(1, 'h').toDate(),
+        stoppedAt: moment().startOf('month').add(3, 'h').add(18, 's').toDate(),
+      }),
+    ];
+
+    let done = assert.async();
+
+    this.server.get('/entries', (schema, request) => {
+      if (
+        request.queryParams['filter[current-month]'] === '1' &&
+        request.queryParams['filter[user-id]'].length === 1 &&
+        request.queryParams['filter[user-id]'][0] === `${user.id}`
+      ) {
+        done();
+        return schema.entries.find(monthEntries.mapBy('id'));
+      }
+      return new Response(404, {}, {});
+    });
+
+    await visit('/');
+    assert
+      .dom('[data-test-user-month-duration]')
+      .exists('should show user month duration');
+    assert
+      .dom('[data-test-user-month-duration]')
+      .hasText('02:10:18', 'should show computed user month duration');
+  });
 });

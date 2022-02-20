@@ -12,10 +12,19 @@ export default class UserSummaryService extends Service {
 
   @computed('currentUserId', 'store')
   get weekEntries() {
+    return this._queryWithFilter('current-week');
+  }
+
+  @computed('currentUserId', 'store')
+  get monthEntries() {
+    return this._queryWithFilter('current-month');
+  }
+
+  _queryWithFilter(name) {
     if (!this.currentUserId) return;
     const promise = this.store.query('entry', {
       filter: {
-        'current-week': 1,
+        [name]: 1,
         'user-id': [this.currentUserId],
       }
     }).catch((e) => { return []; });

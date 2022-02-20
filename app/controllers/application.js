@@ -10,4 +10,5 @@ export default class ApplicationController extends Controller {
   @reads('authentication.sessionName') currentUserName;
 
   @reads('userSummary.weekEntries') weekEntries;
+  @reads('userSummary.monthEntries') monthEntries;
 }

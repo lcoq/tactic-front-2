@@ -1,0 +1,13 @@
+{{page-title "Login"}}
+
+<section>
+  <h1>Who are you ?</h1>
+  <ul>
+    {{#each @model as |user|}}
+      <li class="{{if (get this.errorByUserId user.id) "errored"}}" data-test-user-error>
+        <Login::UserForm @user={{user}} @submit={{this.logIn}} @keyup={{this.clearError}} />
+        </li>
+    {{/each}}
+  </ul>
+</section>
+{{outlet}}

@@ -1,0 +1,4 @@
+<label for="{{concat "password-" @user.id}}" data-test-user-name>
+  @ {{@user.name}}
+</label>
+<Input @type="password" id={{concat "password-" @user.id}} @enter={{fn @submit @user.id}} {{on "keyup" (fn @keyup @user.id)}} data-test-password />

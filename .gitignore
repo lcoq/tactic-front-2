@@ -9,6 +9,7 @@
 /node_modules/
 
 # misc
+/.bash_history
 /.env*
 /.pnp*
 /.sass-cache

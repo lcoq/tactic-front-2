@@ -32,7 +32,7 @@ export default function (config) {
 }
 
 function routes() {
-  this.get('/sessions', function(schema, request) {
+  this.get('/sessions', function (schema, request) {
     const authorization = request.requestHeaders['Authorization'];
     const session = schema.sessions.findBy({ token: authorization });
     if (session) {
@@ -41,7 +41,7 @@ function routes() {
       return new Response(422, {}, {});
     }
   });
-  this.post('/sessions', function(schema, request) {
+  this.post('/sessions', function (schema, request) {
     let attrs = this.normalizedRequestAttrs();
     const user = schema.users.find(attrs.userId);
     if (user && user.password === attrs.password) {
@@ -52,4 +52,6 @@ function routes() {
   });
 
   this.get('/users');
+
+  this.get('/entries');
 }

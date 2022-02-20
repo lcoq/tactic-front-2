@@ -1,6 +1,7 @@
+import { set } from '@ember/object';
 import Service from '@ember/service';
 import { service } from '@ember/service';
-import { computed, set } from '@ember/object';
+import { computed } from '@ember/object';
 import { not, notEmpty, reads } from '@ember/object/computed';
 import { tracked } from '@glimmer/tracking';
 
@@ -34,8 +35,8 @@ export default class AuthenticationService extends Service {
 
   authenticate(session) {
     this.session = session;
-    this.token = session.token;
-    this.userId = session.belongsTo('user').id();
+    set(this, 'token', session.token);
+    set(this, 'userId', session.belongsTo('user').id());
   }
 
   _retrieveToken() {

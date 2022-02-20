@@ -2,10 +2,12 @@ import { module, test } from 'qunit';
 import { visit, currentURL } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
+import { setupUtils } from '../utils/setup';
 
 module('Acceptance | index', function (hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
+  setupUtils(hooks);
 
   test('redirects to login when not authenticated', async function (assert) {
     await visit('/');
@@ -19,9 +21,7 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('remains on index when a valid session token is stored in cookies', async function (assert) {
-    const user = this.server.create('user');
-    const session = this.server.create('session', { user: user });
-    document.cookie = `token=${session.token}; path=/`;
+    await this.utils.authenticate();
     await visit('/');
     assert.strictEqual(currentURL(), '/', 'should remains on index');
   });

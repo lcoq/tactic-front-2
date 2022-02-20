@@ -1,12 +1,23 @@
 {{page-title "Tactic"}}
 
-<header class="header it-header">
-  <div class="header-brand-container">
-    <h1 class="header-brand">Tactic</h1>
+<header>
+  <div>
+    <h1>Tactic</h1>
+    {{#if this.isAuthenticated}}
+      <LinkTo @route="login" data-test-login-link>@ {{this.currentUserName}}</LinkTo>
+    {{/if}}
   </div>
 
+  {{#if this.isAuthenticated}}
+    <nav>
+      <section>
+        <LinkTo @route="index" data-test-index-link>Timer</LinkTo>
+      </section>
+      <UserSummary @weekEntries={{this.weekEntries}} />
+    </nav>
+  {{/if}}
 </header>
 
-<div class="app-content">
+<div>
   {{outlet}}
 </div>

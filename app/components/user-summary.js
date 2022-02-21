@@ -3,7 +3,6 @@ import { computed } from '@ember/object';
 import { bool } from '@ember/object/computed';
 
 export default class UserSummaryComponent extends Component {
-
   @computed('args.weekEntries')
   get weekEntriesDuration() {
     return this._computeDuration(this.args.weekEntries);

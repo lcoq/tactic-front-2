@@ -8,16 +8,20 @@ import moment from 'moment';
 
 function isCurrentWeekRequest(request, userId) {
   const params = request.queryParams;
-  return params['filter[current-week]'] === '1' &&
+  return (
+    params['filter[current-week]'] === '1' &&
     params['filter[user-id]'].length === 1 &&
-    params['filter[user-id]'][0] === `${userId}`;
+    params['filter[user-id]'][0] === `${userId}`
+  );
 }
 
 function isCurrentMonthRequest(request, userId) {
   const params = request.queryParams;
-  return params['filter[current-month]'] === '1' &&
+  return (
+    params['filter[current-month]'] === '1' &&
     params['filter[user-id]'].length === 1 &&
-    params['filter[user-id]'][0] === `${userId}`;
+    params['filter[user-id]'][0] === `${userId}`
+  );
 }
 
 module('Acceptance | application', function (hooks) {

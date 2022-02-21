@@ -29,7 +29,7 @@ export default class UserSummaryService extends Service {
       filter: {
         [name]: 1,
         'user-id': [this.currentUserId],
-      }
+      },
     });
     return PromiseProxyObject.create({ promise });
   }

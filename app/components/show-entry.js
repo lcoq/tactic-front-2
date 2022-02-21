@@ -2,6 +2,10 @@ import Component from '@glimmer/component';
 import { reads, and, or } from '@ember/object/computed';
 import { action, computed } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import moment from 'moment';
+import parseHour  from '../utils/parse-hour';
+import parseDuration  from '../utils/parse-duration';
+import formatDuration from '../utils/format-duration';
 
 export default class ShowEntryComponent extends Component {
   @tracked fieldNameToFocusOnEdit = null;
@@ -29,6 +33,19 @@ export default class ShowEntryComponent extends Component {
     if (this.isDeleteErrored) names.push("errored");
     if (this.rounding) names.push("disabled");
     return names.join(' ');
+  }
+
+  @tracked formattedDuration = null;
+  @tracked formattedStartedAt = null;
+  @tracked formattedStoppedAt = null;
+
+  @action formattedDurationChanged() {
+    const duration = parseDuration(this.formattedDuration);
+    if (duration !== null && duration !== this.entry.durationInSeconds) {
+      const newStoppedAt = moment(this.entry.startedAt).add(duration, 's').toDate();
+      this.entry.stoppedAt = newStoppedAt;
+      this.formattedStoppedAt = moment(this.entry.stoppedAt).format('H:mm');
+    }
   }
 
   @action editEntry(field) {
@@ -77,12 +94,15 @@ export default class ShowEntryComponent extends Component {
   }
 
   _openEdit(field) {
+    this._setFormattedStartedAndStoppedAt();
     this.fieldNameToFocusOnEdit = field;
     this.entry.stateManager.send('edit');
   }
 
   _closeEdit() {
     if (this.isEditing) {
+      this._updateStartedAndStoppedAt();
+      this._clearFormattedStartedAndStoppedAt();
       if (this.args.willUpdateEntry) {
         this.args.willUpdateEntry(this.entry);
       }
@@ -97,5 +117,41 @@ export default class ShowEntryComponent extends Component {
 
   _didDeleteEntry() {
     this.args.didDeleteEntry?.(this.entry);
+  }
+
+  _setFormattedStartedAndStoppedAt() {
+    this.formattedDuration = formatDuration(this.entry.durationInSeconds);
+    this.formattedStartedAt = moment(this.entry.startedAt).format('H:mm');
+    this.formattedStoppedAt = moment(this.entry.stoppedAt).format('H:mm');
+  }
+
+  _updateStartedAndStoppedAt() {
+    const [ newStartedAtHours, newStartedAtMinutes ] = parseHour(this.formattedStartedAt);
+    const newStartedAt = moment(this.entry.startedAt).hours(newStartedAtHours).minutes(newStartedAtMinutes).toDate();
+    const newStartedAtTime = newStartedAt.getTime();
+
+    if (!isNaN(newStartedAtTime)) {
+      this.entry.startedAt = newStartedAt;
+    }
+
+    const [ newStoppedAtHours, newStoppedAtMinutes ] = parseHour(this.formattedStoppedAt);
+    let newStoppedAt = moment(this.entry.stoppedAt).hours(newStoppedAtHours).minutes(newStoppedAtMinutes).toDate();
+    const newStoppedAtTime = newStoppedAt.getTime();
+
+    if (isNaN(newStoppedAtTime)) {
+      newStoppedAt = this.entry.stoppedAt;
+    }
+
+    if (moment(newStartedAt).isAfter(newStoppedAt)) {
+      newStoppedAt = moment(newStoppedAt).add(1, 'day').toDate()
+    } else if (moment(newStoppedAt).diff(moment(newStartedAt), 'days') > 0) {
+      newStoppedAt = moment(newStoppedAt).subtract(1, 'day').toDate();
+    }
+    this.entry.stoppedAt = newStoppedAt;
+  }
+
+  _clearFormattedStartedAndStoppedAt() {
+    this.formattedStartedAt = null;
+    this.formattedStoppedAt = null;
   }
 }

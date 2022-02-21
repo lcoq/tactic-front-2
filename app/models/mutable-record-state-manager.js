@@ -4,6 +4,9 @@ import { later, cancel } from '@ember/runloop';
 import { reject } from 'rsvp';
 import { reads, or } from '@ember/object/computed';
 
+import ENV from '../config/environment';
+const PENDING_TIMER_MS = ENV.environment !== 'test' ? 3000 : 50;
+
 const StateModel = StateManagerStateModel;
 
 class ClearStateModel extends StateModel {
@@ -106,7 +109,7 @@ class PendingSaveStateModel extends StateModel {
   _saveTimer = null;
 
   enter() {
-    const timer = later(this, this._save, 3000);
+    const timer = later(this, this._save, PENDING_TIMER_MS);
     this._saveTimer = timer;
   }
 
@@ -161,7 +164,7 @@ class PendingDeleteStateModel extends StateModel {
   _deleteTimer = null;
 
   enter() {
-    const timer = later(this, this._delete, 3000);
+    const timer = later(this, this._delete, PENDING_TIMER_MS);
     this._deleteTimer = timer;
   }
 
@@ -236,9 +239,7 @@ export default class MutableRecordStateManagerModel extends StateManagerModel {
   }
 
   checkDirty(source) {
-    return (
-      Object.keys(source.changedAttributes()).length !== 0 || source.isDeleted
-    );
+    return Object.keys(source.changedAttributes()).length !== 0 || source.isDeleted;
   }
 
   checkValid() {

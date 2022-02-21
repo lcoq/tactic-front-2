@@ -5,11 +5,10 @@ export default class EntryStateManagerModel extends MutableRecordStateManagerMod
   @reads('source') entry;
 
   checkDirty(entry) {
-    super.checkDirty(...arguments) || entry.projectHasChanged;
+    return super.checkDirty(...arguments) || entry.projectHasChanged;
   }
 
   rollback(entry) {
     super.rollback(...arguments);
-    entry.rollbackProject();
   }
 }

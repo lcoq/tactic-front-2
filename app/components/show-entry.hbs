@@ -30,7 +30,7 @@
   <div class="entry-content">
     {{#if this.isEditing}}
       <div class="entry-title">
-        <Input @value={{this.entry.title}} class="entry-edit-title text-input" @enter={{this.closeEdit}} data-test-entry-edit-title {{select-on-focus}} {{focus-if (eq this.fieldNameToFocusOnEdit "title")}} />
+        <Input @value={{this.entry.title}} class="entry-edit-title text-input" @enter={{this.closeEdit}} {{select-on-focus}} {{focus-if (eq this.fieldNameToFocusOnEdit "title")}} data-test-entry-edit-title />
       </div>
     {{else}}
       <div {{on "click" (fn this.editEntry "title")}} class="entry-title touch" data-test-entry-title>
@@ -42,17 +42,54 @@
       </div>
     {{/if}}
 
-    <div class="entry-duration touch" data-test-entry-duration>
-      {{format-duration this.entry.durationInSeconds}}
-    </div>
+    {{#if this.isEditing}}
+      <div class="entry-duration touch">
+        <Input
+           @value={{this.formattedDuration}}
+          class="entry-edit-duration text-input"
+          @enter={{this.closeEdit}}
+          {{select-on-focus}}
+          {{focus-if (eq this.fieldNameToFocusOnEdit "duration")}}
+          {{on "focusout" this.formattedDurationChanged}}
+          data-test-entry-edit-duration />
+      </div>
+    {{else}}
+      <div {{on "click" (fn this.editEntry "duration")}} class="entry-duration touch" data-test-entry-duration>
+        {{format-duration this.entry.durationInSeconds}}
+      </div>
+    {{/if}}
 
-    <div class="entry-started-at touch no-print" data-test-entry-started-at>
-      {{moment-format this.entry.startedAt "H:mm"}}
-    </div>
+    {{#if this.isEditing}}
+      <div class="entry-started-at touch">
+        <Input
+          @value={{this.formattedStartedAt}}
+          class="entry-edit-started-at text-input"
+          @enter={{this.closeEdit}}
+          {{select-on-focus}}
+          {{focus-if (eq this.fieldNameToFocusOnEdit "startedAt")}}
+          data-test-entry-edit-started-at />
+      </div>
+    {{else}}
+      <div {{on "click" (fn this.editEntry "startedAt")}} class="entry-started-at touch no-print" data-test-entry-started-at>
+        {{moment-format this.entry.startedAt "H:mm"}}
+      </div>
+    {{/if}}
 
-    <div class="entry-stopped-at touch no-print" data-test-entry-stopped-at>
-      {{moment-format this.entry.stoppedAt "H:mm"}}
-    </div>
+    {{#if this.isEditing}}
+      <div class="entry-stopped-at touch">
+        <Input
+          @value={{this.formattedStoppedAt}}
+          class="entry-edit-stopped-at text-input"
+          @enter={{this.closeEdit}}
+          {{select-on-focus}}
+          {{focus-if (eq this.fieldNameToFocusOnEdit "stoppedAt")}}
+          data-test-entry-edit-stopped-at />
+      </div>
+    {{else}}
+      <div {{on "click" (fn this.editEntry "stoppedAt")}} class="entry-stopped-at touch no-print" data-test-entry-stopped-at>
+        {{moment-format this.entry.stoppedAt "H:mm"}}
+      </div>
+    {{/if}}
   </div>
 
 </li>

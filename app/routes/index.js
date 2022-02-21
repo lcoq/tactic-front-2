@@ -15,12 +15,14 @@ export default class IndexRoute extends Route {
   }
 
   model() {
-    const entryListPromise = this.store.query('entry', {}).then(function (entries) {
-      return EntryGroupByDayList.create({ entries: entries.toArray() });
-    });
+    const entryListPromise = this.store
+      .query('entry', {})
+      .then(function (entries) {
+        return EntryGroupByDayList.create({ entries: entries.toArray() });
+      });
 
     return hash({
-      entryList: entryListPromise
+      entryList: entryListPromise,
     });
   }
 }

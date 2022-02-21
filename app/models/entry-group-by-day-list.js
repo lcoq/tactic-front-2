@@ -28,7 +28,9 @@ export default class EntryGroupByDayListModel extends EntryGroupModel {
     let group = this.groups.find((g) => momentDay.isSame(g.day));
     if (!group) {
       group = EntryGroupModel.create({ day });
-      const insertIndex = this._findInsertIndex(this.groups, (g) => momentDay.isAfter(g.day));
+      const insertIndex = this._findInsertIndex(this.groups, (g) =>
+        momentDay.isAfter(g.day)
+      );
       this.groups.insertAt(insertIndex, group);
     }
     return group;
@@ -37,7 +39,9 @@ export default class EntryGroupByDayListModel extends EntryGroupModel {
   _addEntryToGroup(group, entry) {
     const entries = group.entries;
     const entryMomentStartedAt = moment(entry.startedAt);
-    const insertIndex = this._findInsertIndex(entries, (e) => entryMomentStartedAt.isAfter(e.startedAt));
+    const insertIndex = this._findInsertIndex(entries, (e) =>
+      entryMomentStartedAt.isAfter(e.startedAt)
+    );
     entries.insertAt(insertIndex, entry);
   }
 

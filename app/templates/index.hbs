@@ -1,1 +1,35 @@
+{{#each @model.entryList.groups as |group|}}
+  <section data-test-entry-group>
+    <header>
+      <h2 title={{moment-format group.day "YYYY-MM-DD"}} data-test-entry-group-title>{{entry-group-day group.day}}</h2>
+      <div data-test-entry-group-duration>{{format-duration group.durationInSeconds}}</div>
+    </header>
+    <ul>
+      {{#each group.entries as |entry|}}
+        <li data-test-entry>
+
+          <div data-test-entry-title>
+            {{#if entry.title}}
+              {{entry.title}}
+            {{else}}
+              <span>No title</span>
+            {{/if}}
+          </div>
+
+          <div data-test-entry-duration>
+            {{format-duration entry.durationInSeconds}}
+          </div>
+
+          <div data-test-entry-started-at>
+            {{moment-format entry.startedAt "H:mm"}}
+          </div>
+
+          <div data-test-entry-stopped-at>
+            {{moment-format entry.stoppedAt "H:mm"}}
+          </div>
+        </li>
+      {{/each}}
+    </ul>
+  </section>
+{{/each}}
 {{outlet}}

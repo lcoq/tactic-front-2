@@ -1,41 +1,10 @@
-<section class="entry-group-list">
-  <h2 class="entry-group-list-duration only-print">
-    Total: {{format-duration @model.entryList.durationInSeconds}}
-  </h2>
-  {{#each @model.entryList.groups as |group|}}
-    <section class="entry-group" data-test-entry-group>
-      <header class="entry-group-header">
-        <h2 title={{moment-format group.day "YYYY-MM-DD"}} class="entry-group-header-title no-print" data-test-entry-group-title>{{entry-group-day group.day}}</h2>
-        <h2 class="entry-group-header-title only-print">{{moment-format group.day "YYYY-MM-DD"}}</h2>
-        <div class="entry-group-header-duration" data-test-entry-group-duration>{{format-duration group.durationInSeconds}}</div>
-      </header>
-      <ul class="entry-group-item-list">
-        {{#each group.entries as |entry|}}
-          <li class="entry" data-test-entry>{{! TODO other classes that depends on entry state}}
-            <div class="entry-content">
-              <div class="entry-title touch" data-test-entry-title>
-                {{#if entry.title}}
-                  {{entry.title}}
-                {{else}}
-                  <span class="entry-title-no-title">No title</span>
-                {{/if}}
-              </div>
-
-              <div class="entry-duration touch" data-test-entry-duration>
-                {{format-duration entry.durationInSeconds}}
-              </div>
-
-              <div class="entry-started-at touch no-print" data-test-entry-started-at>
-                {{moment-format entry.startedAt "H:mm"}}
-              </div>
-
-              <div class="entry-stopped-at touch no-print" data-test-entry-stopped-at>
-                {{moment-format entry.stoppedAt "H:mm"}}
-              </div>
-            </div>
-          </li>
-        {{/each}}
-      </ul>
-    </section>
-  {{/each}}
-</section>
+{{entries-by-day
+  list=@model.entryList
+  willUpdateEntry=this.willUpdateEntry
+  didUpdateEntry=this.didUpdateEntry
+  willDeleteEntry=this.willDeleteEntry
+  didDeleteEntry=this.didDeleteEntry
+  didRevertEntry=this.didRevertEntry
+  restartEntry=this.restartEntry
+  searchProjects=this.searchProjects
+}}

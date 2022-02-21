@@ -54,4 +54,5 @@ function routes() {
   this.get('/users');
 
   this.get('/entries');
+  this.patch('/entries/:id');
 }

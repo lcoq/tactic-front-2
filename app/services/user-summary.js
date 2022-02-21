@@ -3,6 +3,7 @@ import { service } from '@ember/service';
 import { reads } from '@ember/object/computed';
 import { observer, computed } from '@ember/object';
 import PromiseProxyObject from '../models/promise-proxy-object';
+import { action } from '@ember/object';
 
 export default class UserSummaryService extends Service {
   @service store;
@@ -13,14 +14,20 @@ export default class UserSummaryService extends Service {
   @reads('_weekEntries.content') weekEntries;
   @reads('_monthEntries.content') monthEntries;
 
-  @computed('currentUserId')
+  _forceReload = null;
+
+  @computed('currentUserId', '_forceReload')
   get _monthEntries() {
     return this._queryWithFilter('current-month');
   }
 
-  @computed('currentUserId')
+  @computed('currentUserId', '_forceReload')
   get _weekEntries() {
     return this._queryWithFilter('current-week');
+  }
+
+  @action reload() {
+    this.notifyPropertyChange('_forceReload');
   }
 
   _queryWithFilter(name) {

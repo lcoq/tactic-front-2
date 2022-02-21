@@ -11,6 +11,26 @@ export default class EntryGroupByDayListModel extends EntryGroupModel {
     this._addEntries(this.entries);
   }
 
+  addEntry(entry) {
+    this._addEntries([entry]);
+  }
+
+  removeEntry(entry) {
+    const group = this._findGroupByEntry(entry);
+    this._removeEntryFromGroupAndPossiblyWholeGroup(group, entry);
+    this.entries.removeObject(entry);
+  }
+
+  updateEntry(entry) {
+    const day = this._entryDay(entry);
+    const previousGroup = this._findGroupByEntry(entry);
+    const newGroup = this._findGroup(day);
+    if (previousGroup !== newGroup) {
+      this._removeEntryFromGroupAndPossiblyWholeGroup(previousGroup, entry);
+      this.addEntry(entry);
+    }
+  }
+
   _addEntries(entries) {
     entries.forEach((entry) => {
       this._addEntryAndPossiblyCreateGroup(entry);
@@ -24,16 +44,7 @@ export default class EntryGroupByDayListModel extends EntryGroupModel {
   }
 
   _findOrCreateGroup(day) {
-    const momentDay = moment(day);
-    let group = this.groups.find((g) => momentDay.isSame(g.day));
-    if (!group) {
-      group = EntryGroupModel.create({ day });
-      const insertIndex = this._findInsertIndex(this.groups, (g) =>
-        momentDay.isAfter(g.day)
-      );
-      this.groups.insertAt(insertIndex, group);
-    }
-    return group;
+    return this._findGroup(day) || this._createGroup(day);
   }
 
   _addEntryToGroup(group, entry) {
@@ -43,6 +54,33 @@ export default class EntryGroupByDayListModel extends EntryGroupModel {
       entryMomentStartedAt.isAfter(e.startedAt)
     );
     entries.insertAt(insertIndex, entry);
+  }
+
+  _findGroup(day) {
+    const momentDay = moment(day);
+    return this.groups.find((g) => momentDay.isSame(g.day));
+  }
+
+  _createGroup(day) {
+    const momentDay = moment(day);
+    const group = EntryGroupModel.create({ day });
+    const insertIndex = this._findInsertIndex(this.groups, (g) =>
+      momentDay.isAfter(g.day)
+    );
+    this.groups.insertAt(insertIndex, group);
+    return group;
+  }
+
+  _findGroupByEntry(entry) {
+    return this.groups.find((g) => g.entries.includes(entry));
+  }
+
+  _removeEntryFromGroupAndPossiblyWholeGroup(group, entry) {
+    if (group.entries.length === 1) {
+      this.groups.removeObject(group);
+    } else {
+      group.entries.removeObject(entry);
+    }
   }
 
   _entryDay(entry) {

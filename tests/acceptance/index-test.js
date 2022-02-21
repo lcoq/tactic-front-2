@@ -1,5 +1,12 @@
 import { module, test } from 'qunit';
-import { visit, currentURL, find, findAll } from '@ember/test-helpers';
+import {
+  visit,
+  currentURL,
+  find,
+  findAll,
+  click,
+  fillIn,
+} from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 import { setupUtils } from '../utils/setup';
@@ -240,5 +247,25 @@ module('Acceptance | index', function (hooks) {
           );
       });
     });
+  });
+
+  test('updates entry', async function (assert) {
+    const user = await this.utils.authenticate();
+    const entry = this.server.create('entry', {
+      title: 'My entry',
+    });
+    this.server.get('/entries', (schema, request) => {
+      return schema.entries.find([entry.id]);
+    });
+
+    await visit('/');
+
+    await click('[data-test-entry-title]');
+
+    assert.dom('[data-test-entry-edit-title]').exists('should show title edit');
+    await fillIn('[data-test-entry-edit-title]', 'My new entry title');
+    await click('[data-test-header]'); // send focusout
+
+    assert.equal(entry.reload().title, 'My new entry title', 'should update entry');
   });
 });

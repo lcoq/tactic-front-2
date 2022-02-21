@@ -1,0 +1,58 @@
+<li class="entry {{this.classNames}}" data-test-entry {{on-focus-out-click this.closeEdit this.isEditing}}>
+
+  {{#unless this.rounding}}
+    <div class="entry-actions no-print">
+      {{#if this.isErrored}}
+        <a {{on "click" this.retrySaveOrDeleteEntry}} class="entry-action entry-action-retry touch">
+        </a>
+      {{/if}}
+      {{#if this.canRevert}}
+        <a {{on "click" this.revertEditEntry}} class="entry-action entry-action-revert touch">
+          <img class="entry-action-cancel-img" src="/assets/images/revert.svg" alt="Revert" />
+        </a>
+      {{/if}}
+      {{#if this.isClear}}
+        <a {{on "click" this.markEntryForDelete}} class="entry-action entry-action-delete touch">
+          <img class="entry-action-delete-img" src="/assets/images/trash.svg" alt="Delete" />
+        </a>
+        <a {{on "click" this.changeEntryDate}} class="entry-action entry-action-delete touch">
+          <img class="entry-action-delete-img" src="/assets/images/calendar.svg" alt="Change date" />
+        </a>
+      {{/if}}
+      {{#if this.canRestartEntry}}
+        <a {{on "click" this.restartEntry}} class="entry-action entry-action-restart touch">
+          <img class="entry-action-restart-img" src="/assets/images/play.svg" alt="Restart" />
+        </a>
+      {{/if}}
+    </div>
+  {{/unless}}
+
+  <div class="entry-content">
+    {{#if this.isEditing}}
+      <div class="entry-title">
+        <Input @value={{this.entry.title}} class="entry-edit-title text-input" @enter={{this.closeEdit}} data-test-entry-edit-title {{select-on-focus}} {{focus-if (eq this.fieldNameToFocusOnEdit "title")}} />
+      </div>
+    {{else}}
+      <div {{on "click" (fn this.editEntry "title")}} class="entry-title touch" data-test-entry-title>
+        {{#if this.entry.title}}
+          {{this.entry.title}}
+        {{else}}
+          <span class="entry-title-no-title">No title</span>
+        {{/if}}
+      </div>
+    {{/if}}
+
+    <div class="entry-duration touch" data-test-entry-duration>
+      {{format-duration this.entry.durationInSeconds}}
+    </div>
+
+    <div class="entry-started-at touch no-print" data-test-entry-started-at>
+      {{moment-format this.entry.startedAt "H:mm"}}
+    </div>
+
+    <div class="entry-stopped-at touch no-print" data-test-entry-stopped-at>
+      {{moment-format this.entry.stoppedAt "H:mm"}}
+    </div>
+  </div>
+
+</li>

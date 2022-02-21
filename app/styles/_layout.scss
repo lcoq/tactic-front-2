@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+  background-color: $clr1;
+  font-family: $font-family;
+}
+
+.app-content {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  padding: 30px 100px;
+  width: 80%;
+}

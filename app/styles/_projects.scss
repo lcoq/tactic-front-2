@@ -1,0 +1,87 @@
+.project-group-list-title {
+  font-size: $fs-xxl;
+  font-weight: bold;
+  padding: $sp 0;
+}
+
+.project-group.deleting {
+  background-color: $clr9;
+}
+
+.project {
+  position: relative;
+  padding: $sp-sm;
+  line-height: $btn-size;
+}
+
+.project:hover, .project.invalid, .project.errored, .project.deleting, .project.pending, .project.editing {
+  .project-actions {
+    display: flex;
+  }
+}
+
+.project:hover {
+  background-color: $clr7;
+}
+
+.project.invalid, .project.errored, .project.deleting {
+  background-color: $clr9;
+}
+
+.project.pending {
+  background-color: $clr11;
+}
+
+.project.editing {
+  background-color: $clr10;
+
+  &:hover {
+    background-color: $clr10;
+  }
+}
+
+.project-actions {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(-100%, -50%);
+}
+
+.project-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.project-action-invalid-img, .project-action-delete-img, .project-action-cancel-img {
+  width: 16px;
+  height: 16px;
+}
+
+.project-action-retry {
+  background-image: url('/assets/images/offline.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px;
+
+  &:hover {
+    background-image: url('/assets/images/refresh.svg');
+  }
+}
+
+.project-edit-name {
+  width: 100%;
+}
+
+.project-create {
+  display: flex;
+  align-items: center;
+  font-style: italic;
+}
+
+.project-create-plus {
+  font-weight: bold;
+  font-size: $fs-xl;
+  margin-right: $sp-xs;
+}

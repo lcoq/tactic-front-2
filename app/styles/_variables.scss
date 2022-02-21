@@ -1,0 +1,39 @@
+@use "sass:math";
+
+/* fonts */
+$font-family: "Lucida Grande", Arial, sans-serif;
+$fs-xs: 0.8em;
+$fs-sm: 0.9em;
+$fs-lg: 1.1em;
+$fs-xl: 1.2em;
+$fs-xxl: 1.5em;
+
+/* colors */
+$clr1: #FBFBFB;
+$clr2: #333333;
+$clr3: #E1E1E1;
+$clr4: #555555;
+$clr5: #666666;
+$clr6: #DDDDDD;
+$clr7: #F1F1F1;
+$clr8: #888888;
+$clr9: #FFEEEE; /* lighter red */
+$clr10: #FFFFFF; /* full white */
+$clr11: #E4F7E4; /* light green */
+$clr12: #BBBBBB;
+$clr13: #4BC800;
+$clr14: #48C100; /* flashy green */
+$clr15: #C74B00; /* flashy red */
+$clr16: #FFCACA; /* light red */
+$clr17: #FFDC9C; /* light yellow */
+
+/* spacings */
+$sp-lg: 30px;
+$sp: 20px;
+$sp-sm: math.div($sp, 2);
+$sp-xs: math.div($sp, 3);
+$sp-xxs: math.div($sp, 4);
+
+/* sizes */
+$btn-size: 36px;
+$btn-size-sm: 30px;

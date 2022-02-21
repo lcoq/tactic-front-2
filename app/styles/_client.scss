@@ -1,0 +1,105 @@
+.client {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: $clr3;
+  padding: 0 $sp-sm;
+  min-width: $btn-size-sm;
+  min-height: $btn-size-sm;
+}
+
+.client:hover, .client.invalid, .client.save-errored, .client.delete-errored, .client.deleting, .client.pending, .client.editing {
+  .client-actions {
+    display: flex;
+  }
+}
+
+.client:hover {
+  background-color: $clr7;
+}
+
+.client.frozen {
+  .client-title {
+    cursor: default;
+  }
+
+  &:hover {
+    background-color: $clr3;
+  }
+}
+
+.client.invalid, .client.save-errored {
+  background-color: $clr9;
+}
+
+.client.deleting, .client.delete-errored {
+  background-color: $clr16;
+}
+
+.client.pending {
+  background-color: $clr11;
+}
+
+.client.editing {
+  background-color: $clr10;
+  border-bottom: 2px solid $clr3;
+
+  &:hover {
+    background-color: $clr10;
+  }
+}
+
+.client-actions {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(-100%, -50%);
+}
+
+.client-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.client-action-invalid-img, .client-action-delete-img, .client-action-cancel-img {
+  width: 16px;
+  height: 16px;
+}
+
+.client-action-retry {
+  background-image: url('/assets/images/offline.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px;
+
+  &:hover {
+    background-image: url('/assets/images/refresh.svg');
+  }
+}
+
+.client-title {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  color: $clr4;
+}
+
+.client-title-txt {
+  display: flex;
+  align-items: center;
+  font-size: $fs-lg;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.client-create-plus {
+  font-weight: bold;
+  font-size: $fs-xl;
+  margin-right: $sp-xs;
+}
+
+.client-create-plus-txt {
+  font-style: italic;
+}

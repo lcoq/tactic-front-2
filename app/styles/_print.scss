@@ -1,0 +1,141 @@
+body {
+  font-family: $font-family;
+  font-size: 0.95em;
+  color: $clr2;
+
+  .no-print {
+    display: none !important;
+  }
+
+  .only-print {
+    display: block !important;
+  }
+}
+
+.header-brand {
+  display: block;
+  font-size: $fs-xxl;
+  font-weight: bold;
+  margin-bottom: $sp-lg;
+}
+
+/* reviews */
+
+.reviews-filter {
+  margin-bottom: $sp;
+}
+
+.reviews-filter-header, .reviews-filter-header-title {
+  display: inline;
+  font-weight: bold;
+}
+
+.reviews-filter-users .reviews-filter-header-title:after {
+  display: inline;
+  content: ': ';
+}
+
+.reviews-filter-clients .reviews-filter-header-title:after {
+  display: inline;
+  content: ': ';
+}
+
+.reviews-filter-projects .reviews-filter-header-title:after {
+  display: inline;
+  content: ': ';
+}
+
+.reviews-filter-from, .reviews-filter-to {
+  display: inline;
+  font-size: $fs-xl;
+}
+
+.reviews-filter-from:after {
+  display: inline;
+  content: ' - ';
+}
+
+.reviews-filter-query {
+  margin-top: $sp;
+}
+
+/* entry group */
+
+.entry-group {
+  margin-bottom: $sp-sm;
+}
+
+.entry-group-list-duration {
+  margin-top: $sp-sm;
+  margin-bottom: $sp-lg;
+}
+
+.entry-root-group-list-header, .entry-root-group-header, .entry-group-header {
+  display: flex;
+  padding: $sp-sm;
+  margin: $sp-xs 0;
+}
+
+.entry-root-group-list-header-title, .entry-root-group-header-title, .entry-group-header-title {
+  display: inline;
+  margin-right: $sp-sm;
+  font-weight: bold;
+}
+
+.entry-root-group-list-header-duration, .entry-root-group-header-duration, .entry-group-header-duration {
+  display: inline;
+}
+
+.entry-root-group-list-header {
+  background-color: inherit;
+  padding: $sp-sm 0;
+  margin: $sp 0;
+}
+
+.entry-root-group-header {
+  margin: $sp 0;
+  border: 1px solid $clr2;
+}
+
+
+.entry-group-header {
+  border-bottom: 1px solid $clr2;
+}
+
+.entry-group-header-duration {
+  color: $clr8;
+  font-weight: bold;
+}
+
+.entry-root-group-header-duration {
+  font-weight: bold;
+}
+
+
+/* entry */
+
+.entry {
+  padding: $sp-xs;
+  margin-left: $sp-xs;
+}
+
+.entry-content {
+  display: flex;
+}
+
+.entry-date {
+  padding-right: $sp-sm;
+}
+
+.entry-title {
+  width: 85%;
+  padding-right: $sp-sm;
+}
+
+.entry-project {
+  padding-right: $sp-sm;
+}
+
+.entry-duration {
+  padding-right: $sp-sm;
+}

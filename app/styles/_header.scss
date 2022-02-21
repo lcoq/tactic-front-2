@@ -1,0 +1,81 @@
+.header {
+  display: flex;
+  width: 100%;
+  height: $btn-size;
+  background-color: $clr2;
+  color: $clr3;
+}
+
+.header-brand-container {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  height: $btn-size;
+  padding: 0 $sp;
+}
+
+.header-brand {
+  padding: 0 $sp-sm;
+  font-size: $fs-xxl;
+  font-weight: bold;
+}
+
+.header-brand-user {
+  font-size: $fs-lg;
+  white-space: nowrap;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 100px 0 200px;
+}
+
+.header-nav-section {
+  z-index: 10;
+  display: inline-block;
+
+  &.right {
+    margin-left: auto;
+  }
+}
+
+.header-nav-section-title {
+  display: inline-block;
+  height: $btn-size;
+  line-height: $btn-size;
+  padding: 0 $sp;
+
+  &:hover, &.link-active {
+    color: $clr4;
+    background-color: $clr6;
+  }
+}
+
+.header-nav-section-week {
+  margin-left: auto;
+  background-color: $clr4;
+}
+
+.header-user-summary-container {
+  display: flex;
+}
+
+.header-user-summary-section {
+  padding: 5px;
+  background-color: $clr4;
+
+  &:not(:last-of-type) {
+    margin-right: 5px;
+  }
+}
+
+.header-user-summary-label {
+  font-size: 0.8em;
+}
+
+.header-user-summary-duration {
+  font-size: 0.9em;
+  font-weight: bold;
+}

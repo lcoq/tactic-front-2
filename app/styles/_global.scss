@@ -1,0 +1,57 @@
+a {
+  cursor: pointer;
+}
+
+.touch {
+  cursor: pointer;
+  min-width: $btn-size;
+  min-height: $btn-size;
+}
+
+.touch-sm {
+  cursor: pointer;
+  min-width: $btn-size-sm;
+  min-height: $btn-size-sm;
+}
+
+.text-input {
+  min-width: $btn-size;
+  min-height: $btn-size;
+}
+
+.input-error-message-list {
+  position: absolute;
+  top: calc(100% - #{$sp-sm});
+  left: 0;
+  margin-top: $sp-sm;
+  font-size: $fs-sm;
+  font-weight: normal;
+  background-color: $clr15;
+  color: $clr10;
+  z-index: 1;
+  line-height: $btn-size-sm;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: - $sp-sm;
+    left: $sp-xs;
+    width: 0;
+    height: 0;
+    border-left: $sp-sm solid transparent;
+    border-right: $sp-sm solid transparent;
+    border-bottom: $sp-sm solid $clr15;
+  }
+}
+
+.input-error-message {
+  padding: 0 $sp-sm;
+}
+
+.only-print {
+  display: none !important;
+}
+
+.hidden {
+  display: none !important;
+}

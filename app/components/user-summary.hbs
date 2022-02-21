@@ -1,9 +1,10 @@
-<div>
-  <span>This week</span>
-  <span data-test-user-week-duration>{{format-duration this.weekEntriesDuration}}</span>
-</div>
-<div>
-  <span>This month</span>
-  <span data-test-user-month-duration>{{format-duration this.monthEntriesDuration}}</span>
-</div>
-{{yield}}
+<section class="header-nav-section right header-user-summary-container">
+  <div class="header-user-summary-section it-user-summary-section">
+    <span class="header-user-summary-label">This week</span>
+    <span class="header-user-summary-duration it-user-summary-duration" data-test-user-week-duration>{{format-duration this.weekEntriesDuration}}</span>
+  </div>
+  <div class="header-user-summary-section">
+    <span class="header-user-summary-label">This month</span>
+    <span class="header-user-summary-duration it-user-summary-duration" data-test-user-month-duration>{{format-duration this.monthEntriesDuration}}</span>
+  </div>
+</section>

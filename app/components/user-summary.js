@@ -4,21 +4,18 @@ import { bool } from '@ember/object/computed';
 
 export default class UserSummaryComponent extends Component {
 
-  @bool('args.weekEntries.isFulfilled') hasWeekEntries;
-  @bool('args.monthEntries.isFulfilled') hasMonthEntries;
-
-  @computed('hasWeekEntries')
+  @computed('args.weekEntries')
   get weekEntriesDuration() {
-    return this.hasWeekEntries ? this._computeDuration(this.args.weekEntries) : 0;
+    return this._computeDuration(this.args.weekEntries);
   }
 
-  @computed('hasMonthEntries')
+  @computed('args.monthEntries')
   get monthEntriesDuration() {
-    return this.hasMonthEntries ? this._computeDuration(this.args.monthEntries) : 0;
+    return this._computeDuration(this.args.monthEntries);
   }
 
   _computeDuration(entries) {
-    return entries.reduce(function (sum, entry) {
+    return (entries ?? []).reduce(function (sum, entry) {
       return sum + entry.durationInSeconds;
     }, 0);
   }

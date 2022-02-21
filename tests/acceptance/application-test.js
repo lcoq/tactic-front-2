@@ -6,6 +6,20 @@ import { setupUtils } from '../utils/setup';
 import { Response } from 'miragejs';
 import moment from 'moment';
 
+function isCurrentWeekRequest(request, userId) {
+  const params = request.queryParams;
+  return params['filter[current-week]'] === '1' &&
+    params['filter[user-id]'].length === 1 &&
+    params['filter[user-id]'][0] === `${userId}`;
+}
+
+function isCurrentMonthRequest(request, userId) {
+  const params = request.queryParams;
+  return params['filter[current-month]'] === '1' &&
+    params['filter[user-id]'].length === 1 &&
+    params['filter[user-id]'][0] === `${userId}`;
+}
+
 module('Acceptance | application', function (hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
@@ -52,15 +66,12 @@ module('Acceptance | application', function (hooks) {
     let done = assert.async();
 
     this.server.get('/entries', (schema, request) => {
-      if (
-        request.queryParams['filter[current-week]'] === '1' &&
-        request.queryParams['filter[user-id]'].length === 1 &&
-        request.queryParams['filter[user-id]'][0] === `${user.id}`
-      ) {
+      if (isCurrentWeekRequest(request, user.id)) {
         done();
         return schema.entries.find(weekEntries.mapBy('id'));
+      } else {
+        return schema.entries.all();
       }
-      return new Response(404, {}, {});
     });
 
     await visit('/');
@@ -91,15 +102,12 @@ module('Acceptance | application', function (hooks) {
     let done = assert.async();
 
     this.server.get('/entries', (schema, request) => {
-      if (
-        request.queryParams['filter[current-month]'] === '1' &&
-        request.queryParams['filter[user-id]'].length === 1 &&
-        request.queryParams['filter[user-id]'][0] === `${user.id}`
-      ) {
+      if (isCurrentMonthRequest(request, user.id)) {
         done();
         return schema.entries.find(monthEntries.mapBy('id'));
+      } else {
+        return schema.entries.all();
       }
-      return new Response(404, {}, {});
     });
 
     await visit('/');

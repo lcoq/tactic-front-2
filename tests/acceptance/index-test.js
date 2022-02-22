@@ -109,7 +109,7 @@ module('Acceptance | index', function (hooks) {
         user,
         startedAt: moment().startOf('day').add(4, 'h').toDate(),
         stoppedAt: moment().startOf('day').add(11, 'h').add(12, 'm').toDate(),
-      }),
+      }, 'withoutTitle'),
     ];
 
     const allEntries = [
@@ -249,35 +249,118 @@ module('Acceptance | index', function (hooks) {
     });
   });
 
-  test('updates entry', async function (assert) {
+  test('updates entry title', async function (assert) {
     const user = await this.utils.authenticate();
-    const entry = this.server.create('entry', {
-      title: 'My entry',
-      startedAt: moment().startOf('day').add(1, 'h').add(3, 'min').add(5, 's'),
-      stoppedAt: moment().startOf('day').add(2, 'h').add(5, 'min').add(12, 's'),
-    });
+    const entry = this.server.create('entry');
     this.server.get('/entries', (schema, request) => {
       return schema.entries.find([entry.id]);
     });
 
     await visit('/');
-
     await click('[data-test-entry-title]');
 
     assert.dom('[data-test-entry-edit-title]').exists('should show title edit');
     await fillIn('[data-test-entry-edit-title]', 'My new entry title');
 
-    assert.dom('[data-test-entry-edit-started-at]').exists('should show started at edit');
-    await fillIn('[data-test-entry-edit-started-at]', '02:05');
-
-    assert.dom('[data-test-entry-edit-stopped-at]').exists('should show stopped at edit');
-    await fillIn('[data-test-entry-edit-stopped-at]', '04:06');
-
     await click('[data-test-header]'); // send focusout
 
     entry.reload();
     assert.equal(entry.title, 'My new entry title', 'should update entry title');
-    assert.equal(moment(entry.startedAt).format('HH:mm'), '02:05', 'should update entry started at');
-    assert.equal(moment(entry.stoppedAt).format('HH:mm'), '04:06', 'should update entry stopped at');
   });
+
+  test('updates entry started at', async function (assert) {
+    const user = await this.utils.authenticate();
+    const entry = this.server.create('entry');
+    this.server.get('/entries', (schema, request) => {
+      return schema.entries.find([entry.id]);
+    });
+
+    await visit('/');
+    await click('[data-test-entry-started-at]');
+
+    assert.dom('[data-test-entry-edit-started-at]').exists('should show started at edit');
+    await fillIn('[data-test-entry-edit-started-at]', '02:05');
+
+    await click('[data-test-header]'); // send focusout
+
+    entry.reload();
+    assert.equal(moment(entry.startedAt).format('HH:mm'), '02:05', 'should update entry started at');
+  });
+
+  test('updates entry stopped at', async function (assert) {
+    const user = await this.utils.authenticate();
+    const entry = this.server.create('entry');
+    this.server.get('/entries', (schema, request) => {
+      return schema.entries.find([entry.id]);
+    });
+
+    await visit('/');
+    await click('[data-test-entry-stopped-at]');
+
+    assert.dom('[data-test-entry-edit-stopped-at]').exists('should show stopped at edit');
+    await fillIn('[data-test-entry-edit-stopped-at]', '02:05');
+
+    await click('[data-test-header]'); // send focusout
+
+    entry.reload();
+    assert.equal(moment(entry.stoppedAt).format('HH:mm'), '02:05', 'should update entry stopped at');
+  });
+
+  test('updates entry stopped at after duration update', async function (assert) {
+    const user = await this.utils.authenticate();
+
+    const startedAt = moment().startOf('day').add(1, 'h').add(3, 'm').add(5, 's').toDate();
+
+    const entry = this.server.create('entry', { startedAt });
+    this.server.get('/entries', (schema, request) => {
+      return schema.entries.find([entry.id]);
+    });
+
+    await visit('/');
+    await click('[data-test-entry-duration]');
+
+    assert.dom('[data-test-entry-edit-duration]').exists('should show duration edit');
+    await fillIn('[data-test-entry-edit-duration]', '00:08:00');
+
+    await click('[data-test-header]'); // send focusout
+
+    entry.reload();
+    assert.equal(entry.stoppedAt, moment(startedAt).add(8, 'm').toISOString(), 'should update entry stopped at');
+  });
+
+  test('updates entry a single time after multiple changes', async function (assert) {
+    const user = await this.utils.authenticate();
+    const entry = this.server.create('entry');
+    this.server.get('/entries', (schema, request) => {
+      return schema.entries.find([entry.id]);
+    });
+
+    let patchCount = 0;
+
+    this.server.patch('/entries/:id', function (schema, request) {
+      const id = request.params.id;
+      const attrs = this.normalizedRequestAttrs();
+      patchCount += 1;
+      return schema.entries.find(id).update(attrs);
+    });
+
+    await visit('/');
+
+    await click('[data-test-entry-title]');
+    assert.dom('[data-test-entry-edit-title]').exists('should show title edit');
+
+    await fillIn('[data-test-entry-edit-title]', 'My new entry title');
+    await fillIn('[data-test-entry-edit-started-at]', '02:05');
+    await fillIn('[data-test-entry-edit-stopped-at]', '03:06');
+    await click('[data-test-header]'); // send focusout
+
+    entry.reload();
+    assert.equal(patchCount, 1, 'should send PATCH a single time for a single entry update in a reasonable time');
+
+    assert.equal(entry.title, 'My new entry title', 'should update entry title');
+    assert.equal(moment(entry.startedAt).format('HH:mm'), '02:05', 'should update entry started at');
+    assert.equal(moment(entry.stoppedAt).format('HH:mm'), '03:06', 'should update entry stopped at');
+  });
+
+
 });

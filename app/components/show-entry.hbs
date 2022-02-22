@@ -30,7 +30,13 @@
   <div class="entry-content">
     {{#if this.isEditing}}
       <div class="entry-title">
-        <Input @value={{this.entry.title}} class="entry-edit-title text-input" @enter={{this.closeEdit}} {{select-on-focus}} {{focus-if (eq this.fieldNameToFocusOnEdit "title")}} data-test-entry-edit-title />
+        <Input
+          @value={{this.entry.title}}
+          class="entry-edit-title text-input"
+          @enter={{this.closeEdit}}
+          {{select-on-focus}}
+          {{focus-if (eq this.fieldNameToFocusOnEdit "title")}}
+          data-test-entry-edit-title />
       </div>
     {{else}}
       <div {{on "click" (fn this.editEntry "title")}} class="entry-title touch" data-test-entry-title>

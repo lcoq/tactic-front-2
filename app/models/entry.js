@@ -37,16 +37,16 @@ export default class EntryModel extends Model {
     const initialStartedAt = moment(this.startedAt);
     const initialStoppedAt = moment(this.stoppedAt);
     const newStartedAt = moment(initialStartedAt)
-          .year(momentNewDate.year())
-          .dayOfYear(momentNewDate.dayOfYear());
+      .year(momentNewDate.year())
+      .dayOfYear(momentNewDate.dayOfYear());
     const newStoppedAt = moment(initialStoppedAt)
-          .year(momentNewDate.year())
-          .dayOfYear(momentNewDate.dayOfYear());
+      .year(momentNewDate.year())
+      .dayOfYear(momentNewDate.dayOfYear());
     if (newStartedAt.isAfter(newStoppedAt)) {
-      newStoppedAt.add(1, 'day')
+      newStoppedAt.add(1, 'day');
     }
-    this.startedAt = newStartedAt.toDate();
-    this.stoppedAt = newStoppedAt.toDate();
+    set(this, 'startedAt', newStartedAt.toDate());
+    set(this, 'stoppedAt', newStoppedAt.toDate());
   }
 
   rollbackProject() {

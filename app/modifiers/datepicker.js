@@ -1,7 +1,10 @@
 import { modifier } from 'ember-modifier';
 import moment from 'moment';
 
-export default modifier(function datepicker(element, [initialDate, selectCallback], /*named*/) {
+export default modifier(function datepicker(
+  element,
+  [initialDate, selectCallback] /*named*/
+) {
   const $element = $(element);
   $element.datepicker({
     firstDay: 1,
@@ -14,7 +17,9 @@ export default modifier(function datepicker(element, [initialDate, selectCallbac
     onSelect: function (dateString) {
       const date = moment(dateString, 'YYYYMMDD').toDate();
       selectCallback(date);
-    }
+    },
   });
-  return () => { $element.datepicker('destroy') };
+  return () => {
+    $element.datepicker('destroy');
+  };
 });

@@ -150,10 +150,16 @@ export default class ShowEntryComponent extends Component {
   }
 
   _updateStartedAndStoppedAt() {
-    const newStartedAt = this._parseHourAndBuildNewDate(this.formattedStartedAt, this.entry.startedAt);
+    const newStartedAt = this._parseHourAndBuildNewDate(
+      this.formattedStartedAt,
+      this.entry.startedAt
+    );
     const newStartedAtTime = newStartedAt.getTime();
 
-    let newStoppedAt = this._parseHourAndBuildNewDate(this.formattedStoppedAt, this.entry.stoppedAt);
+    let newStoppedAt = this._parseHourAndBuildNewDate(
+      this.formattedStoppedAt,
+      this.entry.stoppedAt
+    );
     const newStoppedAtTime = newStoppedAt.getTime();
 
     if (!isNaN(newStartedAtTime)) {
@@ -176,10 +182,7 @@ export default class ShowEntryComponent extends Component {
   }
 
   _parseHourAndBuildNewDate(raw, baseDate) {
-    const [ hours, minutes ] = parseHour(raw);
-    return moment(baseDate)
-      .hours(hours)
-      .minutes(minutes)
-      .toDate();
+    const [hours, minutes] = parseHour(raw);
+    return moment(baseDate).hours(hours).minutes(minutes).toDate();
   }
 }

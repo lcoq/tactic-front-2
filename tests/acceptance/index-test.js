@@ -412,8 +412,16 @@ module('Acceptance | index', function (hooks) {
 
   test('updates started at and stopped at date', async function (assert) {
     const user = await this.utils.authenticate();
-    const startedAt = moment().startOf('day').subtract(1, 'day').add(5, 'h').add(3, 'm');
-    const stoppedAt = moment().startOf('day').subtract(1, 'day').add(5, 'h').add(5, 'm');
+    const startedAt = moment()
+      .startOf('day')
+      .subtract(1, 'day')
+      .add(5, 'h')
+      .add(3, 'm');
+    const stoppedAt = moment()
+      .startOf('day')
+      .subtract(1, 'day')
+      .add(5, 'h')
+      .add(5, 'm');
     const entry = this.server.create('entry', { startedAt, stoppedAt });
 
     this.server.get('/entries', (schema, request) => {
@@ -423,16 +431,14 @@ module('Acceptance | index', function (hooks) {
     await visit('/');
 
     assert
-      .dom('[data-test-entry-edit-date')
+      .dom('[data-test-entry-edit-date]')
       .exists('should show edit date action');
     await click('[data-test-entry-edit-date]');
 
     assert
       .dom('.ui-datepicker-calendar')
       .exists('should show datepicker calendar');
-    assert
-      .dom('.ui-datepicker-today')
-      .exists('should show datepicker today');
+    assert.dom('.ui-datepicker-today').exists('should show datepicker today');
 
     await click('.ui-datepicker-today a');
 

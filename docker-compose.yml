@@ -6,7 +6,6 @@ services:
     image: danlynn/ember-cli:4.1.1
     volumes:
       - .:/myapp
-      - node_modules:/myapp/node_modules
       - .bash_history:/root/.bash_history
     tmpfs:
       - /myapp/tmp
@@ -17,7 +16,6 @@ services:
     command: ember test --server
     volumes:
       - .:/myapp
-      - node_modules:/myapp/node_modules
     tmpfs:
       - /myapp/tmp
     ports:

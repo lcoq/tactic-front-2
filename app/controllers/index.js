@@ -77,6 +77,7 @@ export default class IndexController extends Controller {
   }
 
   @action didUpdateNewEntry() {
+    this.newEntryStateManager.send('update');
   }
 
   @action retrySaveNewEntry() {

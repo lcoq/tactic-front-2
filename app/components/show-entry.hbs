@@ -98,7 +98,9 @@
       </div>
     {{else}}
       <div {{on "click" (fn this.editEntry "startedAt")}} class="entry-started-at touch no-print" data-test-entry-started-at>
-        {{moment-format this.entry.startedAt "H:mm"}}
+        {{#if this.entry.startedAt}}
+          {{moment-format this.entry.startedAt "H:mm"}}
+        {{/if}}
       </div>
     {{/if}}
 
@@ -114,7 +116,9 @@
       </div>
     {{else}}
       <div {{on "click" (fn this.editEntry "stoppedAt")}} class="entry-stopped-at touch no-print" data-test-entry-stopped-at>
-        {{moment-format this.entry.stoppedAt "H:mm"}}
+        {{#if this.entry.stoppedAt}}
+          {{moment-format this.entry.stoppedAt "H:mm"}}
+        {{/if}}
       </div>
     {{/if}}
   </div>

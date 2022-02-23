@@ -504,13 +504,16 @@ module('Acceptance | index', function (hooks) {
        This allows to test `rollback` on entry as `await` will not wait the
        pending save entry state to actually save the entry */
     const defererService = this.owner.lookup('service:deferer');
-    const initialDefererServiceUsesNativeTimeout = defererService.usesNativeTimeout;
+    const initialDefererServiceUsesNativeTimeout =
+      defererService.usesNativeTimeout;
     const initialDefererServiceWait = defererService.wait;
     defererService.usesNativeTimeout = function (key) {
       return key === 'mutable-record-state-manager:save';
     };
     defererService.wait = function (key) {
-      return key === 'mutable-record-state-manager:save' ? 10 : defererService.waitsByKey[key];
+      return key === 'mutable-record-state-manager:save'
+        ? 10
+        : defererService.waitsByKey[key];
     };
 
     const user = await this.utils.authenticate();

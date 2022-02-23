@@ -108,7 +108,11 @@ class PendingSaveStateModel extends StateModel {
   _saveTimer = null;
 
   enter() {
-    this._saveTimer = this.deferer.later('mutable-record-state-manager:save', this, this._save);
+    this._saveTimer = this.deferer.later(
+      'mutable-record-state-manager:save',
+      this,
+      this._save
+    );
   }
 
   leave() {
@@ -162,7 +166,11 @@ class PendingDeleteStateModel extends StateModel {
   _deleteTimer = null;
 
   enter() {
-    this._deleteTimer = this.deferer.later('mutable-record-state-manager:delete', this, this._save);
+    this._deleteTimer = this.deferer.later(
+      'mutable-record-state-manager:delete',
+      this,
+      this._save
+    );
   }
 
   leave() {

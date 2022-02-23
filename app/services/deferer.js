@@ -8,20 +8,19 @@ const isntTest = !isTest;
 export default class DefererService extends Service {
   get waitsByKey() {
     return {
-      'mutable-record-state-manager:save':   isTest ? 5 : 3000,
+      'mutable-record-state-manager:save': isTest ? 5 : 3000,
       'mutable-record-state-manager:delete': isTest ? 5 : 3000,
     };
   }
 
   later(key, target, method) {
     const wait = this.wait(key);
-    return this._later(key,target, method, wait);
+    return this._later(key, target, method, wait);
   }
 
   cancel(key, timer) {
     this._cancel(key, timer);
   }
-
 
   usesNativeTimeout(key) {
     return false;

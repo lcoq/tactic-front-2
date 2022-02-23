@@ -10,6 +10,7 @@ import formatDuration from '../utils/format-duration';
 export default class ShowEntryComponent extends Component {
   @tracked fieldNameToFocusOnEdit = null;
   @tracked rounding = false;
+  @tracked isEditingDate = false;
 
   @reads('args.entry') entry;
   @reads('args.searchProjects') searchProjects;
@@ -59,13 +60,13 @@ export default class ShowEntryComponent extends Component {
   }
 
   @action editEntry(field) {
-    if (!this.entry.stateManager.isEditing) {
+    if (!this.isEditing) {
       this._openEdit(field);
     }
   }
 
   @action closeEdit() {
-    if (this.entry.stateManager.isEditing) {
+    if (this.isEditing) {
       this._closeEdit();
     }
   }
@@ -84,8 +85,14 @@ export default class ShowEntryComponent extends Component {
     this.entry.stateManager.send('markForDelete');
   }
 
-  @action changeEntryDate() {
-    // TODO
+  @action editEntryDate() {
+    if (!this.isEditing) this._openEdit();
+    this.isEditingDate = true;
+  }
+
+  @action updateEntryDate(newDate) {
+    this.entry.updateToDate(newDate);
+    this._closeEdit();
   }
 
   @action selectProject(project) {
@@ -111,12 +118,13 @@ export default class ShowEntryComponent extends Component {
 
   _openEdit(field) {
     this._setFormattedStartedAndStoppedAt();
-    this.fieldNameToFocusOnEdit = field;
+    if (field) this.fieldNameToFocusOnEdit = field;
     this.entry.stateManager.send('edit');
   }
 
   _closeEdit() {
     if (this.isEditing) {
+      this.isEditingDate = false;
       this._updateStartedAndStoppedAt();
       this._clearFormattedStartedAndStoppedAt();
       if (this.args.willUpdateEntry) {
@@ -142,32 +150,18 @@ export default class ShowEntryComponent extends Component {
   }
 
   _updateStartedAndStoppedAt() {
-    const [newStartedAtHours, newStartedAtMinutes] = parseHour(
-      this.formattedStartedAt
-    );
-    const newStartedAt = moment(this.entry.startedAt)
-      .hours(newStartedAtHours)
-      .minutes(newStartedAtMinutes)
-      .toDate();
+    const newStartedAt = this._parseHourAndBuildNewDate(this.formattedStartedAt, this.entry.startedAt);
     const newStartedAtTime = newStartedAt.getTime();
+
+    let newStoppedAt = this._parseHourAndBuildNewDate(this.formattedStoppedAt, this.entry.stoppedAt);
+    const newStoppedAtTime = newStoppedAt.getTime();
 
     if (!isNaN(newStartedAtTime)) {
       this.entry.startedAt = newStartedAt;
     }
-
-    const [newStoppedAtHours, newStoppedAtMinutes] = parseHour(
-      this.formattedStoppedAt
-    );
-    let newStoppedAt = moment(this.entry.stoppedAt)
-      .hours(newStoppedAtHours)
-      .minutes(newStoppedAtMinutes)
-      .toDate();
-    const newStoppedAtTime = newStoppedAt.getTime();
-
     if (isNaN(newStoppedAtTime)) {
       newStoppedAt = this.entry.stoppedAt;
     }
-
     if (moment(newStartedAt).isAfter(newStoppedAt)) {
       newStoppedAt = moment(newStoppedAt).add(1, 'day').toDate();
     } else if (moment(newStoppedAt).diff(moment(newStartedAt), 'days') > 0) {
@@ -179,5 +173,13 @@ export default class ShowEntryComponent extends Component {
   _clearFormattedStartedAndStoppedAt() {
     this.formattedStartedAt = null;
     this.formattedStoppedAt = null;
+  }
+
+  _parseHourAndBuildNewDate(raw, baseDate) {
+    const [ hours, minutes ] = parseHour(raw);
+    return moment(baseDate)
+      .hours(hours)
+      .minutes(minutes)
+      .toDate();
   }
 }

@@ -32,6 +32,23 @@ export default class EntryModel extends Model {
     }
   }
 
+  updateToDate(newDate) {
+    const momentNewDate = moment(newDate);
+    const initialStartedAt = moment(this.startedAt);
+    const initialStoppedAt = moment(this.stoppedAt);
+    const newStartedAt = moment(initialStartedAt)
+          .year(momentNewDate.year())
+          .dayOfYear(momentNewDate.dayOfYear());
+    const newStoppedAt = moment(initialStoppedAt)
+          .year(momentNewDate.year())
+          .dayOfYear(momentNewDate.dayOfYear());
+    if (newStartedAt.isAfter(newStoppedAt)) {
+      newStoppedAt.add(1, 'day')
+    }
+    this.startedAt = newStartedAt.toDate();
+    this.stoppedAt = newStoppedAt.toDate();
+  }
+
   rollbackProject() {
     set(this, 'project', this.initialProject);
   }

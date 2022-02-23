@@ -80,6 +80,7 @@
     "moment": "^2.29.1"
   },
   "dependencies": {
-    "eventemitter3": "^4.0.7"
+    "eventemitter3": "^4.0.7",
+    "jquery-ui-dist": "^1.13.1"
   }
 }

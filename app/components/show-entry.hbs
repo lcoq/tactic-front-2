@@ -15,7 +15,7 @@
         <a {{on "click" this.markEntryForDelete}} class="entry-action entry-action-delete touch">
           <img class="entry-action-delete-img" src="/assets/images/trash.svg" alt="Delete" />
         </a>
-        <a {{on "click" this.changeEntryDate}} class="entry-action entry-action-delete touch">
+        <a {{on "click" this.editEntryDate}} class="entry-action entry-action-delete touch" data-test-entry-edit-date>
           <img class="entry-action-delete-img" src="/assets/images/calendar.svg" alt="Change date" />
         </a>
       {{/if}}
@@ -28,6 +28,8 @@
   {{/unless}}
 
   <div class="entry-content">
+    {{#if this.isEditingDate}}<div class="entry-edit-date" {{datepicker this.entry.startedAt this.updateEntryDate}}/>{{/if}}
+
     {{#if this.isEditing}}
       <div class="entry-title">
         <Input

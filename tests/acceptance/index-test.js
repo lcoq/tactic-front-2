@@ -410,6 +410,45 @@ module('Acceptance | index', function (hooks) {
     assert.equal(entry.project.name, 'Tactic', 'should update entry project');
   });
 
+  test('updates started at and stopped at date', async function (assert) {
+    const user = await this.utils.authenticate();
+    const startedAt = moment().startOf('day').subtract(1, 'day').add(5, 'h').add(3, 'm');
+    const stoppedAt = moment().startOf('day').subtract(1, 'day').add(5, 'h').add(5, 'm');
+    const entry = this.server.create('entry', { startedAt, stoppedAt });
+
+    this.server.get('/entries', (schema, request) => {
+      return schema.entries.find([entry.id]);
+    });
+
+    await visit('/');
+
+    assert
+      .dom('[data-test-entry-edit-date')
+      .exists('should show edit date action');
+    await click('[data-test-entry-edit-date]');
+
+    assert
+      .dom('.ui-datepicker-calendar')
+      .exists('should show datepicker calendar');
+    assert
+      .dom('.ui-datepicker-today')
+      .exists('should show datepicker today');
+
+    await click('.ui-datepicker-today a');
+
+    entry.reload();
+    assert.equal(
+      entry.startedAt,
+      moment(startedAt).dayOfYear(moment().dayOfYear()).toISOString(),
+      'should update entry started at'
+    );
+    assert.equal(
+      entry.stoppedAt,
+      moment(stoppedAt).dayOfYear(moment().dayOfYear()).toISOString(),
+      'should update entry stopped at'
+    );
+  });
+
   test('updates entry a single time after multiple changes', async function (assert) {
     const user = await this.utils.authenticate();
     const entry = this.server.create('entry');

@@ -15,7 +15,7 @@ export default function parseDuration(string) {
     if (string.match(/h/)) {
       const hIndex = string.indexOf('h');
       hours = parseInt(string.substring(0, hIndex));
-      string = string.substring(hIndex+1);
+      string = string.substring(hIndex + 1);
     } else {
       hours = 0;
     }
@@ -23,7 +23,7 @@ export default function parseDuration(string) {
     if (string.match(/m/)) {
       const mIndex = string.indexOf('m');
       minutes = parseInt(string.substring(0, mIndex));
-      string = string.substring(mIndex+1);
+      string = string.substring(mIndex + 1);
     } else if (!string.match(/s/) && string.match(/^\s*[0-9]+\s*/)) {
       minutes = parseInt(string);
       string = string.replace(/^\s*[0-9]+\s*/, '');
@@ -40,15 +40,15 @@ export default function parseDuration(string) {
       seconds = 0;
     }
 
-    return (hours * 60 * 60) + (minutes * 60) + seconds;
+    return hours * 60 * 60 + minutes * 60 + seconds;
   }
 
   if (string.match(/^\s*[0-9]*\s*:?\s*[0-9]*\s*:?\s*[0-9]+\s*$/)) {
-    const [ hoursString, minutesString, secondsString ] = string.split(':');
+    const [hoursString, minutesString, secondsString] = string.split(':');
     const hours = parseInt(hoursString);
     const minutes = parseInt(minutesString || '0');
     const seconds = parseInt(secondsString || '0');
-    return (hours * 60 * 60) + (minutes * 60) + seconds;
+    return hours * 60 * 60 + minutes * 60 + seconds;
   }
 
   return null;

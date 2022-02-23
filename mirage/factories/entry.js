@@ -26,6 +26,6 @@ export default Factory.extend({
   withoutTitle: trait({
     title() {
       return null;
-    }
-  })
+    },
+  }),
 });

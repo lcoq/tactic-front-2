@@ -3,8 +3,8 @@ import { reads, and, or } from '@ember/object/computed';
 import { action, computed } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import moment from 'moment';
-import parseHour  from '../utils/parse-hour';
-import parseDuration  from '../utils/parse-duration';
+import parseHour from '../utils/parse-hour';
+import parseDuration from '../utils/parse-duration';
 import formatDuration from '../utils/format-duration';
 
 export default class ShowEntryComponent extends Component {
@@ -24,15 +24,22 @@ export default class ShowEntryComponent extends Component {
   @or('isPendingSave', 'isPendingDelete') canRevert;
   @and('restartEntry', 'entry.isClear') canRestartEntry;
 
-  @computed('isEditing', 'isPendingDelete', 'isPendingSave', 'isSaveErrored', 'isDeleteErrored', 'rounding')
+  @computed(
+    'isEditing',
+    'isPendingDelete',
+    'isPendingSave',
+    'isSaveErrored',
+    'isDeleteErrored',
+    'rounding'
+  )
   get classNames() {
     const names = [];
-    if (this.isEditing) names.push("editing");
-    if (this.isPendingDelete) names.push("deleting");
-    if (this.isPendingSave) names.push("pending");
-    if (this.isSaveErrored) names.push("errored");
-    if (this.isDeleteErrored) names.push("errored");
-    if (this.rounding) names.push("disabled");
+    if (this.isEditing) names.push('editing');
+    if (this.isPendingDelete) names.push('deleting');
+    if (this.isPendingSave) names.push('pending');
+    if (this.isSaveErrored) names.push('errored');
+    if (this.isDeleteErrored) names.push('errored');
+    if (this.rounding) names.push('disabled');
     return names.join(' ');
   }
 
@@ -43,7 +50,9 @@ export default class ShowEntryComponent extends Component {
   @action formattedDurationChanged() {
     const duration = parseDuration(this.formattedDuration);
     if (duration !== null && duration !== this.entry.durationInSeconds) {
-      const newStoppedAt = moment(this.entry.startedAt).add(duration, 's').toDate();
+      const newStoppedAt = moment(this.entry.startedAt)
+        .add(duration, 's')
+        .toDate();
       this.entry.stoppedAt = newStoppedAt;
       this.formattedStoppedAt = moment(this.entry.stoppedAt).format('H:mm');
     }
@@ -76,6 +85,7 @@ export default class ShowEntryComponent extends Component {
   }
 
   @action changeEntryDate() {
+    // TODO
   }
 
   @action selectProject(project) {
@@ -132,16 +142,26 @@ export default class ShowEntryComponent extends Component {
   }
 
   _updateStartedAndStoppedAt() {
-    const [ newStartedAtHours, newStartedAtMinutes ] = parseHour(this.formattedStartedAt);
-    const newStartedAt = moment(this.entry.startedAt).hours(newStartedAtHours).minutes(newStartedAtMinutes).toDate();
+    const [newStartedAtHours, newStartedAtMinutes] = parseHour(
+      this.formattedStartedAt
+    );
+    const newStartedAt = moment(this.entry.startedAt)
+      .hours(newStartedAtHours)
+      .minutes(newStartedAtMinutes)
+      .toDate();
     const newStartedAtTime = newStartedAt.getTime();
 
     if (!isNaN(newStartedAtTime)) {
       this.entry.startedAt = newStartedAt;
     }
 
-    const [ newStoppedAtHours, newStoppedAtMinutes ] = parseHour(this.formattedStoppedAt);
-    let newStoppedAt = moment(this.entry.stoppedAt).hours(newStoppedAtHours).minutes(newStoppedAtMinutes).toDate();
+    const [newStoppedAtHours, newStoppedAtMinutes] = parseHour(
+      this.formattedStoppedAt
+    );
+    let newStoppedAt = moment(this.entry.stoppedAt)
+      .hours(newStoppedAtHours)
+      .minutes(newStoppedAtMinutes)
+      .toDate();
     const newStoppedAtTime = newStoppedAt.getTime();
 
     if (isNaN(newStoppedAtTime)) {
@@ -149,7 +169,7 @@ export default class ShowEntryComponent extends Component {
     }
 
     if (moment(newStartedAt).isAfter(newStoppedAt)) {
-      newStoppedAt = moment(newStoppedAt).add(1, 'day').toDate()
+      newStoppedAt = moment(newStoppedAt).add(1, 'day').toDate();
     } else if (moment(newStoppedAt).diff(moment(newStartedAt), 'days') > 0) {
       newStoppedAt = moment(newStoppedAt).subtract(1, 'day').toDate();
     }

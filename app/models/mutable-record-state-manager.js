@@ -241,7 +241,9 @@ export default class MutableRecordStateManagerModel extends StateManagerModel {
   }
 
   checkDirty(source) {
-    return Object.keys(source.changedAttributes()).length !== 0 || source.isDeleted;
+    return (
+      Object.keys(source.changedAttributes()).length !== 0 || source.isDeleted
+    );
   }
 
   checkValid() {

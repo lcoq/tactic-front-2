@@ -6,7 +6,8 @@ import {
   findAll,
   click,
   fillIn,
-  typeIn
+  typeIn,
+  pauseTest,
 } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
@@ -291,7 +292,11 @@ module('Acceptance | index', function (hooks) {
     await click('[data-test-header]'); // send focusout
 
     entry.reload();
-    assert.equal(entry.title, 'My new entry title', 'should update entry title');
+    assert.equal(
+      entry.title,
+      'My new entry title',
+      'should update entry title'
+    );
   });
 
   test('updates entry started at', async function (assert) {
@@ -304,13 +309,19 @@ module('Acceptance | index', function (hooks) {
     await visit('/');
     await click('[data-test-entry-started-at]');
 
-    assert.dom('[data-test-entry-edit-started-at]').exists('should show started at edit');
+    assert
+      .dom('[data-test-entry-edit-started-at]')
+      .exists('should show started at edit');
     await fillIn('[data-test-entry-edit-started-at]', '02:05');
 
     await click('[data-test-header]'); // send focusout
 
     entry.reload();
-    assert.equal(moment(entry.startedAt).format('HH:mm'), '02:05', 'should update entry started at');
+    assert.equal(
+      moment(entry.startedAt).format('HH:mm'),
+      '02:05',
+      'should update entry started at'
+    );
   });
 
   test('updates entry stopped at', async function (assert) {
@@ -323,19 +334,30 @@ module('Acceptance | index', function (hooks) {
     await visit('/');
     await click('[data-test-entry-stopped-at]');
 
-    assert.dom('[data-test-entry-edit-stopped-at]').exists('should show stopped at edit');
+    assert
+      .dom('[data-test-entry-edit-stopped-at]')
+      .exists('should show stopped at edit');
     await fillIn('[data-test-entry-edit-stopped-at]', '02:05');
 
     await click('[data-test-header]'); // send focusout
 
     entry.reload();
-    assert.equal(moment(entry.stoppedAt).format('HH:mm'), '02:05', 'should update entry stopped at');
+    assert.equal(
+      moment(entry.stoppedAt).format('HH:mm'),
+      '02:05',
+      'should update entry stopped at'
+    );
   });
 
   test('updates entry stopped at after duration update', async function (assert) {
     const user = await this.utils.authenticate();
 
-    const startedAt = moment().startOf('day').add(1, 'h').add(3, 'm').add(5, 's').toDate();
+    const startedAt = moment()
+      .startOf('day')
+      .add(1, 'h')
+      .add(3, 'm')
+      .add(5, 's')
+      .toDate();
 
     const entry = this.server.create('entry', { startedAt });
     this.server.get('/entries', (schema, request) => {
@@ -345,7 +367,9 @@ module('Acceptance | index', function (hooks) {
     await visit('/');
     await click('[data-test-entry-duration]');
 
-    assert.dom('[data-test-entry-edit-duration]').exists('should show duration edit');
+    assert
+      .dom('[data-test-entry-edit-duration]')
+      .exists('should show duration edit');
     await fillIn('[data-test-entry-edit-duration]', '00:08:00');
 
     await click('[data-test-header]'); // send focusout

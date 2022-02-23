@@ -36,10 +36,13 @@ export default class IndexController extends Controller {
   }
 
   @action restartEntry(entry) {
+    // TODO
   }
 
   @action searchProjects(query) {
-    if (isEmpty(query)) { return resolve(); }
+    if (isEmpty(query)) {
+      return resolve();
+    }
     return this.store.query('project', { filter: { query: query } });
   }
 

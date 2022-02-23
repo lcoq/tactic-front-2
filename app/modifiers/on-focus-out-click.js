@@ -5,7 +5,11 @@ export default modifier(function onFocusOutClick(
   [callback, condition] /*named*/
 ) {
   function clickElement(event) {
-    if (condition && document.body.contains(event.target) && !element.contains(event.target)) {
+    if (
+      condition &&
+      document.body.contains(event.target) &&
+      !element.contains(event.target)
+    ) {
       callback();
     }
   }

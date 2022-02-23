@@ -41,10 +41,14 @@ export default class EntryChooseProjectComponent extends Component {
   }
 
   @action clearProjects() {
-    later(this, () => {
-      if (this.isDestroying || this.isDestroyed) return;
-      this.projects = null;
-    }, 200);
+    later(
+      this,
+      () => {
+        if (this.isDestroying || this.isDestroyed) return;
+        this.projects = null;
+      },
+      200
+    );
   }
 
   @action keyPressed(event) {

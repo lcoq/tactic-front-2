@@ -11,16 +11,15 @@
       </header>
       <ul class="entry-group-item-list">
         {{#each group.entries as |entry|}}
-          {{show-entry
-            entry=entry
-            willUpdateEntry=this.willUpdateEntry
-            didUpdateEntry=this.didUpdateEntry
-            willDeleteEntry=this.willDeleteEntry
-            didDeleteEntry=this.didDeleteEntry
-            didRevertEntry=this.didRevertEntry
-            restartEntry=this.restartEntry
-            searchProjects=this.searchProjects
-          }}
+          <ShowEntry
+            @entry={{entry}}
+            @willUpdateEntry={{this.willUpdateEntry}}
+            @didUpdateEntry={{this.didUpdateEntry}}
+            @willDeleteEntry={{this.willDeleteEntry}}
+            @didDeleteEntry={{this.didDeleteEntry}}
+            @didRevertEntry={{this.didRevertEntry}}
+            @restartEntry={{this.restartEntry}}
+            @searchProjects={{this.searchProjects}} />
         {{/each}}
       </ul>
     </section>

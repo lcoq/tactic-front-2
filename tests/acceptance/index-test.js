@@ -6,6 +6,7 @@ import {
   findAll,
   click,
   fillIn,
+  typeIn
 } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
@@ -37,9 +38,13 @@ module('Acceptance | index', function (hooks) {
   test('shows recent user entries grouped by day', async function (assert) {
     const user = await this.utils.authenticate();
 
+    const projectTactic = this.server.create('project', { name: 'Tactic' });
+    const projectOther = this.server.create('project', { name: 'Other' });
+
     const dayBeforeYesterdayEntries = [
       this.server.create('entry', {
         user,
+        project: projectTactic,
         title: 'Debugging Tactic',
         startedAt: moment()
           .startOf('day')
@@ -55,6 +60,7 @@ module('Acceptance | index', function (hooks) {
       }),
       this.server.create('entry', {
         user,
+        project: projectTactic,
         title: 'Deploying Tactic',
         startedAt: moment()
           .startOf('day')
@@ -71,6 +77,7 @@ module('Acceptance | index', function (hooks) {
       }),
       this.server.create('entry', {
         user,
+        project: projectTactic,
         title: 'Prod testing Tactic',
         startedAt: moment()
           .startOf('day')
@@ -89,6 +96,7 @@ module('Acceptance | index', function (hooks) {
     const yesterdayEntries = [
       this.server.create('entry', {
         user,
+        project: projectOther,
         title: 'Eating',
         startedAt: moment()
           .startOf('day')
@@ -105,11 +113,15 @@ module('Acceptance | index', function (hooks) {
     ];
 
     const todayEntries = [
-      this.server.create('entry', {
-        user,
-        startedAt: moment().startOf('day').add(4, 'h').toDate(),
-        stoppedAt: moment().startOf('day').add(11, 'h').add(12, 'm').toDate(),
-      }, 'withoutTitle'),
+      this.server.create(
+        'entry',
+        {
+          user,
+          startedAt: moment().startOf('day').add(4, 'h').toDate(),
+          stoppedAt: moment().startOf('day').add(11, 'h').add(12, 'm').toDate(),
+        },
+        'withoutTitle'
+      ),
     ];
 
     const allEntries = [
@@ -131,6 +143,7 @@ module('Acceptance | index', function (hooks) {
         entries: [
           {
             title: 'No title',
+            project: 'No project',
             duration: '07:12:00',
             startedAt: '4:00',
             stoppedAt: '11:12',
@@ -143,6 +156,7 @@ module('Acceptance | index', function (hooks) {
         entries: [
           {
             title: 'Eating',
+            project: 'Other',
             duration: '00:59:00',
             startedAt: '10:00',
             stoppedAt: '10:59',
@@ -155,18 +169,21 @@ module('Acceptance | index', function (hooks) {
         entries: [
           {
             title: 'Prod testing Tactic',
+            project: 'Tactic',
             duration: '01:08:00',
             startedAt: '15:00',
             stoppedAt: '16:08',
           },
           {
             title: 'Deploying Tactic',
+            project: 'Tactic',
             duration: '00:05:13',
             startedAt: '8:00',
             stoppedAt: '8:05',
           },
           {
             title: 'Debugging Tactic',
+            project: 'Tactic',
             duration: '01:06:00',
             startedAt: '3:00',
             stoppedAt: '4:06',
@@ -217,6 +234,15 @@ module('Acceptance | index', function (hooks) {
           .hasText(
             entryAttributes.title,
             `${entryId} should compute entry title`
+          );
+        assert
+          .dom(entry.querySelector('[data-test-entry-project'))
+          .exists(`${entryId} should show entry project`);
+        assert
+          .dom(entry.querySelector('[data-test-entry-project'))
+          .hasText(
+            entryAttributes.project,
+            `${entryId} should compute entry project`
           );
         assert
           .dom(entry.querySelector('[data-test-entry-duration'))
@@ -325,7 +351,39 @@ module('Acceptance | index', function (hooks) {
     await click('[data-test-header]'); // send focusout
 
     entry.reload();
-    assert.equal(entry.stoppedAt, moment(startedAt).add(8, 'm').toISOString(), 'should update entry stopped at');
+    assert.equal(
+      entry.stoppedAt,
+      moment(startedAt).add(8, 'm').toISOString(),
+      'should update entry stopped at'
+    );
+  });
+
+  test('updates project', async function (assert) {
+    const user = await this.utils.authenticate();
+    const entry = this.server.create('entry');
+
+    const projectTactic = this.server.create('project', { name: 'Tactic' });
+
+    this.server.get('/entries', (schema, request) => {
+      return schema.entries.find([entry.id]);
+    });
+
+    await visit('/');
+    await click('[data-test-entry-project]');
+
+    assert
+      .dom('[data-test-entry-edit-project]')
+      .exists('should show project edit');
+    await typeIn('[data-test-entry-edit-project]', 'Tacti');
+
+    assert
+      .dom('[data-test-entry-edit-project-choice]')
+      .exists('should show projects choice list');
+
+    await click('[data-test-entry-edit-project-choice]');
+
+    entry.reload();
+    assert.equal(entry.project.name, 'Tactic', 'should update entry project');
   });
 
   test('updates entry a single time after multiple changes', async function (assert) {
@@ -355,12 +413,96 @@ module('Acceptance | index', function (hooks) {
     await click('[data-test-header]'); // send focusout
 
     entry.reload();
-    assert.equal(patchCount, 1, 'should send PATCH a single time for a single entry update in a reasonable time');
+    assert.equal(
+      patchCount,
+      1,
+      'should send PATCH a single time for a single entry update in a reasonable time'
+    );
 
-    assert.equal(entry.title, 'My new entry title', 'should update entry title');
-    assert.equal(moment(entry.startedAt).format('HH:mm'), '02:05', 'should update entry started at');
-    assert.equal(moment(entry.stoppedAt).format('HH:mm'), '03:06', 'should update entry stopped at');
+    assert.equal(
+      entry.title,
+      'My new entry title',
+      'should update entry title'
+    );
+    assert.equal(
+      moment(entry.startedAt).format('HH:mm'),
+      '02:05',
+      'should update entry started at'
+    );
+    assert.equal(
+      moment(entry.stoppedAt).format('HH:mm'),
+      '03:06',
+      'should update entry stopped at'
+    );
   });
 
+  test('updates entry and rollback', async function (assert) {
+    /* Stub deferer service to use native timeout with "reasonable" delay.
+       This allows to test `rollback` on entry as `await` will not wait the
+       pending save entry state to actually save the entry */
+    const defererService = this.owner.lookup('service:deferer');
+    const initialDefererServiceUsesNativeTimeout = defererService.usesNativeTimeout;
+    const initialDefererServiceWait = defererService.wait;
+    defererService.usesNativeTimeout = function (key) {
+      return key === 'mutable-record-state-manager:save';
+    };
+    defererService.wait = function (key) {
+      return key === 'mutable-record-state-manager:save' ? 10 : defererService.waitsByKey[key];
+    };
 
+    const user = await this.utils.authenticate();
+    const entry = this.server.create('entry', {
+      title: 'My initial title',
+      startedAt: '2022-02-22T18:45:40.000Z',
+      stoppedAt: '2022-02-22T18:50:00.000Z',
+    });
+    this.server.get('/entries', (schema, request) => {
+      return schema.entries.find([entry.id]);
+    });
+
+    let patchCount = 0;
+
+    this.server.patch('/entries/:id', function (schema, request) {
+      const id = request.params.id;
+      const attrs = this.normalizedRequestAttrs();
+      patchCount += 1;
+      return schema.entries.find(id).update(attrs);
+    });
+
+    await visit('/');
+
+    await click('[data-test-entry-title]');
+    await fillIn('[data-test-entry-edit-title]', 'My new entry title');
+    await fillIn('[data-test-entry-edit-started-at]', '02:05');
+    await fillIn('[data-test-entry-edit-stopped-at]', '03:06');
+
+    await click('[data-test-header]');
+
+    assert
+      .dom('[data-test-entry-edit-rollback]')
+      .exists('should show rollback');
+    await click('[data-test-entry-edit-rollback]');
+
+    assert.equal(patchCount, 0, 'should not send PATCH entry');
+
+    entry.reload();
+    assert.equal(
+      entry.title,
+      'My initial title',
+      'should not have updated entry title'
+    );
+    assert.equal(
+      entry.startedAt,
+      '2022-02-22T18:45:40.000Z',
+      'should not have updated entry started at'
+    );
+    assert.equal(
+      entry.stoppedAt,
+      '2022-02-22T18:50:00.000Z',
+      'should not have updated entry stopped at'
+    );
+
+    defererService.usesNativeTimeout = initialDefererServiceUsesNativeTimeout;
+    defererService.wait = initialDefererServiceWait;
+  });
 });

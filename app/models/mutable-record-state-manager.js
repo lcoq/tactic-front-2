@@ -3,9 +3,8 @@ import StateManagerStateModel from './state-manager-state';
 import { later, cancel } from '@ember/runloop';
 import { reject } from 'rsvp';
 import { reads, or } from '@ember/object/computed';
-
-import ENV from '../config/environment';
-const PENDING_TIMER_MS = ENV.environment !== 'test' ? 3000 : 50;
+import { computed } from '@ember/object';
+import { getOwner } from '@ember/application';
 
 const StateModel = StateManagerStateModel;
 
@@ -109,8 +108,7 @@ class PendingSaveStateModel extends StateModel {
   _saveTimer = null;
 
   enter() {
-    const timer = later(this, this._save, PENDING_TIMER_MS);
-    this._saveTimer = timer;
+    this._saveTimer = this.deferer.later('mutable-record-state-manager:save', this, this._save);
   }
 
   leave() {
@@ -151,7 +149,7 @@ class PendingSaveStateModel extends StateModel {
   _cancelTimer() {
     const timer = this._saveTimer;
     if (timer) {
-      cancel(timer);
+      this.deferer.cancel('mutable-record-state-manager:save', timer);
       this._saveTimer = null;
     }
   }
@@ -164,8 +162,7 @@ class PendingDeleteStateModel extends StateModel {
   _deleteTimer = null;
 
   enter() {
-    const timer = later(this, this._delete, PENDING_TIMER_MS);
-    this._deleteTimer = timer;
+    this._deleteTimer = this.deferer.later('mutable-record-state-manager:delete', this, this._save);
   }
 
   leave() {
@@ -205,7 +202,7 @@ class PendingDeleteStateModel extends StateModel {
   _cancelTimer() {
     const timer = this._deleteTimer;
     if (timer) {
-      cancel(timer);
+      this.deferer.cancel('mutable-record-state-manager:delete', timer);
       this._deleteTimer = null;
     }
   }
@@ -225,6 +222,11 @@ export default class MutableRecordStateManagerModel extends StateManagerModel {
   @or('isPendingDelete', 'isDeleteErrored') isPendingDeleteOrDeleteErrored;
 
   @or('isSaveErrored', 'isDeleteErrored') isErrored;
+
+  @computed('source')
+  get defererService() {
+    return getOwner(this.source).lookup('service:deferer');
+  }
 
   get stateClasses() {
     return [
@@ -248,5 +250,11 @@ export default class MutableRecordStateManagerModel extends StateManagerModel {
 
   rollback(source) {
     source.rollbackAttributes();
+  }
+
+  instantiateStateClass(klass) {
+    const instance = super.instantiateStateClass(klass);
+    instance.deferer = this.defererService;
+    return instance;
   }
 }

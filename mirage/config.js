@@ -55,4 +55,6 @@ function routes() {
 
   this.get('/entries');
   this.patch('/entries/:id');
+
+  this.get('/projects');
 }

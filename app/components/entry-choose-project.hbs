@@ -1,0 +1,25 @@
+<div>
+  <Input
+    @value={{this.projectName}}
+    class={{this.inputClasses}}
+    placeholder="Project"
+    {{select-on-focus}}
+    {{focus-if this.focusOnInput}}
+    {{on "focusout" this.clearProjects}}
+    {{on "keyup" this.keyPressed}}
+    data-test-entry-edit-project />
+
+  {{#if this.projects}}
+    <ul class="{{this.projectsListClasses}}">
+      {{#each this.projects as |project|}}
+        <li
+          {{on "click" (fn this.selectProject project)}}
+          {{on "mouseenter" (fn this.changeHoveredProject project)}}
+          class="{{this.projectClasses}} {{if (eq project this.hoveredProject) "selected"}}"
+          data-test-entry-edit-project-choice>
+          {{project.name}}
+        </li>
+      {{/each}}
+    </ul>
+  {{/if}}
+</div>

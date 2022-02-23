@@ -12,6 +12,7 @@ export default class ShowEntryComponent extends Component {
   @tracked rounding = false;
 
   @reads('args.entry') entry;
+  @reads('args.searchProjects') searchProjects;
 
   @reads('entry.stateManager.isClear') isClear;
   @reads('entry.stateManager.isEditing') isEditing;
@@ -75,6 +76,11 @@ export default class ShowEntryComponent extends Component {
   }
 
   @action changeEntryDate() {
+  }
+
+  @action selectProject(project) {
+    this.entry.project = project;
+    this._closeEdit();
   }
 
   @action restartEntry() {

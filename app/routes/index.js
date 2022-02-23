@@ -16,7 +16,7 @@ export default class IndexRoute extends Route {
 
   model() {
     const entryListPromise = this.store
-      .query('entry', {})
+      .query('entry', { include: 'project' })
       .then(function (entries) {
         return EntryGroupByDayList.create({ entries: entries.toArray() });
       });

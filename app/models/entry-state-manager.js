@@ -10,5 +10,6 @@ export default class EntryStateManagerModel extends MutableRecordStateManagerMod
 
   rollback(entry) {
     super.rollback(...arguments);
+    entry.rollbackProject();
   }
 }

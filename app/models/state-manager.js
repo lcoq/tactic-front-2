@@ -10,9 +10,7 @@ export default class StateManagerModel {
   constructor({ source }) {
     this.source = source;
     this.eventEmitter = new EventEmitter();
-    this.states = this.stateClasses.map(
-      (klass) => new klass({ manager: this, source })
-    );
+    this.states = this.stateClasses.map(this.instantiateStateClass.bind(this));
     this.currentState = this.states[0];
   }
 
@@ -37,5 +35,9 @@ export default class StateManagerModel {
 
   off() {
     this.eventEmitter.off(...arguments);
+  }
+
+  instantiateStateClass(klass) {
+    return new klass({ manager: this, source: this.source });
   }
 }

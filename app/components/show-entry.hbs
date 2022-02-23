@@ -7,7 +7,7 @@
         </a>
       {{/if}}
       {{#if this.canRevert}}
-        <a {{on "click" this.revertEditEntry}} class="entry-action entry-action-revert touch">
+        <a {{on "click" this.revertEditEntry}} class="entry-action entry-action-revert touch" data-test-entry-edit-rollback>
           <img class="entry-action-cancel-img" src="/assets/images/revert.svg" alt="Revert" />
         </a>
       {{/if}}
@@ -44,6 +44,25 @@
           {{this.entry.title}}
         {{else}}
           <span class="entry-title-no-title">No title</span>
+        {{/if}}
+      </div>
+    {{/if}}
+
+    {{#if this.isEditing}}
+      <div class="entry-project touch it-entry-project">
+        <EntryChooseProject
+          @projectName={{unbound this.entry.project.name}}
+          @classNamePrefix="entry-edit"
+          @searchProjects={{this.searchProjects}}
+          @selectProject={{this.selectProject}}
+          @focusOnInput={{eq this.fieldNameToFocusOnEdit "project"}} />
+      </div>
+    {{else}}
+      <div {{on "click" (fn this.editEntry "project")}} class="entry-project touch" data-test-entry-project>
+        {{#if this.entry.project}}
+          {{this.entry.project.name}}
+        {{else}}
+          <span class="entry-project-no-project">No project</span>
         {{/if}}
       </div>
     {{/if}}

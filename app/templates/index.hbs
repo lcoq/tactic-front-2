@@ -1,10 +1,9 @@
-{{entries-by-day
-  list=@model.entryList
-  willUpdateEntry=this.willUpdateEntry
-  didUpdateEntry=this.didUpdateEntry
-  willDeleteEntry=this.willDeleteEntry
-  didDeleteEntry=this.didDeleteEntry
-  didRevertEntry=this.didRevertEntry
-  restartEntry=this.restartEntry
-  searchProjects=this.searchProjects
-}}
+<EntriesByDay
+  @list={{@model.entryList}}
+  @willUpdateEntry={{this.willUpdateEntry}}
+  @didUpdateEntry={{this.didUpdateEntry}}
+  @willDeleteEntry={{this.willDeleteEntry}}
+  @didDeleteEntry={{this.didDeleteEntry}}
+  @didRevertEntry={{this.didRevertEntry}}
+  @restartEntry={{this.restartEntry}}
+  @searchProjects={{this.searchProjects}} />

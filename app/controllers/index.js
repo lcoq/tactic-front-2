@@ -1,8 +1,11 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
+import { isEmpty } from '@ember/utils';
+import { resolve } from 'rsvp';
 
 export default class IndexController extends Controller {
+  @service store;
   @service userSummary;
 
   waitingEntries = [];
@@ -22,7 +25,7 @@ export default class IndexController extends Controller {
 
   @action didDeleteEntry(entry) {
     this.waitingEntries.removeObject(entry);
-      this._reloadOrScheduleUserSummary();
+    this._reloadOrScheduleUserSummary();
   }
 
   @action didRevertEntry(entry) {
@@ -35,7 +38,9 @@ export default class IndexController extends Controller {
   @action restartEntry(entry) {
   }
 
-  @action searchProjects() {
+  @action searchProjects(query) {
+    if (isEmpty(query)) { return resolve(); }
+    return this.store.query('project', { filter: { query: query } });
   }
 
   _reloadOrScheduleUserSummary() {
@@ -54,5 +59,4 @@ export default class IndexController extends Controller {
   _scheduleReloadUserSummary() {
     this.shouldUpdateSummary = true;
   }
-
 }

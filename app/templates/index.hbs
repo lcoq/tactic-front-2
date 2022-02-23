@@ -1,5 +1,16 @@
+<section class="entry-create-container no-print">
+  <CreateEntry
+    @entry={{this.newEntry}}
+    @isSaveErrored={{this.newEntry.stateManager.isSaveErrored}}
+    @startTimer={{this.startTimer}}
+    @stopTimer={{this.stopTimer}}
+    @searchProjects={{this.searchProjects}}
+    @didUpdateEntry={{this.didUpdateNewEntry}}
+    @retrySaveEntry={{this.retrySaveNewEntry}}
+    @setProject={{this.setProjectOnNewEntry}} />
+</section>
 <EntriesByDay
-  @list={{@model.entryList}}
+  @list={{this.entryList}}
   @willUpdateEntry={{this.willUpdateEntry}}
   @didUpdateEntry={{this.didUpdateEntry}}
   @willDeleteEntry={{this.willDeleteEntry}}

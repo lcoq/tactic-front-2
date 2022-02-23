@@ -13,8 +13,15 @@ export default class EntryChooseProjectComponent extends Component {
   @tracked hoveredProject = null;
 
   @reads('args.classNamePrefix') classNamePrefix;
-  @reads('args.projectName') projectName;
   @reads('args.focusOnInput') focusOnInput;
+
+  @computed('args.projectName')
+  get projectName() {
+    return this.args.projectName;
+  }
+  set projectName(value) {
+    return value;
+  }
 
   @computed('classNamePrefix')
   get inputClasses() {

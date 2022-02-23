@@ -17,12 +17,15 @@ export default class IndexRoute extends Route {
   model() {
     const entryListPromise = this.store
       .query('entry', { include: 'project' })
-      .then(function (entries) {
-        return EntryGroupByDayList.create({ entries: entries.toArray() });
-      });
+      .then((entries) => EntryGroupByDayList.create({ entries: entries.toArray() }));
+
+    const runningEntryPromise = this.store
+      .queryRecord('entry', { filter: { running: 1 }, include: 'project' })
+      .then((entry) => entry ?? this.store.createRecord('entry'));
 
     return hash({
       entryList: entryListPromise,
+      newEntry: runningEntryPromise
     });
   }
 }

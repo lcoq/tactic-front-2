@@ -169,7 +169,7 @@ class PendingDeleteStateModel extends StateModel {
     this._deleteTimer = this.deferer.later(
       'mutable-record-state-manager:delete',
       this,
-      this._save
+      this._delete
     );
   }
 
@@ -249,9 +249,11 @@ export default class MutableRecordStateManagerModel extends StateManagerModel {
   }
 
   checkDirty(source) {
-    return (
-      Object.keys(source.changedAttributes()).length !== 0 || source.isDeleted
-    );
+    if (source.isDeleted && !source.hasDirtyAttributes) {
+      return false;
+    } else {
+      return Object.keys(source.changedAttributes()).length !== 0;
+    }
   }
 
   checkValid() {

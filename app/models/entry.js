@@ -32,6 +32,21 @@ export default class EntryModel extends Model {
     }
   }
 
+  @computed('startedAt', 'stoppedAt')
+  get isStarted() {
+    return this.startedAt && !this.stoppedAt;
+  }
+
+  start() {
+    if (!this.isStarted) {
+      this.startedAt = new Date();
+    }
+  }
+
+  stop() {
+    this.stoppedAt = new Date();
+  }
+
   updateToDate(newDate) {
     const momentNewDate = moment(newDate);
     const initialStartedAt = moment(this.startedAt);

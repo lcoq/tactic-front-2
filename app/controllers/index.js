@@ -1,14 +1,25 @@
 import Controller from '@ember/controller';
-import { action } from '@ember/object';
+import { action, computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import { service } from '@ember/service';
 import { isEmpty } from '@ember/utils';
-import { resolve } from 'rsvp';
+import { resolve, reject } from 'rsvp';
+import RunningEntryStateManager from '../models/running-entry-state-manager';
+import { set } from '@ember/object';
 
 export default class IndexController extends Controller {
   @service store;
   @service userSummary;
 
   waitingEntries = [];
+
+  @reads('model.newEntry') newEntry;
+  @reads('model.entryList') entryList;
+
+  @computed('newEntry')
+  get newEntryStateManager() {
+    return new RunningEntryStateManager({ source: this.newEntry });
+  }
 
   @action willUpdateEntry(entry) {
     this.waitingEntries.pushObject(entry);
@@ -39,11 +50,72 @@ export default class IndexController extends Controller {
     // TODO
   }
 
+  @action startTimer() {
+    this.newEntryStateManager.send('start');
+    this._updateIcon('started');
+  }
+
+  @action stopTimer() {
+    this._stopNewEntry().finally(() => {
+      this._buildNewEntry();
+      this._updateIcon('stopped');
+    });
+  }
+
+  @action setProjectOnNewEntry(project) {
+    const entry = this.newEntry;
+    const stateManager = this.newEntryStateManager;
+    const setProject = () => {
+      entry.project = project;
+      this.didUpdateNewEntry();
+    }
+    if (entry.isSaving) {
+      stateManager.once('didSave', setProject, this);
+    } else {
+      setProject();
+    }
+  }
+
+  @action didUpdateNewEntry() {
+  }
+
+  @action retrySaveNewEntry() {
+    // TODO
+  }
+
   @action searchProjects(query) {
     if (isEmpty(query)) {
       return resolve();
     }
     return this.store.query('project', { filter: { query: query } });
+  }
+
+  _stopNewEntry() {
+    const stateManager = this.newEntryStateManager;
+    const entry = this.newEntry;
+    return stateManager
+      .send('stop')
+      .then(() => {
+        this._reloadOrScheduleUserSummary();
+      }, () => {
+        if (stateManager.isSaveErrored) {
+          // TODO move new entry state manager logic to the entry state manager ?
+          entry.stateManager.transitionTo('saveError');
+        }
+        return reject();
+      })
+      .finally(() => {
+        this.entryList.addEntry(entry);
+      });
+  }
+
+  _updateIcon(name) {
+    // TODO
+  }
+
+  _buildNewEntry(attributes) {
+    const entry = this.store.createRecord('entry', attributes ?? {});
+    set(this, 'model.newEntry', entry);
   }
 
   _reloadOrScheduleUserSummary() {
@@ -62,4 +134,5 @@ export default class IndexController extends Controller {
   _scheduleReloadUserSummary() {
     this.shouldUpdateSummary = true;
   }
+
 }

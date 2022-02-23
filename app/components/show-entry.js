@@ -23,7 +23,7 @@ export default class ShowEntryComponent extends Component {
   @reads('entry.stateManager.isSaveErrored') isSaveErrored;
   @reads('entry.stateManager.isDeleteErrored') isDeleteErrored;
   @or('isPendingSave', 'isPendingDelete') canRevert;
-  @and('restartEntry', 'entry.isClear') canRestartEntry;
+  @and('args.restartEntry', 'isClear') canRestartEntry;
 
   @computed(
     'isEditing',

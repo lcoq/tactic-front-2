@@ -1,0 +1,29 @@
+<div class="entry-create {{if this.isSaveErrored "errored"}}">
+  <div class="entry-actions no-print">
+    {{#if this.isSaveErrored}}
+      <a {{on "click" this.retrySaveEntry}} class="entry-action entry-action-retry touch">
+      </a>
+    {{/if}}
+  </div>
+  <Input
+    @value={{this.entry.title}}
+    class="entry-create-title text-input"
+    placeholder="What are you working on ?"
+    {{on "keyup" this.startTimerOrTriggerUpdate}} />
+  <div class="entry-create-project-container">
+     <EntryChooseProject
+       @projectName={{this.projectName}}
+       @classNamePrefix="entry-create"
+       @searchProjects={{this.searchProjects}}
+       @selectProject={{this.selectProject}}
+       @keyPressed={{this.startTimer}} />
+  </div>
+  <div class="entry-create-duration touch">
+    {{if this.isStarted this.entryDuration "00:00:00"}}
+  </div>
+  {{#if this.isStarted}}
+    <button {{on "click" this.stopTimer}} class="entry-create-stop touch">Stop</button>
+  {{else}}
+    <button {{on "click" this.startTimer}} class="entry-create-start touch">Start</button>
+  {{/if}}
+</div>

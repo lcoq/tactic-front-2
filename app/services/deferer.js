@@ -5,11 +5,15 @@ import ENV from '../config/environment';
 const isTest = ENV.environment === 'test';
 const isntTest = !isTest;
 
+const ENTRY_SAVE_DELAY = isTest ? 5 : 3000;
+
 export default class DefererService extends Service {
   get waitsByKey() {
     return {
-      'mutable-record-state-manager:save': isTest ? 5 : 3000,
-      'mutable-record-state-manager:delete': isTest ? 5 : 3000,
+      'mutable-record-state-manager:save': ENTRY_SAVE_DELAY,
+      'mutable-record-state-manager:delete': ENTRY_SAVE_DELAY,
+      'running-entry-state-manager:save': ENTRY_SAVE_DELAY,
+      'create-entry:clock': isTest ? 5 : 500
     };
   }
 

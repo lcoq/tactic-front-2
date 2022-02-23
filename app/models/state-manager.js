@@ -15,7 +15,7 @@ export default class StateManagerModel {
   }
 
   send() {
-    this.currentState.send(...arguments);
+    return this.currentState.send(...arguments);
   }
 
   transitionTo(stateName) {

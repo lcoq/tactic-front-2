@@ -449,18 +449,6 @@ module('Acceptance | index', function (hooks) {
     const entry = this.server.create('entry');
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
-    // TODO replace patchCount with
-    // https://miragejs.com/docs/testing/assertions/#asserting-against-handled-requests-and-responses
-
-    let patchCount = 0;
-
-    this.server.patch('/entries/:id', function (schema, request) {
-      const id = request.params.id;
-      const attrs = this.normalizedRequestAttrs();
-      patchCount += 1;
-      return schema.entries.find(id).update(attrs);
-    });
-
     await visit('/');
 
     await click('[data-test-entry-title]');
@@ -472,8 +460,9 @@ module('Acceptance | index', function (hooks) {
     await click('[data-test-header]'); // send focusout
 
     entry.reload();
+
     assert.equal(
-      patchCount,
+      server.pretender.handledRequests.filterBy('method', 'PATCH').length,
       1,
       'should send PATCH a single time for a single entry update in a reasonable time'
     );
@@ -520,15 +509,6 @@ module('Acceptance | index', function (hooks) {
     });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
-    let patchCount = 0;
-
-    this.server.patch('/entries/:id', function (schema, request) {
-      const id = request.params.id;
-      const attrs = this.normalizedRequestAttrs();
-      patchCount += 1;
-      return schema.entries.find(id).update(attrs);
-    });
-
     await visit('/');
 
     await click('[data-test-entry-title]');
@@ -543,7 +523,11 @@ module('Acceptance | index', function (hooks) {
       .exists('should show rollback');
     await click('[data-test-entry-edit-rollback]');
 
-    assert.equal(patchCount, 0, 'should not send PATCH entry');
+    assert.equal(
+      server.pretender.handledRequests.filterBy('method', 'PATCH').length,
+      0,
+      'should not send PATCH entry'
+    );
 
     entry.reload();
     assert.equal(

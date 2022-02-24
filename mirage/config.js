@@ -29,6 +29,7 @@ export default function (config) {
   return createServer({
     ...config,
     routes,
+    trackRequests: true
   });
 }
 

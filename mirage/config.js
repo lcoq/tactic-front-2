@@ -1,5 +1,6 @@
 import { Response } from 'miragejs';
 import { createServer } from 'miragejs';
+import getEntries from './routes/get-entries';
 
 export default function (config) {
   // These comments are here to help you get started. Feel free to delete them.
@@ -53,8 +54,10 @@ function routes() {
 
   this.get('/users');
 
-  this.get('/entries');
+  this.get('/entries', getEntries.default());
+  this.post('/entries');
   this.patch('/entries/:id');
+  this.delete('/entries/:id');
 
   this.get('/projects');
 }

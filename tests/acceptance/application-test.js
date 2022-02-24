@@ -6,6 +6,8 @@ import { setupUtils } from '../utils/setup';
 import { Response } from 'miragejs';
 import moment from 'moment';
 
+import mirageGetEntriesRoute from '../../mirage/routes/get-entries';
+
 function isCurrentWeekRequest(request, userId) {
   const params = request.queryParams;
   return (
@@ -69,12 +71,12 @@ module('Acceptance | application', function (hooks) {
 
     let done = assert.async();
 
-    this.server.get('/entries', (schema, request) => {
+    this.server.get('/entries', function (schema, request) {
       if (isCurrentWeekRequest(request, user.id)) {
         done();
         return schema.entries.find(weekEntries.mapBy('id'));
       } else {
-        return schema.entries.all();
+        return mirageGetEntriesRoute.default()(schema, request);
       }
     });
 
@@ -110,7 +112,7 @@ module('Acceptance | application', function (hooks) {
         done();
         return schema.entries.find(monthEntries.mapBy('id'));
       } else {
-        return schema.entries.all();
+        return mirageGetEntriesRoute.default()(schema, request);
       }
     });
 

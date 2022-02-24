@@ -582,5 +582,38 @@ module('Acceptance | index', function (hooks) {
     assert.notOk(server.db.entries.find(entry.id), 'should destroy entry');
   });
 
-  // TODO test DELETE, DELETE + rollback
+  test('deletes entry and rollback', async function (assert) {
+    /* Stub deferer service to use native timeout with "reasonable" delay.
+       This allows to test `rollback` on entry as `await` will not wait the
+       pending delete entry state to actually delete the entry */
+    const defererService = this.owner.lookup('service:deferer');
+    const initialDefererServiceUsesNativeTimeout =
+      defererService.usesNativeTimeout;
+    const initialDefererServiceWait = defererService.wait;
+    defererService.usesNativeTimeout = function (key) {
+      return key === 'mutable-record-state-manager:delete';
+    };
+    defererService.wait = function (key) {
+      return key === 'mutable-record-state-manager:delete'
+        ? 10
+        : defererService.waitsByKey[key];
+    };
+
+    const user = await this.utils.authenticate();
+    this.server.create('entry');
+    const entry = this.server.create('entry');
+    this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
+
+    await visit('/');
+    assert.dom('[data-test-entry-delete]').exists('should show delete action');
+
+    await click('[data-test-entry-delete]');
+
+    assert
+      .dom('[data-test-entry-edit-rollback]')
+      .exists('should show rollback');
+    await click('[data-test-entry-edit-rollback]');
+
+    assert.ok(server.db.entries.find(entry.id), 'should not have destroyed entry');
+  });
 });

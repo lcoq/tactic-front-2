@@ -282,10 +282,10 @@ module('Acceptance | index', function (hooks) {
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
     await visit('/');
-    await click('[data-test-entry-title]');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-title]`);
 
-    assert.dom('[data-test-entry-edit-title]').exists('should show title edit');
-    await fillIn('[data-test-entry-edit-title]', 'My new entry title');
+    assert.dom(`[data-test-entry="${entry.id}"] [data-test-entry-edit-title]`).exists('should show title edit');
+    await fillIn(`[data-test-entry="${entry.id}"] [data-test-entry-edit-title]`, 'My new entry title');
 
     await click('[data-test-header]'); // send focusout
 
@@ -303,12 +303,12 @@ module('Acceptance | index', function (hooks) {
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
     await visit('/');
-    await click('[data-test-entry-started-at]');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-started-at]`);
 
     assert
-      .dom('[data-test-entry-edit-started-at]')
+      .dom(`[data-test-entry="${entry.id}"] [data-test-entry-edit-started-at]`)
       .exists('should show started at edit');
-    await fillIn('[data-test-entry-edit-started-at]', '02:05');
+    await fillIn(`[data-test-entry="${entry.id}"] [data-test-entry-edit-started-at]`, '02:05');
 
     await click('[data-test-header]'); // send focusout
 
@@ -326,12 +326,12 @@ module('Acceptance | index', function (hooks) {
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
     await visit('/');
-    await click('[data-test-entry-stopped-at]');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-stopped-at]`);
 
     assert
-      .dom('[data-test-entry-edit-stopped-at]')
+      .dom(`[data-test-entry="${entry.id}"] [data-test-entry-edit-stopped-at]`)
       .exists('should show stopped at edit');
-    await fillIn('[data-test-entry-edit-stopped-at]', '02:05');
+    await fillIn(`[data-test-entry="${entry.id}"] [data-test-entry-edit-stopped-at]`, '02:05');
 
     await click('[data-test-header]'); // send focusout
 
@@ -357,12 +357,12 @@ module('Acceptance | index', function (hooks) {
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
     await visit('/');
-    await click('[data-test-entry-duration]');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-duration]`);
 
     assert
-      .dom('[data-test-entry-edit-duration]')
+      .dom(`[data-test-entry="${entry.id}"] [data-test-entry-edit-duration]`)
       .exists('should show duration edit');
-    await fillIn('[data-test-entry-edit-duration]', '00:08:00');
+    await fillIn(`[data-test-entry="${entry.id}"] [data-test-entry-edit-duration]`, '00:08:00');
 
     await click('[data-test-header]'); // send focusout
 
@@ -374,9 +374,7 @@ module('Acceptance | index', function (hooks) {
     );
   });
 
-  /// TODO restore test : actually it edit the running entry project instead of
-  // the one in the entries list
-  skip('updates project', async function (assert) {
+  test('updates project', async function (assert) {
     const user = await this.utils.authenticate();
     const entry = this.server.create('entry');
 
@@ -384,18 +382,18 @@ module('Acceptance | index', function (hooks) {
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
     await visit('/');
-    await click('[data-test-entry-project]');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-project]`);
 
     assert
-      .dom('[data-test-entry-edit-project]')
+      .dom(`[data-test-entry="${entry.id}"] [data-test-entry-edit-project]`)
       .exists('should show project edit');
-    await typeIn('[data-test-entry-edit-project]', 'Tacti');
+    await typeIn(`[data-test-entry="${entry.id}"] [data-test-entry-edit-project]`, 'Tacti');
 
     assert
-      .dom('[data-test-entry-edit-project-choice]')
+      .dom(`[data-test-entry="${entry.id}"] [data-test-entry-edit-project-choice]`)
       .exists('should show projects choice list');
 
-    await click('[data-test-entry-edit-project-choice]');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-edit-project-choice]`);
 
     entry.reload();
     assert.equal(entry.project.name, 'Tactic', 'should update entry project');
@@ -420,16 +418,16 @@ module('Acceptance | index', function (hooks) {
     await visit('/');
 
     assert
-      .dom('[data-test-entry-edit-date]')
+      .dom(`[data-test-entry="${entry.id}"] [data-test-entry-edit-date]`)
       .exists('should show edit date action');
-    await click('[data-test-entry-edit-date]');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-edit-date]`);
 
     assert
-      .dom('.ui-datepicker-calendar')
+      .dom(`[data-test-entry="${entry.id}"] .ui-datepicker-calendar`)
       .exists('should show datepicker calendar');
-    assert.dom('.ui-datepicker-today').exists('should show datepicker today');
+    assert.dom(`[data-test-entry="${entry.id}"] .ui-datepicker-today`).exists('should show datepicker today');
 
-    await click('.ui-datepicker-today a');
+    await click(`[data-test-entry="${entry.id}"] .ui-datepicker-today a`);
 
     entry.reload();
     assert.equal(
@@ -451,12 +449,12 @@ module('Acceptance | index', function (hooks) {
 
     await visit('/');
 
-    await click('[data-test-entry-title]');
-    assert.dom('[data-test-entry-edit-title]').exists('should show title edit');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-title]`);
+    assert.dom(`[data-test-entry="${entry.id}"] [data-test-entry-edit-title]`).exists('should show title edit');
 
-    await fillIn('[data-test-entry-edit-title]', 'My new entry title');
-    await fillIn('[data-test-entry-edit-started-at]', '02:05');
-    await fillIn('[data-test-entry-edit-stopped-at]', '03:06');
+    await fillIn(`[data-test-entry="${entry.id}"] [data-test-entry-edit-title]`, 'My new entry title');
+    await fillIn(`[data-test-entry="${entry.id}"] [data-test-entry-edit-started-at]`, '02:05');
+    await fillIn(`[data-test-entry="${entry.id}"] [data-test-entry-edit-stopped-at]`, '03:06');
     await click('[data-test-header]'); // send focusout
 
     entry.reload();
@@ -511,17 +509,17 @@ module('Acceptance | index', function (hooks) {
 
     await visit('/');
 
-    await click('[data-test-entry-title]');
-    await fillIn('[data-test-entry-edit-title]', 'My new entry title');
-    await fillIn('[data-test-entry-edit-started-at]', '02:05');
-    await fillIn('[data-test-entry-edit-stopped-at]', '03:06');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-title]`);
+    await fillIn(`[data-test-entry="${entry.id}"] [data-test-entry-edit-title]`, 'My new entry title');
+    await fillIn(`[data-test-entry="${entry.id}"] [data-test-entry-edit-started-at]`, '02:05');
+    await fillIn(`[data-test-entry="${entry.id}"] [data-test-entry-edit-stopped-at]`, '03:06');
 
     await click('[data-test-header]');
 
     assert
-      .dom('[data-test-entry-edit-rollback]')
+      .dom(`[data-test-entry="${entry.id}"] [data-test-entry-edit-rollback]`)
       .exists('should show rollback');
-    await click('[data-test-entry-edit-rollback]');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-edit-rollback]`);
 
     assert.equal(
       server.pretender.handledRequests.filterBy('method', 'PATCH').length,
@@ -557,11 +555,11 @@ module('Acceptance | index', function (hooks) {
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
     await visit('/');
-    assert.dom('[data-test-entry-delete]').exists('should show delete action');
+    assert.dom(`[data-test-entry="${entry.id}"] [data-test-entry-delete]`).exists('should show delete action');
 
     this.server.get('/entries', mirageGetEntriesRoute.default()); // needed to avoid sending the previously deleted entry
 
-    await click('[data-test-entry-delete]');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-delete]`);
 
     assert.notOk(server.db.entries.find(entry.id), 'should destroy entry');
   });
@@ -589,14 +587,14 @@ module('Acceptance | index', function (hooks) {
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
     await visit('/');
-    assert.dom('[data-test-entry-delete]').exists('should show delete action');
+    assert.dom(`[data-test-entry="${entry.id}"] [data-test-entry-delete]`).exists('should show delete action');
 
-    await click('[data-test-entry-delete]');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-delete]`);
 
     assert
-      .dom('[data-test-entry-edit-rollback]')
+      .dom(`[data-test-entry="${entry.id}"] [data-test-entry-edit-rollback]`)
       .exists('should show rollback');
-    await click('[data-test-entry-edit-rollback]');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-edit-rollback]`);
 
     assert.ok(server.db.entries.find(entry.id), 'should not have destroyed entry');
   });

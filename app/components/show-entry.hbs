@@ -3,7 +3,7 @@
   {{#unless this.rounding}}
     <div class="entry-actions no-print">
       {{#if this.isErrored}}
-        <a {{on "click" this.retrySaveOrDeleteEntry}} class="entry-action entry-action-retry touch">
+        <a {{on "click" this.retrySaveOrDeleteEntry}} class="entry-action entry-action-retry touch" data-test-entry-retry>
         </a>
       {{/if}}
       {{#if this.canRevert}}

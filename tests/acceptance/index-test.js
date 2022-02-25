@@ -13,13 +13,66 @@ import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 import { setupUtils } from '../utils/setup';
 import moment from 'moment';
+import { Response } from 'miragejs';
 
 import mirageGetEntriesRoute from '../../mirage/routes/get-entries';
+
+function setupStubs (hooks) {
+  hooks.beforeEach(function () {
+    this.stubbedCallbacks = [];
+  });
+  hooks.afterEach(function () {
+    this.stubbedCallbacks.forEach((callback) => callback());
+  });
+}
+
+function stub (target, methodName, replacement) {
+  const initial = target[methodName];
+  target[methodName] = replacement;
+  this.stubbedCallbacks.push(() => target[methodName] = initial);
+  return initial;
+}
+
+/* This stubs the deferer service by removing running entry clock updates.
+   This avoids infinite loop issue due to constant restart of the timer.
+ */
+function stubCreateEntryClock () {
+  const deferer = this.owner.lookup('service:deferer');
+  const initialLater = stub.call(this, deferer, 'later', function (key) {
+    if (key === 'create-entry:clock') {
+      return 12345;
+    } else {
+      initialLater.apply(deferer, arguments);
+    }
+  });
+}
+
+/* This stubs the deferer service to use native timeout with "reasonable" delay.
+   This allows to test `rollback` on entry as `await` will not wait the
+   pending save entry state to actually save the entry */
+function stubForNativeTimeoutOn (keyForNativeTimeout) {
+  const deferer = this.owner.lookup('service:deferer');
+  const initialUsesNativeTimeout = stub.call(this, deferer, 'usesNativeTimeout', function (key) {
+    if (key === keyForNativeTimeout) {
+      return true;
+    } else {
+      return initialUsesNativeTimeout.call(deferer);
+    }
+  });
+  const initialWait = stub.call(this, deferer, 'wait', function (key) {
+    if (key === keyForNativeTimeout) {
+      return 10;
+    } else {
+      return initialWait.call(deferer);
+    }
+  });
+}
 
 module('Acceptance | index', function (hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
   setupUtils(hooks);
+  setupStubs(hooks);
 
   test('redirects to login when not authenticated', async function (assert) {
     await visit('/');
@@ -483,21 +536,7 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('updates entry and rollback', async function (assert) {
-    /* Stub deferer service to use native timeout with "reasonable" delay.
-       This allows to test `rollback` on entry as `await` will not wait the
-       pending save entry state to actually save the entry */
-    const defererService = this.owner.lookup('service:deferer');
-    const initialDefererServiceUsesNativeTimeout =
-      defererService.usesNativeTimeout;
-    const initialDefererServiceWait = defererService.wait;
-    defererService.usesNativeTimeout = function (key) {
-      return key === 'mutable-record-state-manager:save';
-    };
-    defererService.wait = function (key) {
-      return key === 'mutable-record-state-manager:save'
-        ? 10
-        : defererService.waitsByKey[key];
-    };
+    stubForNativeTimeoutOn.call(this, 'mutable-record-state-manager:save');
 
     const user = await this.utils.authenticate();
     const entry = this.server.create('entry', {
@@ -543,9 +582,6 @@ module('Acceptance | index', function (hooks) {
       '2022-02-22T18:50:00.000Z',
       'should not have updated entry stopped at'
     );
-
-    defererService.usesNativeTimeout = initialDefererServiceUsesNativeTimeout;
-    defererService.wait = initialDefererServiceWait;
   });
 
   test('deletes entry', async function (assert) {
@@ -561,6 +597,7 @@ module('Acceptance | index', function (hooks) {
 
     await click(`[data-test-entry="${entry.id}"] [data-test-entry-delete]`);
 
+    assert.dom(`[data-test-entry="${entry.id}"]`).doesNotExist('should remove entry from list');
     assert.notOk(server.db.entries.find(entry.id), 'should destroy entry');
   });
 
@@ -596,19 +633,62 @@ module('Acceptance | index', function (hooks) {
       .exists('should show rollback');
     await click(`[data-test-entry="${entry.id}"] [data-test-entry-edit-rollback]`);
 
+    assert.dom(`[data-test-entry="${entry.id}"]`).exists('should keep entry in list');
     assert.ok(server.db.entries.find(entry.id), 'should not have destroyed entry');
 
     defererService.usesNativeTimeout = initialDefererServiceUsesNativeTimeout;
     defererService.wait = initialDefererServiceWait;
   });
 
+  test('allows to retry entry update on server error', async function (assert) {
+    const user = await this.utils.authenticate();
+    const entry = this.server.create('entry');
+    this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
+    this.server.patch('/entries/:id', () => new Response(500, {}, {}));
+
+    await visit('/');
+    assert.dom(`[data-test-entry="${entry.id}"] [data-test-entry-retry]`).doesNotExist('should not show retry action');
+
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-title]`);
+    await fillIn(`[data-test-entry="${entry.id}"] [data-test-entry-edit-title]`, 'My new entry title');
+    await click('[data-test-header]'); // send focusout
+    assert.dom('[data-test-entry-retry]').exists('should show retry action');
+
+    this.server.patch('/entries/:id');
+    await click('[data-test-entry-retry]');
+    assert.dom('[data-test-entry-retry]').doesNotExist('should no longer show retry action');
+
+    entry.reload();
+    assert.equal(
+      entry.title,
+      'My new entry title',
+      'should update entry title'
+    );
+  });
+
+  test('allows to retry entry deletion on server error', async function (assert) {
+    const user = await this.utils.authenticate();
+    const entry = this.server.create('entry');
+    this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
+    this.server.delete('/entries/:id', () => new Response(500, {}, {}));
+
+    await visit('/');
+    assert.dom(`[data-test-entry="${entry.id}"] [data-test-entry-retry]`).doesNotExist('should not show retry action');
+
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-delete]`);
+    assert.dom('[data-test-entry-retry]').exists('should show retry action');
+
+    this.server.get('/entries', mirageGetEntriesRoute.default()); // needed to avoid sending the previously deleted entry
+
+    this.server.delete('/entries/:id');
+    await click('[data-test-entry-retry]');
+    assert.dom('[data-test-entry-retry]').doesNotExist('should no longer show retry action');
+
+    assert.notOk(server.db.entries.find(entry.id), 'should destroy entry');
+  });
+
   test('starts entry on start click', async function (assert) {
-    /* avoid running entry clock updates by stubbing the deferer */
-    const deferer = this.owner.lookup('service:deferer');
-    const initialDeferer = { later: deferer.later };
-    deferer.later = function (key) {
-      return (key === 'create-entry:clock') ? 12345 : initialDeferer.later.apply(deferer, arguments);
-    };
+    stubCreateEntryClock.call(this);
 
     const user = await this.utils.authenticate();
     await visit('/');
@@ -618,17 +698,10 @@ module('Acceptance | index', function (hooks) {
     assert.equal(server.db.entries.length, 1, 'should have created entry');
     assert.ok(server.db.entries[0].startedAt, 'should have set entry started at');
     assert.notOk(server.db.entries[0].stoppedAt, 'should not have stopped entry');
-
-    deferer.later = initialDeferer.later;
   });
 
   test('starts entry on title type', async function (assert) {
-    /* avoid running entry clock updates by stubbing the deferer */
-    const deferer = this.owner.lookup('service:deferer');
-    const initialDeferer = { later: deferer.later };
-    deferer.later = function (key) {
-      return (key === 'create-entry:clock') ? 12345 : initialDeferer.later.apply(deferer, arguments);
-    };
+    stubCreateEntryClock.call(this);
 
     const user = await this.utils.authenticate();
     await visit('/');
@@ -639,17 +712,10 @@ module('Acceptance | index', function (hooks) {
     assert.ok(server.db.entries[0].startedAt, 'should have set entry started at');
     assert.equal(server.db.entries[0].title, "My entry title", 'should have set entry title');
     assert.notOk(server.db.entries[0].stoppedAt, 'should not have stopped entry');
-
-    deferer.later = initialDeferer.later;
   });
 
   test('starts entry on project search type', async function (assert) {
-    /* avoid running entry clock updates by stubbing the deferer */
-    const deferer = this.owner.lookup('service:deferer');
-    const initialDeferer = { later: deferer.later };
-    deferer.later = function (key) {
-      return (key === 'create-entry:clock') ? 12345 : initialDeferer.later.apply(deferer, arguments);
-    };
+    stubCreateEntryClock.call(this);
 
     const project = this.server.create('project', { name: "Tactic" })
 
@@ -669,17 +735,10 @@ module('Acceptance | index', function (hooks) {
 
     await click(`[data-test-running-entry] [data-test-entry-edit-project-choice]`);
     assert.equal(server.db.entries[0].projectId, `${project.id}`, 'should set project');
-
-    deferer.later = initialDeferer.later;
   });
 
   test('loads the running entry when it exists', async function (assert) {
-    /* avoid running entry clock updates by stubbing the deferer */
-    const deferer = this.owner.lookup('service:deferer');
-    const initialDeferer = { later: deferer.later };
-    deferer.later = function (key) {
-      return (key === 'create-entry:clock') ? 12345 : initialDeferer.later.apply(deferer, arguments);
-    };
+    stubCreateEntryClock.call(this);
 
     const user = await this.utils.authenticate();
     const project = this.server.create('project', { name: "Tactic" });
@@ -698,6 +757,31 @@ module('Acceptance | index', function (hooks) {
     assert.dom(`[data-test-running-entry] [data-test-entry-edit-project]`).hasValue('Tactic', 'should set running entry project name');
     assert.dom(`[data-test-running-entry] [data-test-running-entry-duration]`).exists('should show running entry duration');
     assert.dom(`[data-test-running-entry] [data-test-running-entry-duration]`).includesText('02:', 'should compute running entry duration');
+  });
+
+  test('stops the running entry', async function (assert) {
+    stubCreateEntryClock.call(this);
+
+    const user = await this.utils.authenticate();
+    const project = this.server.create('project', { name: "Tactic" });
+    const runningEntry = this.server.create('entry', {
+      title: "My running entry",
+      project: project,
+      startedAt: moment().subtract(2, 'h').subtract(1, 'm').toDate()
+    }, 'running');
+
+    this.server.get('/entries', mirageGetEntriesRoute.runningEntry(runningEntry));
+
+    await visit('/');
+    await click(`[data-test-stop-entry]`);
+
+    assert.dom(`[data-test-start-entry]`).exists('should show start button after stop');
+
+    runningEntry.reload();
+    assert.ok(runningEntry.stoppedAt, 'should set stopped at on running entry');
+
+    assert.dom(`[data-test-entry="${runningEntry.id}"]`).exists('should show stopped entry in list');
+    assert.dom(`[data-test-entry="${runningEntry.id}"] [data-test-entry-title]`).hasText('My running entry', 'should show stopped entry title in list');
   });
 
 });

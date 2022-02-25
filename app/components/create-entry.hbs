@@ -1,4 +1,4 @@
-<div class="entry-create {{if this.isSaveErrored "errored"}}">
+<div class="entry-create {{if this.isSaveErrored "errored"}}" data-test-running-entry>
   <div class="entry-actions no-print">
     {{#if this.isSaveErrored}}
       <a {{on "click" this.retrySaveEntry}} class="entry-action entry-action-retry touch">
@@ -9,7 +9,8 @@
     @value={{this.entry.title}}
     class="entry-create-title text-input"
     placeholder="What are you working on ?"
-    {{on "keyup" this.startTimerOrTriggerUpdate}} />
+    {{on "keyup" this.startTimerOrTriggerUpdate}}
+    data-test-running-entry-title />
   <div class="entry-create-project-container">
      <EntryChooseProject
        @projectName={{this.projectName}}
@@ -22,8 +23,8 @@
     {{if this.isStarted this.entryDuration "00:00:00"}}
   </div>
   {{#if this.isStarted}}
-    <button {{on "click" this.stopTimer}} class="entry-create-stop touch">Stop</button>
+    <button {{on "click" this.stopTimer}} class="entry-create-stop touch" data-test-stop-entry>Stop</button>
   {{else}}
-    <button {{on "click" this.startTimer}} class="entry-create-start touch">Start</button>
+    <button {{on "click" this.startTimer}} class="entry-create-start touch" data-test-start-entry>Start</button>
   {{/if}}
 </div>

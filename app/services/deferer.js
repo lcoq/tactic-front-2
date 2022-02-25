@@ -1,11 +1,12 @@
 import Service from '@ember/service';
-import { later, cancel } from '@ember/runloop';
+import { debounce, later, cancel } from '@ember/runloop';
 
 import ENV from '../config/environment';
 const isTest = ENV.environment === 'test';
 const isntTest = !isTest;
 
-const ENTRY_SAVE_DELAY = isTest ? 5 : 3000;
+const TEST_DELAY = 5;
+const ENTRY_SAVE_DELAY = isTest ? TEST_DELAY : 3000;
 
 export default class DefererService extends Service {
   get waitsByKey() {
@@ -13,13 +14,20 @@ export default class DefererService extends Service {
       'mutable-record-state-manager:save': ENTRY_SAVE_DELAY,
       'mutable-record-state-manager:delete': ENTRY_SAVE_DELAY,
       'running-entry-state-manager:save': ENTRY_SAVE_DELAY,
-      'create-entry:clock': isTest ? 5 : 500
+      'create-entry:clock': isTest ? TEST_DELAY : 500,
+      'entry-choose-project:clear': isTest ? TEST_DELAY : 200,
+      'entry-choose-project:search': isTest ? TEST_DELAY : 500
     };
   }
 
   later(key, target, method) {
     const wait = this.wait(key);
     return this._later(key, target, method, wait);
+  }
+
+  debounce(key, target, method) {
+    const delay = this.wait(key);
+    return this._debounce(key, target, method, delay);
   }
 
   cancel(key, timer) {
@@ -44,6 +52,10 @@ export default class DefererService extends Service {
     } else {
       return later(target, method, wait);
     }
+  }
+
+  _debounce(key, target, method, delay) {
+    return debounce(target, method, delay);
   }
 
   _cancel(key, timer) {

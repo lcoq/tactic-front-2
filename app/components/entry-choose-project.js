@@ -2,13 +2,12 @@ import Component from '@glimmer/component';
 import { action, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { isEmpty, isPresent } from '@ember/utils';
-import { debounce, later } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
-
-import ENV from '../config/environment';
-const SEARCH_DELAY_MS = ENV.environment !== 'test' ? 500 : 50;
+import { service } from '@ember/service';
 
 export default class EntryChooseProjectComponent extends Component {
+  @service deferer;
+
   @tracked projects = null;
   @tracked hoveredProject = null;
 
@@ -48,14 +47,14 @@ export default class EntryChooseProjectComponent extends Component {
   }
 
   @action clearProjects() {
-    later(
+    this.deferer.later(
+      'entry-choose-project:clear',
       this,
       () => {
         if (this.isDestroying || this.isDestroyed) return;
         this.projects = null;
-      },
-      200
-    );
+      }
+    )
   }
 
   @action keyPressed(event) {
@@ -67,7 +66,7 @@ export default class EntryChooseProjectComponent extends Component {
       this._moveHoveredProject(-1);
     } else {
       this.args.keyPressed?.();
-      debounce(this, this._searchProjects, SEARCH_DELAY_MS);
+      this.deferer.debounce('entry-choose-project:seearch', this, this._searchProjects);
     }
   }
 

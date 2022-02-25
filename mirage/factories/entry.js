@@ -28,4 +28,10 @@ export default Factory.extend({
       return null;
     },
   }),
+
+  running: trait({
+    stoppedAt() {
+      return null;
+    }
+  })
 });

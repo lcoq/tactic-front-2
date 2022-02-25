@@ -597,5 +597,104 @@ module('Acceptance | index', function (hooks) {
     await click(`[data-test-entry="${entry.id}"] [data-test-entry-edit-rollback]`);
 
     assert.ok(server.db.entries.find(entry.id), 'should not have destroyed entry');
+
+    defererService.usesNativeTimeout = initialDefererServiceUsesNativeTimeout;
+    defererService.wait = initialDefererServiceWait;
   });
+
+  test('starts entry on start click', async function (assert) {
+    /* avoid running entry clock updates by stubbing the deferer */
+    const deferer = this.owner.lookup('service:deferer');
+    const initialDeferer = { later: deferer.later };
+    deferer.later = function (key) {
+      return (key === 'create-entry:clock') ? 12345 : initialDeferer.later.apply(deferer, arguments);
+    };
+
+    const user = await this.utils.authenticate();
+    await visit('/');
+    assert.dom(`[data-test-start-entry]`).exists('should show start button');
+    await click(`[data-test-start-entry]`);
+
+    assert.equal(server.db.entries.length, 1, 'should have created entry');
+    assert.ok(server.db.entries[0].startedAt, 'should have set entry started at');
+    assert.notOk(server.db.entries[0].stoppedAt, 'should not have stopped entry');
+
+    deferer.later = initialDeferer.later;
+  });
+
+  test('starts entry on title type', async function (assert) {
+    /* avoid running entry clock updates by stubbing the deferer */
+    const deferer = this.owner.lookup('service:deferer');
+    const initialDeferer = { later: deferer.later };
+    deferer.later = function (key) {
+      return (key === 'create-entry:clock') ? 12345 : initialDeferer.later.apply(deferer, arguments);
+    };
+
+    const user = await this.utils.authenticate();
+    await visit('/');
+    assert.dom(`[data-test-running-entry-title]`).exists('should show running entry title input');
+    await typeIn(`[data-test-running-entry-title]`, "My entry title");
+
+    assert.equal(server.db.entries.length, 1, 'should have created entry');
+    assert.ok(server.db.entries[0].startedAt, 'should have set entry started at');
+    assert.equal(server.db.entries[0].title, "My entry title", 'should have set entry title');
+    assert.notOk(server.db.entries[0].stoppedAt, 'should not have stopped entry');
+
+    deferer.later = initialDeferer.later;
+  });
+
+  test('starts entry on project search type', async function (assert) {
+    /* avoid running entry clock updates by stubbing the deferer */
+    const deferer = this.owner.lookup('service:deferer');
+    const initialDeferer = { later: deferer.later };
+    deferer.later = function (key) {
+      return (key === 'create-entry:clock') ? 12345 : initialDeferer.later.apply(deferer, arguments);
+    };
+
+    const project = this.server.create('project', { name: "Tactic" })
+
+    const user = await this.utils.authenticate();
+    await visit('/');
+    assert.dom(`[data-test-running-entry] [data-test-entry-edit-project]`).exists('should show running entry project input');
+
+    await typeIn(`[data-test-running-entry] [data-test-entry-edit-project]`, "Tacti");
+
+    assert.equal(server.db.entries.length, 1, 'should have created entry');
+    assert.ok(server.db.entries[0].startedAt, 'should have set entry started at');
+    assert.notOk(server.db.entries[0].stoppedAt, 'should not have stopped entry');
+
+    assert
+      .dom(`[data-test-running-entry] [data-test-entry-edit-project-choice]`)
+      .exists('should show projects choice list');
+
+    await click(`[data-test-running-entry] [data-test-entry-edit-project-choice]`);
+    assert.equal(server.db.entries[0].projectId, `${project.id}`, 'should set project');
+
+    deferer.later = initialDeferer.later;
+  });
+
+  test('loads the running entry when it exists', async function (assert) {
+    /* avoid running entry clock updates by stubbing the deferer */
+    const deferer = this.owner.lookup('service:deferer');
+    const initialDeferer = { later: deferer.later };
+    deferer.later = function (key) {
+      return (key === 'create-entry:clock') ? 12345 : initialDeferer.later.apply(deferer, arguments);
+    };
+
+    const user = await this.utils.authenticate();
+    const project = this.server.create('project', { name: "Tactic" });
+    const runningEntry = this.server.create('entry', {
+      title: "My running entry",
+      project: project
+    }, 'running');
+
+    this.server.get('/entries', mirageGetEntriesRoute.runningEntry(runningEntry));
+
+    await visit('/');
+    assert.dom(`[data-test-start-entry]`).doesNotExist('should not show start button');
+    assert.dom(`[data-test-stop-entry]`).exists('should show stop button');
+    assert.dom(`[data-test-running-entry] [data-test-running-entry-title]`).hasValue('My running entry', 'should set running entry title');
+    assert.dom(`[data-test-running-entry] [data-test-entry-edit-project]`).hasValue('Tactic', 'should set running entry project name');
+  });
+
 });

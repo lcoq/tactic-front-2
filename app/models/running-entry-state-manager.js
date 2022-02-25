@@ -67,7 +67,9 @@ class PendingSaveStateModel extends StateModel {
 
   _save() {
     this._saveTimer = null;
-    const save = () => { this.source.save() };
+    const save = () => {
+      return this.source.save();
+    };
     const newPromise = this._previousSavePromise.
       then(save, save).
       then(() => {

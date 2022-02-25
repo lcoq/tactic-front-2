@@ -685,7 +685,8 @@ module('Acceptance | index', function (hooks) {
     const project = this.server.create('project', { name: "Tactic" });
     const runningEntry = this.server.create('entry', {
       title: "My running entry",
-      project: project
+      project: project,
+      startedAt: moment().subtract(2, 'h').subtract(1, 'm').toDate()
     }, 'running');
 
     this.server.get('/entries', mirageGetEntriesRoute.runningEntry(runningEntry));
@@ -695,6 +696,8 @@ module('Acceptance | index', function (hooks) {
     assert.dom(`[data-test-stop-entry]`).exists('should show stop button');
     assert.dom(`[data-test-running-entry] [data-test-running-entry-title]`).hasValue('My running entry', 'should set running entry title');
     assert.dom(`[data-test-running-entry] [data-test-entry-edit-project]`).hasValue('Tactic', 'should set running entry project name');
+    assert.dom(`[data-test-running-entry] [data-test-running-entry-duration]`).exists('should show running entry duration');
+    assert.dom(`[data-test-running-entry] [data-test-running-entry-duration]`).includesText('02:', 'should compute running entry duration');
   });
 
 });

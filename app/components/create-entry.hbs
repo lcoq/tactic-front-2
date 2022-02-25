@@ -19,7 +19,7 @@
        @selectProject={{this.selectProject}}
        @keyPressed={{this.startTimer}} />
   </div>
-  <div class="entry-create-duration touch">
+  <div class="entry-create-duration touch" data-test-running-entry-duration>
     {{if this.isStarted this.entryDuration "00:00:00"}}
   </div>
   {{#if this.isStarted}}

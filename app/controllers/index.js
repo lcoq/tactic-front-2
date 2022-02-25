@@ -47,7 +47,11 @@ export default class IndexController extends Controller {
   }
 
   @action restartEntry(entry) {
-    // TODO
+    const before = this.newEntry.isStarted ? this._stopNewEntry() : resolve();
+    before.finally(() => {
+      this._buildNewEntry({ title: entry.title, project: entry.project });
+      this.startTimer();
+    });
   }
 
   @action startTimer() {

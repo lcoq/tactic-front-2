@@ -784,4 +784,79 @@ module('Acceptance | index', function (hooks) {
     assert.dom(`[data-test-entry="${runningEntry.id}"] [data-test-entry-title]`).hasText('My running entry', 'should show stopped entry title in list');
   });
 
+  test('restarts entry', async function (assert) {
+    stubCreateEntryClock.call(this);
+
+    const user = await this.utils.authenticate();
+    const project = this.server.create('project', { name: "Tactic" });
+    const entry = this.server.create('entry', {
+      title: "My old entry title",
+      project: project
+    });
+    this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
+
+    await visit('/');
+    assert.dom(`[data-test-entry="${entry.id}"] [data-test-entry-restart]`).exists('should show restart action');
+
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-restart]`);
+    assert.dom(`[data-test-stop-entry]`).exists('should show stop button');
+    assert.dom(`[data-test-running-entry] [data-test-running-entry-title]`).hasValue('My old entry title', 'should set running entry title');
+    assert.dom(`[data-test-running-entry] [data-test-entry-edit-project]`).hasValue('Tactic', 'should set running entry project name');
+  });
+
+  test('restarts entry stop the running and restart the entry', async function (assert) {
+    stubCreateEntryClock.call(this);
+
+    const user = await this.utils.authenticate();
+    const runningEntry = this.server.create('entry', 'running');
+    this.server.get('/entries', mirageGetEntriesRoute.runningEntry(runningEntry));
+
+    const project = this.server.create('project', { name: "Tactic" });
+    const entry = this.server.create('entry', {
+      title: "My old entry title",
+      project: project
+    });
+
+    await visit('/');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-restart]`);
+
+    runningEntry.reload();
+    assert.ok(runningEntry.stoppedAt, 'should stop the previously running entry');
+
+    assert.dom(`[data-test-stop-entry]`).exists('should show stop button');
+    assert.dom(`[data-test-running-entry] [data-test-running-entry-title]`).hasValue('My old entry title', 'should set running entry title');
+    assert.dom(`[data-test-running-entry] [data-test-entry-edit-project]`).hasValue('Tactic', 'should set running entry project name');
+
+    const newEntry = this.server.db.entries.findBy({ stoppedAt: null });
+    assert.ok(newEntry, 'should start new entry');
+    assert.equal(newEntry.title, 'My old entry title', 'should set new entry title');
+    assert.equal(newEntry.projectId, project.id, 'should set new entry project');
+  });
+
+  test('restarts entry stop the running and restart the entry even when the stop results in server error', async function (assert) {
+    stubCreateEntryClock.call(this);
+
+    const user = await this.utils.authenticate();
+    const runningEntry = this.server.create('entry', 'running');
+    this.server.get('/entries', mirageGetEntriesRoute.runningEntry(runningEntry));
+
+    const project = this.server.create('project', { name: "Tactic" });
+    const entry = this.server.create('entry', {
+      title: "My old entry title",
+      project: project
+    });
+
+    this.server.patch('/entries/:id', () => new Response(500, {}, {}));
+
+    await visit('/');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-restart]`);
+
+    assert.dom(`[data-test-entry="${runningEntry.id}"]`).exists('should move the running entry to the entry list');
+    assert.dom(`[data-test-entry="${runningEntry.id}"] [data-test-entry-retry]`).exists('should show retry on the entry that cannot be stopped');
+
+    assert.dom(`[data-test-stop-entry]`).exists('should show stop button');
+    assert.dom(`[data-test-running-entry] [data-test-running-entry-title]`).hasValue('My old entry title', 'should set running entry title');
+    assert.dom(`[data-test-running-entry] [data-test-entry-edit-project]`).hasValue('Tactic', 'should set running entry project name');
+  });
+
 });

@@ -7,6 +7,7 @@ export default class IndexRoute extends Route {
   @service store;
   @service router;
   @service authentication;
+  @service runningEntry;
 
   beforeModel() {
     if (this.authentication.notAuthenticated) {
@@ -19,13 +20,9 @@ export default class IndexRoute extends Route {
       .query('entry', { include: 'project' })
       .then((entries) => EntryGroupByDayList.create({ entries: entries.toArray() }));
 
-    const runningEntryPromise = this.store
-      .queryRecord('entry', { filter: { running: 1 }, include: 'project' })
-      .then((entry) => entry ?? this.store.createRecord('entry'));
-
     return hash({
       entryList: entryListPromise,
-      newEntry: runningEntryPromise
+      _runningEntry: this.runningEntry.promise
     });
   }
 }

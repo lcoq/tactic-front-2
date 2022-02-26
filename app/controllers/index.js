@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { action, computed } from '@ember/object';
-import { reads } from '@ember/object/computed';
+import { reads, alias } from '@ember/object/computed';
 import { service } from '@ember/service';
 import { isEmpty } from '@ember/utils';
 import { resolve, reject } from 'rsvp';
@@ -10,11 +10,12 @@ import { set } from '@ember/object';
 export default class IndexController extends Controller {
   @service store;
   @service userSummary;
+  @service runningEntry;
 
   waitingEntries = [];
 
-  @reads('model.newEntry') newEntry;
   @reads('model.entryList') entryList;
+  @alias('runningEntry.entry') newEntry;
 
   @computed('newEntry')
   get newEntryStateManager() {
@@ -124,7 +125,7 @@ export default class IndexController extends Controller {
 
   _buildNewEntry(attributes) {
     const entry = this.store.createRecord('entry', attributes ?? {});
-    set(this, 'model.newEntry', entry);
+    set(this, 'newEntry', entry);
   }
 
   /* We need to save the entry that is still running in the server before saving

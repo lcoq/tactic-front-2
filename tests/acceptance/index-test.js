@@ -683,6 +683,31 @@ module('Acceptance | index', function (hooks) {
     assert.notOk(server.db.entries[0].stoppedAt, 'should not have stopped entry');
   });
 
+  test('starts entry update the favicon', async function (assert) {
+    stubCreateEntryClock.call(this);
+
+    const user = await this.utils.authenticate();
+    await visit('/');
+
+    /* `assert.dom` does not work here, probably because this is "outside" of
+       the Ember app root element */
+    const $favicon16 = $('[data-test-favicon-16]');
+    const $favicon32 = $('[data-test-favicon-32]');
+
+    assert.equal($favicon16.length, 1, 'should have 16x16 favicon');
+    assert.equal($favicon16.prop('sizes'), '16x16', 'should have 16x16 favicon size attribute');
+    assert.equal($favicon16.attr('href'), '/assets/images/favicon-16x16.png', 'should have non-started 16x16 favicon');
+
+    assert.equal($favicon32.length, 1, 'should have 32x32 favicon');
+    assert.equal($favicon32.prop('sizes'), '32x32', 'should have 32x32 favicon size attribute');
+    assert.equal($favicon32.attr('href'), '/assets/images/favicon-32x32.png', 'should have non-started 32x32 favicon');
+
+    await click(`[data-test-start-entry]`);
+
+    assert.equal($favicon16.attr('href'), '/assets/images/favicon-started-16x16.png', 'should have started 16x16 favicon after start');
+    assert.equal($favicon32.attr('href'), '/assets/images/favicon-started-32x32.png', 'should have started 32x32 favicon after start');
+  });
+
   test('starts entry on title type', async function (assert) {
     stubCreateEntryClock.call(this);
 

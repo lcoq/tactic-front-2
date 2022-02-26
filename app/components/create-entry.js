@@ -69,6 +69,10 @@ export default class CreateEntryComponent extends Component {
 
   _updateClock() {
     this.clock = new Date();
-    this.clockTimer = this.deferer.later('create-entry:clock', this, this._updateClock);
+    this.clockTimer = this.deferer.later(
+      'create-entry:clock',
+      this,
+      this._updateClock
+    );
   }
 }

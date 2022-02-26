@@ -31,7 +31,7 @@ class ClearStateModel extends StateModel {
       },
       update() {
         this.transitionTo('pendingSave');
-      }
+      },
     };
   }
 }
@@ -65,7 +65,7 @@ class PendingSaveStateModel extends StateModel {
         this._cancelTimer();
         this.entry.stop();
         return this._save();
-      }
+      },
     };
   }
 
@@ -74,15 +74,16 @@ class PendingSaveStateModel extends StateModel {
     const save = () => {
       return this.source.save();
     };
-    const newPromise = this._previousSavePromise.
-      then(save, save).
-      then(() => {
+    const newPromise = this._previousSavePromise.then(save, save).then(
+      () => {
         this.emit('didSave');
         this.transitionTo('clear'); // TODO prevent transition clear -> clear ?
-      }, () => {
+      },
+      () => {
         this.transitionTo('saveError');
         return reject();
-      });
+      }
+    );
     this._previousSavePromise = newPromise;
     return newPromise;
   }
@@ -121,7 +122,7 @@ class SaveErrorStateModel extends StateModel {
         this.entry.stop();
         this.transitionTo('pendingSave');
         return this.sendToCurrentState('forceSave');
-      }
+      },
     };
   }
 }
@@ -137,11 +138,7 @@ export default class RunningEntryStateManagerModel extends StateManagerModel {
   }
 
   get stateClasses() {
-    return [
-      ClearStateModel,
-      PendingSaveStateModel,
-      SaveErrorStateModel
-    ];
+    return [ClearStateModel, PendingSaveStateModel, SaveErrorStateModel];
   }
 
   instantiateStateClass(klass) {

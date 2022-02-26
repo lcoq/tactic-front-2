@@ -15,7 +15,7 @@ export default {
       } else {
         return schema.entries.find(entries.mapBy('id'));
       }
-    }
+    };
   },
   runningEntry: function (entry) {
     return function (schema, request) {
@@ -24,6 +24,6 @@ export default {
       } else {
         return schema.entries.where((e) => !!e.stoppedAt);
       }
-    }
-  }
-}
+    };
+  },
+};

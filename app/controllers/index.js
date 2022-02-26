@@ -56,9 +56,10 @@ export default class IndexController extends Controller {
   }
 
   @action startTimer() {
-    this._saveEntryStoppedOnlyLocally()
-      .then(() => this.newEntryStateManager.send('start'),
-            () => this.newEntryStateManager.send('startWithSaveError'));
+    this._saveEntryStoppedOnlyLocally().then(
+      () => this.newEntryStateManager.send('start'),
+      () => this.newEntryStateManager.send('startWithSaveError')
+    );
     this._updateIcon('started');
   }
 
@@ -75,7 +76,7 @@ export default class IndexController extends Controller {
     const setProject = () => {
       entry.project = project;
       this.didUpdateNewEntry();
-    }
+    };
     if (entry.isSaving) {
       stateManager.once('didSave', setProject, this);
     } else {
@@ -84,13 +85,15 @@ export default class IndexController extends Controller {
   }
 
   @action didUpdateNewEntry() {
-    this._saveEntryStoppedOnlyLocally()
-      .then(() => this.newEntryStateManager.send('update'));
+    this._saveEntryStoppedOnlyLocally().then(() =>
+      this.newEntryStateManager.send('update')
+    );
   }
 
   @action retrySaveNewEntry() {
-    this._saveEntryStoppedOnlyLocally()
-      .then(() => this.newEntryStateManager.send('retry'));
+    this._saveEntryStoppedOnlyLocally().then(() =>
+      this.newEntryStateManager.send('retry')
+    );
   }
 
   @action searchProjects(query) {
@@ -105,15 +108,18 @@ export default class IndexController extends Controller {
     const entry = this.newEntry;
     return stateManager
       .send('stop')
-      .then(() => {
-        this._reloadOrScheduleUserSummary();
-      }, () => {
-        if (stateManager.isSaveErrored) {
-          // TODO move new entry state manager logic to the entry state manager ?
-          entry.stateManager.transitionTo('saveError');
+      .then(
+        () => {
+          this._reloadOrScheduleUserSummary();
+        },
+        () => {
+          if (stateManager.isSaveErrored) {
+            // TODO move new entry state manager logic to the entry state manager ?
+            entry.stateManager.transitionTo('saveError');
+          }
+          return reject();
         }
-        return reject();
-      })
+      )
       .finally(() => {
         this.entryList.addEntry(entry);
       });
@@ -131,15 +137,17 @@ export default class IndexController extends Controller {
   /* We need to save the entry that is still running in the server before saving
      new running entry because there can't be 2 running entries server-side at
      the same time. */
-  _saveEntryStoppedOnlyLocally () {
+  _saveEntryStoppedOnlyLocally() {
     const entryStoppedOnlyLocally = this.entryList.entries.find((e) => {
       const changedAttributes = e.changedAttributes();
-      return changedAttributes.stoppedAt && changedAttributes.stoppedAt[0] === null;
+      return (
+        changedAttributes.stoppedAt && changedAttributes.stoppedAt[0] === null
+      );
     });
     const promise = entryStoppedOnlyLocally
-          ? entryStoppedOnlyLocally.stateManager.send('retry')
-          : resolve();
-    return promise
+      ? entryStoppedOnlyLocally.stateManager.send('retry')
+      : resolve();
+    return promise;
   }
 
   _reloadOrScheduleUserSummary() {
@@ -158,5 +166,4 @@ export default class IndexController extends Controller {
   _scheduleReloadUserSummary() {
     this.shouldUpdateSummary = true;
   }
-
 }

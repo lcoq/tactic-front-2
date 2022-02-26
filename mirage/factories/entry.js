@@ -32,6 +32,6 @@ export default Factory.extend({
   running: trait({
     stoppedAt() {
       return null;
-    }
-  })
+    },
+  }),
 });

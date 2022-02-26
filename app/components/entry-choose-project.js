@@ -47,14 +47,10 @@ export default class EntryChooseProjectComponent extends Component {
   }
 
   @action clearProjects() {
-    this.deferer.later(
-      'entry-choose-project:clear',
-      this,
-      () => {
-        if (this.isDestroying || this.isDestroyed) return;
-        this.projects = null;
-      }
-    )
+    this.deferer.later('entry-choose-project:clear', this, () => {
+      if (this.isDestroying || this.isDestroyed) return;
+      this.projects = null;
+    });
   }
 
   @action keyPressed(event) {
@@ -66,7 +62,11 @@ export default class EntryChooseProjectComponent extends Component {
       this._moveHoveredProject(-1);
     } else {
       this.args.keyPressed?.();
-      this.deferer.debounce('entry-choose-project:seearch', this, this._searchProjects);
+      this.deferer.debounce(
+        'entry-choose-project:seearch',
+        this,
+        this._searchProjects
+      );
     }
   }
 

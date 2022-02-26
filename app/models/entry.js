@@ -39,12 +39,12 @@ export default class EntryModel extends Model {
 
   start() {
     if (!this.isStarted) {
-      this.startedAt = new Date();
+      set(this, 'startedAt', new Date());
     }
   }
 
   stop() {
-    this.stoppedAt = new Date();
+    set(this, 'stoppedAt', new Date());
   }
 
   updateToDate(newDate) {

@@ -16,7 +16,7 @@ export default class DefererService extends Service {
       'running-entry-state-manager:save': ENTRY_SAVE_DELAY,
       'create-entry:clock': isTest ? TEST_DELAY : 500,
       'entry-choose-project:clear': isTest ? TEST_DELAY : 200,
-      'entry-choose-project:search': isTest ? TEST_DELAY : 500
+      'entry-choose-project:search': isTest ? TEST_DELAY : 500,
     };
   }
 

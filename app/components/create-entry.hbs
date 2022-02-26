@@ -23,8 +23,8 @@
     {{if this.isStarted this.entryDuration "00:00:00"}}
   </div>
   {{#if this.isStarted}}
-    <button {{on "click" this.stopTimer}} class="entry-create-stop touch" data-test-stop-entry>Stop</button>
+    <button class="entry-create-stop touch" data-test-stop-entry type="button" {{on "click" this.stopTimer}}>Stop</button>
   {{else}}
-    <button {{on "click" this.startTimer}} class="entry-create-start touch" data-test-start-entry>Start</button>
+    <button class="entry-create-start touch" data-test-start-entry type="button" {{on "click" this.startTimer}}>Start</button>
   {{/if}}
 </div>

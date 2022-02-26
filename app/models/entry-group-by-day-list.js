@@ -3,11 +3,10 @@ import { tracked } from '@glimmer/tracking';
 import moment from 'moment';
 
 export default class EntryGroupByDayListModel extends EntryGroupModel {
-  @tracked groups = null;
+  @tracked groups = [];
 
   init() {
     super.init(...arguments);
-    this.groups = [];
     this._addEntries(this.entries);
   }
 
@@ -31,9 +30,14 @@ export default class EntryGroupByDayListModel extends EntryGroupModel {
     }
   }
 
+  findEntry(callback) {
+    return this._entries.find(callback);
+  }
+
   _addEntries(entries) {
     entries.forEach((entry) => {
       this._addEntryAndPossiblyCreateGroup(entry);
+      this.entries.pushObject(entry);
     });
   }
 

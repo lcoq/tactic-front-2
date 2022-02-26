@@ -20,7 +20,7 @@ export default Factory.extend({
   stoppedAt() {
     const randHour = Math.floor(Math.random() * maxHourDiff + 1);
     const randMin = Math.floor(Math.random() * maxMinDiff + 1);
-    moment(this.startedAt).add(randHour, 'h').add(randMin, 'm').toDate();
+    return moment(this.startedAt).add(randHour, 'h').add(randMin, 'm').toDate();
   },
 
   withoutTitle: trait({

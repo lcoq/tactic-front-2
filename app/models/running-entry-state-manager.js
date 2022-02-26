@@ -20,6 +20,10 @@ class ClearStateModel extends StateModel {
         this.transitionTo('pendingSave');
         return this.sendToCurrentState('forceSave');
       },
+      startWithSaveError() {
+        this.entry.start();
+        this.transitionTo('saveError');
+      },
       stop() {
         this.entry.stop();
         this.transitionTo('pendingSave');

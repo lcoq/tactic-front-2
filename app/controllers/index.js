@@ -55,7 +55,9 @@ export default class IndexController extends Controller {
   }
 
   @action startTimer() {
-    this.newEntryStateManager.send('start');
+    this._saveEntryStoppedOnlyLocally()
+      .then(() => this.newEntryStateManager.send('start'),
+            () => this.newEntryStateManager.send('startWithSaveError'));
     this._updateIcon('started');
   }
 
@@ -81,11 +83,13 @@ export default class IndexController extends Controller {
   }
 
   @action didUpdateNewEntry() {
-    this.newEntryStateManager.send('update');
+    this._saveEntryStoppedOnlyLocally()
+      .then(() => this.newEntryStateManager.send('update'));
   }
 
   @action retrySaveNewEntry() {
-    // TODO
+    this._saveEntryStoppedOnlyLocally()
+      .then(() => this.newEntryStateManager.send('retry'));
   }
 
   @action searchProjects(query) {
@@ -121,6 +125,20 @@ export default class IndexController extends Controller {
   _buildNewEntry(attributes) {
     const entry = this.store.createRecord('entry', attributes ?? {});
     set(this, 'model.newEntry', entry);
+  }
+
+  /* We need to save the entry that is still running in the server before saving
+     new running entry because there can't be 2 running entries server-side at
+     the same time. */
+  _saveEntryStoppedOnlyLocally () {
+    const entryStoppedOnlyLocally = this.entryList.entries.find((e) => {
+      const changedAttributes = e.changedAttributes();
+      return changedAttributes.stoppedAt && changedAttributes.stoppedAt[0] === null;
+    });
+    const promise = entryStoppedOnlyLocally
+          ? entryStoppedOnlyLocally.stateManager.send('retry')
+          : resolve();
+    return promise
   }
 
   _reloadOrScheduleUserSummary() {

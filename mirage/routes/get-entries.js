@@ -4,7 +4,7 @@ export default {
       if (request.queryParams['filter[running]'] === '1') {
         return { data: null };
       } else {
-        return schema.entries.all();
+        return schema.entries.where((e) => !!e.stoppedAt);
       }
     };
   },
@@ -22,7 +22,7 @@ export default {
       if (request.queryParams['filter[running]'] === '1') {
         return entry;
       } else {
-        return schema.entries.all();
+        return schema.entries.where((e) => !!e.stoppedAt);
       }
     }
   }

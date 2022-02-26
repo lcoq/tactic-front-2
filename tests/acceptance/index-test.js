@@ -42,7 +42,7 @@ function stubCreateEntryClock () {
     if (key === 'create-entry:clock') {
       return 12345;
     } else {
-      initialLater.apply(deferer, arguments);
+      return initialLater.apply(deferer, arguments);
     }
   });
 }
@@ -602,21 +602,7 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('deletes entry and rollback', async function (assert) {
-    /* Stub deferer service to use native timeout with "reasonable" delay.
-       This allows to test `rollback` on entry as `await` will not wait the
-       pending delete entry state to actually delete the entry */
-    const defererService = this.owner.lookup('service:deferer');
-    const initialDefererServiceUsesNativeTimeout =
-      defererService.usesNativeTimeout;
-    const initialDefererServiceWait = defererService.wait;
-    defererService.usesNativeTimeout = function (key) {
-      return key === 'mutable-record-state-manager:delete';
-    };
-    defererService.wait = function (key) {
-      return key === 'mutable-record-state-manager:delete'
-        ? 10
-        : defererService.waitsByKey[key];
-    };
+    stubForNativeTimeoutOn.call(this, 'mutable-record-state-manager:delete');
 
     const user = await this.utils.authenticate();
     this.server.create('entry');
@@ -635,9 +621,6 @@ module('Acceptance | index', function (hooks) {
 
     assert.dom(`[data-test-entry="${entry.id}"]`).exists('should keep entry in list');
     assert.ok(server.db.entries.find(entry.id), 'should not have destroyed entry');
-
-    defererService.usesNativeTimeout = initialDefererServiceUsesNativeTimeout;
-    defererService.wait = initialDefererServiceWait;
   });
 
   test('allows to retry entry update on server error', async function (assert) {
@@ -735,6 +718,24 @@ module('Acceptance | index', function (hooks) {
 
     await click(`[data-test-running-entry] [data-test-entry-edit-project-choice]`);
     assert.equal(server.db.entries[0].projectId, `${project.id}`, 'should set project');
+  });
+
+  test('starts entry allows to retry save on server error', async function (assert) {
+    stubCreateEntryClock.call(this);
+
+    const user = await this.utils.authenticate();
+    this.server.post('/entries', () => new Response(500, {}, {}));
+    await visit('/');
+    await typeIn(`[data-test-running-entry-title]`, "My entry title");
+
+    assert.dom(`[data-test-running-entry-retry]`).exists('should show entry save retry action');
+
+    this.server.post('/entries');
+
+    await click(`[data-test-running-entry-retry]`);
+    assert.dom(`[data-test-running-entry-retry]`).doesNotExist('should remove entry save retry action after save');
+
+    assert.ok(server.db.entries.findBy({ title: "My entry title", stoppedAt: null }), 'should save entry on retry');
   });
 
   test('loads the running entry when it exists', async function (assert) {
@@ -857,6 +858,28 @@ module('Acceptance | index', function (hooks) {
     assert.dom(`[data-test-stop-entry]`).exists('should show stop button');
     assert.dom(`[data-test-running-entry] [data-test-running-entry-title]`).hasValue('My old entry title', 'should set running entry title');
     assert.dom(`[data-test-running-entry] [data-test-entry-edit-project]`).hasValue('Tactic', 'should set running entry project name');
+  });
+
+  test('saves entry stopped locally but resulted in server error before saving new running entry', async function (assert) {
+    stubCreateEntryClock.call(this);
+
+    const user = await this.utils.authenticate();
+    const runningEntry = this.server.create('entry', 'running');
+    this.server.get('/entries', mirageGetEntriesRoute.runningEntry(runningEntry));
+
+    this.server.patch('/entries/:id', () => new Response(500, {}, {}));
+    this.server.post('/entries', () => new Response(500, {}, {}));
+
+    await visit('/');
+    await click(`[data-test-stop-entry]`);
+    await click(`[data-test-start-entry]`);
+    await typeIn(`[data-test-running-entry-title]`, "My entry title");
+
+    assert.equal(
+      server.pretender.handledRequests.filterBy('method', 'POST').length,
+      0,
+      'should not save new running entry before previous running entry stop success'
+    );
   });
 
 });

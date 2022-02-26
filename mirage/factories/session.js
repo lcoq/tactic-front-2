@@ -5,4 +5,7 @@ export default Factory.extend({
   token() {
     return faker.unique(faker.datatype.uuid);
   },
+  name() {
+    return this.user.name;
+  },
 });

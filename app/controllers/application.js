@@ -10,7 +10,7 @@ export default class ApplicationController extends Controller {
     return this.authentication.isAuthenticated;
   }
 
-  get sessionName() {
+  get currentUserName() {
     return this.authentication.sessionName;
   }
 

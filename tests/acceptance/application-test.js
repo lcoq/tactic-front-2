@@ -31,7 +31,7 @@ module('Acceptance | application', function (hooks) {
   setupUtils(hooks);
 
   test('shows login link when authenticated', async function (assert) {
-    await this.utils.authenticate();
+    const user = await this.utils.authenticate();
     await visit('/');
     assert
       .dom('[data-test-login-link]')
@@ -39,6 +39,9 @@ module('Acceptance | application', function (hooks) {
     assert
       .dom('[data-test-login-link]')
       .hasAttribute('href', '/login', 'should links to login page');
+    assert
+      .dom('[data-test-login-link]')
+      .includesText(user.name, 'should show user name on link to login page');
   });
 
   test('shows index link when authenticated', async function (assert) {

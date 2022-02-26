@@ -339,7 +339,7 @@ module('Acceptance | index', function (hooks) {
 
   test('updates entry title', async function (assert) {
     const user = await this.utils.authenticate();
-    const entry = this.server.create('entry');
+    const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
     await visit('/');
@@ -365,7 +365,7 @@ module('Acceptance | index', function (hooks) {
 
   test('updates entry started at', async function (assert) {
     const user = await this.utils.authenticate();
-    const entry = this.server.create('entry');
+    const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
     await visit('/');
@@ -391,7 +391,7 @@ module('Acceptance | index', function (hooks) {
 
   test('updates entry stopped at', async function (assert) {
     const user = await this.utils.authenticate();
-    const entry = this.server.create('entry');
+    const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
     await visit('/');
@@ -425,7 +425,7 @@ module('Acceptance | index', function (hooks) {
       .add(5, 's')
       .toDate();
 
-    const entry = this.server.create('entry', { startedAt });
+    const entry = this.server.create('entry', { startedAt, user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
     await visit('/');
@@ -451,7 +451,7 @@ module('Acceptance | index', function (hooks) {
 
   test('updates project', async function (assert) {
     const user = await this.utils.authenticate();
-    const entry = this.server.create('entry');
+    const entry = this.server.create('entry', { user });
 
     const projectTactic = this.server.create('project', { name: 'Tactic' });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
@@ -493,7 +493,7 @@ module('Acceptance | index', function (hooks) {
       .subtract(1, 'day')
       .add(5, 'h')
       .add(5, 'm');
-    const entry = this.server.create('entry', { startedAt, stoppedAt });
+    const entry = this.server.create('entry', { startedAt, stoppedAt, user });
 
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
@@ -528,7 +528,7 @@ module('Acceptance | index', function (hooks) {
 
   test('updates entry a single time after multiple changes', async function (assert) {
     const user = await this.utils.authenticate();
-    const entry = this.server.create('entry');
+    const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
     await visit('/');
@@ -582,6 +582,7 @@ module('Acceptance | index', function (hooks) {
 
     const user = await this.utils.authenticate();
     const entry = this.server.create('entry', {
+      user,
       title: 'My initial title',
       startedAt: '2022-02-22T18:45:40.000Z',
       stoppedAt: '2022-02-22T18:50:00.000Z',
@@ -639,8 +640,8 @@ module('Acceptance | index', function (hooks) {
 
   test('deletes entry', async function (assert) {
     const user = await this.utils.authenticate();
-    this.server.create('entry');
-    const entry = this.server.create('entry');
+    this.server.create('entry', { user });
+    const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
     await visit('/');
@@ -662,8 +663,8 @@ module('Acceptance | index', function (hooks) {
     stubForNativeTimeoutOn.call(this, 'mutable-record-state-manager:delete');
 
     const user = await this.utils.authenticate();
-    this.server.create('entry');
-    const entry = this.server.create('entry');
+    this.server.create('entry', { user });
+    const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
     await visit('/');
@@ -691,7 +692,7 @@ module('Acceptance | index', function (hooks) {
 
   test('allows to retry entry update on server error', async function (assert) {
     const user = await this.utils.authenticate();
-    const entry = this.server.create('entry');
+    const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
     this.server.patch('/entries/:id', () => new Response(500, {}, {}));
 
@@ -724,7 +725,7 @@ module('Acceptance | index', function (hooks) {
 
   test('allows to retry entry deletion on server error', async function (assert) {
     const user = await this.utils.authenticate();
-    const entry = this.server.create('entry');
+    const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
     this.server.delete('/entries/:id', () => new Response(500, {}, {}));
 
@@ -890,6 +891,7 @@ module('Acceptance | index', function (hooks) {
     const runningEntry = this.server.create(
       'entry',
       {
+        user,
         title: 'My running entry',
         project: project,
         startedAt: moment().subtract(2, 'h').subtract(1, 'm').toDate(),
@@ -929,6 +931,7 @@ module('Acceptance | index', function (hooks) {
     const runningEntry = this.server.create(
       'entry',
       {
+        user,
         title: 'My running entry',
         project: project,
         startedAt: moment().subtract(2, 'h').subtract(1, 'm').toDate(),
@@ -965,6 +968,7 @@ module('Acceptance | index', function (hooks) {
     const user = await this.utils.authenticate();
     const project = this.server.create('project', { name: 'Tactic' });
     const entry = this.server.create('entry', {
+      user,
       title: 'My old entry title',
       project: project,
     });
@@ -989,7 +993,7 @@ module('Acceptance | index', function (hooks) {
     stubCreateEntryClock.call(this);
 
     const user = await this.utils.authenticate();
-    const runningEntry = this.server.create('entry', 'running');
+    const runningEntry = this.server.create('entry', { user }, 'running');
     this.server.get(
       '/entries',
       mirageGetEntriesRoute.runningEntry(runningEntry)
@@ -997,6 +1001,7 @@ module('Acceptance | index', function (hooks) {
 
     const project = this.server.create('project', { name: 'Tactic' });
     const entry = this.server.create('entry', {
+      user,
       title: 'My old entry title',
       project: project,
     });
@@ -1036,7 +1041,7 @@ module('Acceptance | index', function (hooks) {
     stubCreateEntryClock.call(this);
 
     const user = await this.utils.authenticate();
-    const runningEntry = this.server.create('entry', 'running');
+    const runningEntry = this.server.create('entry', { user }, 'running');
     this.server.get(
       '/entries',
       mirageGetEntriesRoute.runningEntry(runningEntry)
@@ -1044,6 +1049,7 @@ module('Acceptance | index', function (hooks) {
 
     const project = this.server.create('project', { name: 'Tactic' });
     const entry = this.server.create('entry', {
+      user,
       title: 'My old entry title',
       project: project,
     });
@@ -1073,7 +1079,7 @@ module('Acceptance | index', function (hooks) {
     stubCreateEntryClock.call(this);
 
     const user = await this.utils.authenticate();
-    const runningEntry = this.server.create('entry', 'running');
+    const runningEntry = this.server.create('entry', { user }, 'running');
     this.server.get(
       '/entries',
       mirageGetEntriesRoute.runningEntry(runningEntry)

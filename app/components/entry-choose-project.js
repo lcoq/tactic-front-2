@@ -63,7 +63,7 @@ export default class EntryChooseProjectComponent extends Component {
     } else {
       this.args.keyPressed?.();
       this.deferer.debounce(
-        'entry-choose-project:seearch',
+        'entry-choose-project:search',
         this,
         this._searchProjects
       );

@@ -1,3 +1,4 @@
+/* global $ */
 import { modifier } from 'ember-modifier';
 import moment from 'moment';
 

@@ -1,13 +1,12 @@
-import { module, test, skip } from 'qunit';
+/* global $ */
+import { module, test } from 'qunit';
 import {
   visit,
   currentURL,
-  find,
   findAll,
   click,
   fillIn,
   typeIn,
-  pauseTest,
 } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
@@ -96,7 +95,7 @@ module('Acceptance | index', function (hooks) {
     assert.strictEqual(currentURL(), '/', 'should remains on index');
   });
 
-  test('shows recent user entries grouped by day', async function (assert) {
+  test('shows recent user entries grouped by day', async function (assert) { // eslint-disable-line
     const user = await this.utils.authenticate();
 
     const projectTactic = this.server.create('project', { name: 'Tactic' });
@@ -279,7 +278,7 @@ module('Acceptance | index', function (hooks) {
           groupAttributes.duration,
           `${groupId} should compute duration`
         );
-      assert.equal(
+      assert.strictEqual(
         entries.length,
         groupAttributes.entries.length,
         `${groupId} should show its entries`
@@ -356,7 +355,7 @@ module('Acceptance | index', function (hooks) {
     await click('[data-test-header]'); // send focusout
 
     entry.reload();
-    assert.equal(
+    assert.strictEqual(
       entry.title,
       'My new entry title',
       'should update entry title'
@@ -382,7 +381,7 @@ module('Acceptance | index', function (hooks) {
     await click('[data-test-header]'); // send focusout
 
     entry.reload();
-    assert.equal(
+    assert.strictEqual(
       moment(entry.startedAt).format('HH:mm'),
       '02:05',
       'should update entry started at'
@@ -408,7 +407,7 @@ module('Acceptance | index', function (hooks) {
     await click('[data-test-header]'); // send focusout
 
     entry.reload();
-    assert.equal(
+    assert.strictEqual(
       moment(entry.stoppedAt).format('HH:mm'),
       '02:05',
       'should update entry stopped at'
@@ -442,7 +441,7 @@ module('Acceptance | index', function (hooks) {
     await click('[data-test-header]'); // send focusout
 
     entry.reload();
-    assert.equal(
+    assert.strictEqual(
       entry.stoppedAt,
       moment(startedAt).add(8, 'm').toISOString(),
       'should update entry stopped at'
@@ -453,7 +452,7 @@ module('Acceptance | index', function (hooks) {
     const user = await this.utils.authenticate();
     const entry = this.server.create('entry', { user });
 
-    const projectTactic = this.server.create('project', { name: 'Tactic' });
+    this.server.create('project', { name: 'Tactic' });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
     await visit('/');
@@ -478,7 +477,11 @@ module('Acceptance | index', function (hooks) {
     );
 
     entry.reload();
-    assert.equal(entry.project.name, 'Tactic', 'should update entry project');
+    assert.strictEqual(
+      entry.project.name,
+      'Tactic',
+      'should update entry project'
+    );
   });
 
   test('updates started at and stopped at date', async function (assert) {
@@ -514,12 +517,12 @@ module('Acceptance | index', function (hooks) {
     await click(`[data-test-entry="${entry.id}"] .ui-datepicker-today a`);
 
     entry.reload();
-    assert.equal(
+    assert.strictEqual(
       entry.startedAt,
       moment(startedAt).dayOfYear(moment().dayOfYear()).toISOString(),
       'should update entry started at'
     );
-    assert.equal(
+    assert.strictEqual(
       entry.stoppedAt,
       moment(stoppedAt).dayOfYear(moment().dayOfYear()).toISOString(),
       'should update entry stopped at'
@@ -554,23 +557,23 @@ module('Acceptance | index', function (hooks) {
 
     entry.reload();
 
-    assert.equal(
-      server.pretender.handledRequests.filterBy('method', 'PATCH').length,
+    assert.strictEqual(
+      this.server.pretender.handledRequests.filterBy('method', 'PATCH').length,
       1,
       'should send PATCH a single time for a single entry update in a reasonable time'
     );
 
-    assert.equal(
+    assert.strictEqual(
       entry.title,
       'My new entry title',
       'should update entry title'
     );
-    assert.equal(
+    assert.strictEqual(
       moment(entry.startedAt).format('HH:mm'),
       '02:05',
       'should update entry started at'
     );
-    assert.equal(
+    assert.strictEqual(
       moment(entry.stoppedAt).format('HH:mm'),
       '03:06',
       'should update entry stopped at'
@@ -614,24 +617,24 @@ module('Acceptance | index', function (hooks) {
       `[data-test-entry="${entry.id}"] [data-test-entry-edit-rollback]`
     );
 
-    assert.equal(
-      server.pretender.handledRequests.filterBy('method', 'PATCH').length,
+    assert.strictEqual(
+      this.server.pretender.handledRequests.filterBy('method', 'PATCH').length,
       0,
       'should not send PATCH entry'
     );
 
     entry.reload();
-    assert.equal(
+    assert.strictEqual(
       entry.title,
       'My initial title',
       'should not have updated entry title'
     );
-    assert.equal(
+    assert.strictEqual(
       entry.startedAt,
       '2022-02-22T18:45:40.000Z',
       'should not have updated entry started at'
     );
-    assert.equal(
+    assert.strictEqual(
       entry.stoppedAt,
       '2022-02-22T18:50:00.000Z',
       'should not have updated entry stopped at'
@@ -656,7 +659,7 @@ module('Acceptance | index', function (hooks) {
     assert
       .dom(`[data-test-entry="${entry.id}"]`)
       .doesNotExist('should remove entry from list');
-    assert.notOk(server.db.entries.find(entry.id), 'should destroy entry');
+    assert.notOk(this.server.db.entries.find(entry.id), 'should destroy entry');
   });
 
   test('deletes entry and rollback', async function (assert) {
@@ -685,7 +688,7 @@ module('Acceptance | index', function (hooks) {
       .dom(`[data-test-entry="${entry.id}"]`)
       .exists('should keep entry in list');
     assert.ok(
-      server.db.entries.find(entry.id),
+      this.server.db.entries.find(entry.id),
       'should not have destroyed entry'
     );
   });
@@ -716,7 +719,7 @@ module('Acceptance | index', function (hooks) {
       .doesNotExist('should no longer show retry action');
 
     entry.reload();
-    assert.equal(
+    assert.strictEqual(
       entry.title,
       'My new entry title',
       'should update entry title'
@@ -745,24 +748,28 @@ module('Acceptance | index', function (hooks) {
       .dom('[data-test-entry-retry]')
       .doesNotExist('should no longer show retry action');
 
-    assert.notOk(server.db.entries.find(entry.id), 'should destroy entry');
+    assert.notOk(this.server.db.entries.find(entry.id), 'should destroy entry');
   });
 
   test('starts entry on start click', async function (assert) {
     stubCreateEntryClock.call(this);
 
-    const user = await this.utils.authenticate();
+    await this.utils.authenticate();
     await visit('/');
     assert.dom(`[data-test-start-entry]`).exists('should show start button');
     await click(`[data-test-start-entry]`);
 
-    assert.equal(server.db.entries.length, 1, 'should have created entry');
+    assert.strictEqual(
+      this.server.db.entries.length,
+      1,
+      'should have created entry'
+    );
     assert.ok(
-      server.db.entries[0].startedAt,
+      this.server.db.entries[0].startedAt,
       'should have set entry started at'
     );
     assert.notOk(
-      server.db.entries[0].stoppedAt,
+      this.server.db.entries[0].stoppedAt,
       'should not have stopped entry'
     );
   });
@@ -770,7 +777,7 @@ module('Acceptance | index', function (hooks) {
   test('starts entry update the favicon', async function (assert) {
     stubCreateEntryClock.call(this);
 
-    const user = await this.utils.authenticate();
+    await this.utils.authenticate();
     await visit('/');
 
     /* `assert.dom` does not work here, probably because this is "outside" of
@@ -778,42 +785,70 @@ module('Acceptance | index', function (hooks) {
     const $favicon16 = $('[data-test-favicon-16]');
     const $favicon32 = $('[data-test-favicon-32]');
 
-    assert.equal($favicon16.length, 1, 'should have 16x16 favicon');
-    assert.equal($favicon16.prop('sizes'), '16x16', 'should have 16x16 favicon size attribute');
-    assert.equal($favicon16.attr('href'), '/assets/images/favicon-16x16.png', 'should have non-started 16x16 favicon');
+    assert.strictEqual($favicon16.length, 1, 'should have 16x16 favicon');
+    assert.strictEqual(
+      $favicon16.attr('sizes'),
+      '16x16',
+      'should have 16x16 favicon size attribute'
+    );
+    assert.strictEqual(
+      $favicon16.attr('href'),
+      '/assets/images/favicon-16x16.png',
+      'should have non-started 16x16 favicon'
+    );
 
-    assert.equal($favicon32.length, 1, 'should have 32x32 favicon');
-    assert.equal($favicon32.prop('sizes'), '32x32', 'should have 32x32 favicon size attribute');
-    assert.equal($favicon32.attr('href'), '/assets/images/favicon-32x32.png', 'should have non-started 32x32 favicon');
+    assert.strictEqual($favicon32.length, 1, 'should have 32x32 favicon');
+    assert.strictEqual(
+      $favicon32.attr('sizes'),
+      '32x32',
+      'should have 32x32 favicon size attribute'
+    );
+    assert.strictEqual(
+      $favicon32.attr('href'),
+      '/assets/images/favicon-32x32.png',
+      'should have non-started 32x32 favicon'
+    );
 
     await click(`[data-test-start-entry]`);
 
-    assert.equal($favicon16.attr('href'), '/assets/images/favicon-started-16x16.png', 'should have started 16x16 favicon after start');
-    assert.equal($favicon32.attr('href'), '/assets/images/favicon-started-32x32.png', 'should have started 32x32 favicon after start');
+    assert.strictEqual(
+      $favicon16.attr('href'),
+      '/assets/images/favicon-started-16x16.png',
+      'should have started 16x16 favicon after start'
+    );
+    assert.strictEqual(
+      $favicon32.attr('href'),
+      '/assets/images/favicon-started-32x32.png',
+      'should have started 32x32 favicon after start'
+    );
   });
 
   test('starts entry on title type', async function (assert) {
     stubCreateEntryClock.call(this);
 
-    const user = await this.utils.authenticate();
+    this.utils.authenticate();
     await visit('/');
     assert
       .dom(`[data-test-running-entry-title]`)
       .exists('should show running entry title input');
     await typeIn(`[data-test-running-entry-title]`, 'My entry title');
 
-    assert.equal(server.db.entries.length, 1, 'should have created entry');
+    assert.strictEqual(
+      this.server.db.entries.length,
+      1,
+      'should have created entry'
+    );
     assert.ok(
-      server.db.entries[0].startedAt,
+      this.server.db.entries[0].startedAt,
       'should have set entry started at'
     );
-    assert.equal(
-      server.db.entries[0].title,
+    assert.strictEqual(
+      this.server.db.entries[0].title,
       'My entry title',
       'should have set entry title'
     );
     assert.notOk(
-      server.db.entries[0].stoppedAt,
+      this.server.db.entries[0].stoppedAt,
       'should not have stopped entry'
     );
   });
@@ -823,7 +858,7 @@ module('Acceptance | index', function (hooks) {
 
     const project = this.server.create('project', { name: 'Tactic' });
 
-    const user = await this.utils.authenticate();
+    await this.utils.authenticate();
     await visit('/');
     assert
       .dom(`[data-test-running-entry] [data-test-entry-edit-project]`)
@@ -834,13 +869,17 @@ module('Acceptance | index', function (hooks) {
       'Tacti'
     );
 
-    assert.equal(server.db.entries.length, 1, 'should have created entry');
+    assert.strictEqual(
+      this.server.db.entries.length,
+      1,
+      'should have created entry'
+    );
     assert.ok(
-      server.db.entries[0].startedAt,
+      this.server.db.entries[0].startedAt,
       'should have set entry started at'
     );
     assert.notOk(
-      server.db.entries[0].stoppedAt,
+      this.server.db.entries[0].stoppedAt,
       'should not have stopped entry'
     );
 
@@ -851,8 +890,8 @@ module('Acceptance | index', function (hooks) {
     await click(
       `[data-test-running-entry] [data-test-entry-edit-project-choice]`
     );
-    assert.equal(
-      server.db.entries[0].projectId,
+    assert.strictEqual(
+      this.server.db.entries[0].projectId,
       `${project.id}`,
       'should set project'
     );
@@ -861,7 +900,7 @@ module('Acceptance | index', function (hooks) {
   test('starts entry allows to retry save on server error', async function (assert) {
     stubCreateEntryClock.call(this);
 
-    const user = await this.utils.authenticate();
+    await this.utils.authenticate();
     this.server.post('/entries', () => new Response(500, {}, {}));
     await visit('/');
     await typeIn(`[data-test-running-entry-title]`, 'My entry title');
@@ -878,7 +917,10 @@ module('Acceptance | index', function (hooks) {
       .doesNotExist('should remove entry save retry action after save');
 
     assert.ok(
-      server.db.entries.findBy({ title: 'My entry title', stoppedAt: null }),
+      this.server.db.entries.findBy({
+        title: 'My entry title',
+        stoppedAt: null,
+      }),
       'should save entry on retry'
     );
   });
@@ -1025,12 +1067,12 @@ module('Acceptance | index', function (hooks) {
 
     const newEntry = this.server.db.entries.findBy({ stoppedAt: null });
     assert.ok(newEntry, 'should start new entry');
-    assert.equal(
+    assert.strictEqual(
       newEntry.title,
       'My old entry title',
       'should set new entry title'
     );
-    assert.equal(
+    assert.strictEqual(
       newEntry.projectId,
       project.id,
       'should set new entry project'
@@ -1093,8 +1135,8 @@ module('Acceptance | index', function (hooks) {
     await click(`[data-test-start-entry]`);
     await typeIn(`[data-test-running-entry-title]`, 'My entry title');
 
-    assert.equal(
-      server.pretender.handledRequests.filterBy('method', 'POST').length,
+    assert.strictEqual(
+      this.server.pretender.handledRequests.filterBy('method', 'POST').length,
       0,
       'should not save new running entry before previous running entry stop success'
     );

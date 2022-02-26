@@ -3,9 +3,9 @@
 <section class="login">
   <h1 class="login-title">Who are you ?</h1>
   <ul class="login-list">
-    {{#each @model as |user|}}
-      <li class="login-item {{if (get this.errorByUserId user.id) "errored"}}" data-test-user-error>
-        <Login::UserForm @user={{user}} @submit={{this.logIn}} @keyup={{this.clearError}} />
+    {{#each @model as |loginUser|}}
+      <li class="login-item {{if loginUser.hasError "errored"}}" data-test-user-error>
+        <Login::UserForm @user={{loginUser.user}} @onSubmit={{this.logIn}} @keyup={{this.clearError}} />
         </li>
     {{/each}}
   </ul>

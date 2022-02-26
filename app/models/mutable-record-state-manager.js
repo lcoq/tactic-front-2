@@ -1,9 +1,6 @@
 import StateManagerModel from './state-manager';
 import StateManagerStateModel from './state-manager-state';
-import { later, cancel } from '@ember/runloop';
 import { reject } from 'rsvp';
-import { reads, or } from '@ember/object/computed';
-import { computed } from '@ember/object';
 import { getOwner } from '@ember/application';
 
 const StateModel = StateManagerStateModel;
@@ -93,7 +90,7 @@ class DeleteErrorStateModel extends StateModel {
         return this.sendToCurrentState('forceDelete');
       },
       edit() {
-        const source = get(this, 'source');
+        const source = this.source;
         this.manager.rollback(source);
         this.transitionTo('editing');
       },
@@ -217,21 +214,46 @@ class PendingDeleteStateModel extends StateModel {
 }
 
 export default class MutableRecordStateManagerModel extends StateManagerModel {
-  @reads('currentState.isClear') isClear;
-  @reads('currentState.isEditing') isEditing;
-  @reads('currentState.isInvalid') isInvalid;
+  get isClear() {
+    return this.currentState.isClear;
+  }
 
-  @reads('currentState.isPendingSave') isPendingSave;
-  @reads('currentState.isSaveErrored') isSaveErrored;
-  @or('isPendingSave', 'isSaveErrored') isPendingSaveOrSaveErrored;
+  get isEditing() {
+    return this.currentState.isEditing;
+  }
 
-  @reads('currentState.isPendingDelete') isPendingDelete;
-  @reads('currentState.isDeleteErrored') isDeleteErrored;
-  @or('isPendingDelete', 'isDeleteErrored') isPendingDeleteOrDeleteErrored;
+  get isInvalid() {
+    return this.currentState.isInvalid;
+  }
 
-  @or('isSaveErrored', 'isDeleteErrored') isErrored;
+  get isPendingSave() {
+    return this.currentState.isPendingSave;
+  }
 
-  @computed('source')
+  get isSaveErrored() {
+    return this.currentState.isSaveErrored;
+  }
+
+  get isPendingDelete() {
+    return this.currentState.isPendingDelete;
+  }
+
+  get isDeleteErrored() {
+    return this.currentState.isDeleteErrored;
+  }
+
+  get isPendingSaveOrSaveErrored() {
+    return this.isPendingSave || this.isSaveErrored;
+  }
+
+  get isPendingDeleteOrDeleteErrored() {
+    return this.isPendingDelete || this.isDeleteErrored;
+  }
+
+  get isErrored() {
+    return this.isSaveErrored || this.isDeleteErrored;
+  }
+
   get defererService() {
     return getOwner(this.source).lookup('service:deferer');
   }

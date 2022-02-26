@@ -1,38 +1,70 @@
 import Component from '@glimmer/component';
-import { reads, and, or } from '@ember/object/computed';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import moment from 'moment';
 import parseHour from '../utils/parse-hour';
 import parseDuration from '../utils/parse-duration';
 import formatDuration from '../utils/format-duration';
+import OnFocusOutClickModifier from '../modifiers/on-focus-out-click';
+import NoopModifier from '../modifiers/noop';
 
 export default class ShowEntryComponent extends Component {
   @tracked fieldNameToFocusOnEdit = null;
   @tracked rounding = false;
   @tracked isEditingDate = false;
 
-  @reads('args.entry') entry;
-  @reads('args.searchProjects') searchProjects;
+  @tracked formattedDuration = null;
+  @tracked formattedStartedAt = null;
+  @tracked formattedStoppedAt = null;
 
-  @reads('entry.stateManager.isClear') isClear;
-  @reads('entry.stateManager.isEditing') isEditing;
-  @reads('entry.stateManager.isPendingDelete') isPendingDelete;
-  @reads('entry.stateManager.isPendingSave') isPendingSave;
-  @reads('entry.stateManager.isErrored') isErrored;
-  @reads('entry.stateManager.isSaveErrored') isSaveErrored;
-  @reads('entry.stateManager.isDeleteErrored') isDeleteErrored;
-  @or('isPendingSave', 'isPendingDelete') canRevert;
-  @and('args.restartEntry', 'isClear') canRestartEntry;
+  get onFocusOutClickModifier() {
+    return this.isEditing ? OnFocusOutClickModifier : NoopModifier;
+  }
 
-  @computed(
-    'isEditing',
-    'isPendingDelete',
-    'isPendingSave',
-    'isSaveErrored',
-    'isDeleteErrored',
-    'rounding'
-  )
+  get entry() {
+    return this.args.entry;
+  }
+
+  get searchProjects() {
+    return this.args.searchProjects;
+  }
+
+  get isClear() {
+    return this.entry.stateManager.isClear;
+  }
+
+  get isEditing() {
+    return this.entry.stateManager.isEditing;
+  }
+
+  get isPendingDelete() {
+    return this.entry.stateManager.isPendingDelete;
+  }
+
+  get isPendingSave() {
+    return this.entry.stateManager.isPendingSave;
+  }
+
+  get isErrored() {
+    return this.entry.stateManager.isErrored;
+  }
+
+  get isSaveErrored() {
+    return this.entry.stateManager.isSaveErrored;
+  }
+
+  get isDeleteErrored() {
+    return this.entry.stateManager.isDeleteErrored;
+  }
+
+  get canRevert() {
+    return this.isPendingSave || this.isPendingDelete;
+  }
+
+  get canRestartEntry() {
+    return this.args.restartEntry && this.isClear;
+  }
+
   get classNames() {
     const names = [];
     if (this.isEditing) names.push('editing');
@@ -43,10 +75,6 @@ export default class ShowEntryComponent extends Component {
     if (this.rounding) names.push('disabled');
     return names.join(' ');
   }
-
-  @tracked formattedDuration = null;
-  @tracked formattedStartedAt = null;
-  @tracked formattedStoppedAt = null;
 
   @action formattedDurationChanged() {
     const duration = parseDuration(this.formattedDuration);
@@ -95,8 +123,8 @@ export default class ShowEntryComponent extends Component {
     this._closeEdit();
   }
 
-  @action selectProject(project) {
-    this.entry.project = project;
+  @action async selectProject(project) {
+    await this.entry.setProject(project);
     this._closeEdit();
   }
 
@@ -162,7 +190,10 @@ export default class ShowEntryComponent extends Component {
     );
     const newStoppedAtTime = newStoppedAt.getTime();
 
-    if (!isNaN(newStartedAtTime)) {
+    if (
+      !isNaN(newStartedAtTime) &&
+      newStartedAt.getTime() !== this.entry.startedAt.getTime()
+    ) {
       this.entry.startedAt = newStartedAt;
     }
     if (isNaN(newStoppedAtTime)) {
@@ -173,7 +204,9 @@ export default class ShowEntryComponent extends Component {
     } else if (moment(newStoppedAt).diff(moment(newStartedAt), 'days') > 0) {
       newStoppedAt = moment(newStoppedAt).subtract(1, 'day').toDate();
     }
-    this.entry.stoppedAt = newStoppedAt;
+    if (newStoppedAt.getTime() !== this.entry.stoppedAt.getTime()) {
+      this.entry.stoppedAt = newStoppedAt;
+    }
   }
 
   _clearFormattedStartedAndStoppedAt() {

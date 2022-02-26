@@ -1,11 +1,10 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
-import { reads, alias } from '@ember/object/computed';
+import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { isEmpty } from '@ember/utils';
 import { resolve, reject } from 'rsvp';
 import RunningEntryStateManager from '../models/running-entry-state-manager';
-import { set } from '@ember/object';
+import { createCache, getValue } from '@glimmer/tracking/primitives/cache';
 
 export default class IndexController extends Controller {
   @service store;
@@ -14,12 +13,27 @@ export default class IndexController extends Controller {
 
   waitingEntries = [];
 
-  @reads('model.entryList') entryList;
-  @alias('runningEntry.entry') newEntry;
+  get entryList() {
+    return this.model.entryList;
+  }
 
-  @computed('newEntry')
-  get newEntryStateManager() {
+  get newEntry() {
+    return this.runningEntry.entry;
+  }
+  set newEntry(newEntry) {
+    this.runningEntry.entry = newEntry;
+  }
+
+  _newEntryStateManagerCache = createCache(() => {
     return new RunningEntryStateManager({ source: this.newEntry });
+  });
+
+  get newEntryStateManager() {
+    return getValue(this._newEntryStateManagerCache);
+  }
+
+  get newEntryIsSaveErrored() {
+    return this.newEntryStateManager.isSaveErrored;
   }
 
   @action willUpdateEntry(entry) {
@@ -60,13 +74,11 @@ export default class IndexController extends Controller {
       () => this.newEntryStateManager.send('start'),
       () => this.newEntryStateManager.send('startWithSaveError')
     );
-    this._updateIcon('started');
   }
 
   @action stopTimer() {
     this._stopNewEntry().finally(() => {
       this._buildNewEntry();
-      this._updateIcon('stopped');
     });
   }
 
@@ -125,13 +137,9 @@ export default class IndexController extends Controller {
       });
   }
 
-  _updateIcon(name) {
-    // TODO
-  }
-
   _buildNewEntry(attributes) {
     const entry = this.store.createRecord('entry', attributes ?? {});
-    set(this, 'newEntry', entry);
+    this.newEntry = entry;
   }
 
   /* We need to save the entry that is still running in the server before saving

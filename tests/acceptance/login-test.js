@@ -1,7 +1,6 @@
 import { module, test } from 'qunit';
 import {
   visit,
-  findAll,
   fillIn,
   typeIn,
   triggerKeyEvent,
@@ -35,7 +34,7 @@ module('Acceptance | login', function (hooks) {
   });
 
   test('does not log in with invalid password and shows error until password changes', async function (assert) {
-    const user = this.server.create('user');
+    this.server.create('user');
     await visit('/login');
     await fillIn('[data-test-password]', 'invalid');
     await triggerKeyEvent('[data-test-password]', 'keyup', 'Enter');

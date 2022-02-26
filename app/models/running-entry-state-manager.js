@@ -1,12 +1,12 @@
 import StateManagerModel from './state-manager';
 import StateManagerStateModel from './state-manager-state';
-import { reads } from '@ember/object/computed';
-import { computed } from '@ember/object';
 import { getOwner } from '@ember/application';
 import { resolve, reject } from 'rsvp';
 
 class StateModel extends StateManagerStateModel {
-  @reads('source') entry;
+  get entry() {
+    return this.source;
+  }
 }
 
 class ClearStateModel extends StateModel {
@@ -128,11 +128,18 @@ class SaveErrorStateModel extends StateModel {
 }
 
 export default class RunningEntryStateManagerModel extends StateManagerModel {
-  @reads('currentState.isClear') isClear;
-  @reads('currentState.isPendingSave') isPendingSave;
-  @reads('currentState.isSaveErrored') isSaveErrored;
+  get isClear() {
+    return this.currentState.isClear;
+  }
 
-  @computed('source')
+  get isPendingSave() {
+    return this.currentState.isPendingSave;
+  }
+
+  get isSaveErrored() {
+    return this.currentState.isSaveErrored;
+  }
+
   get defererService() {
     return getOwner(this.source).lookup('service:deferer');
   }

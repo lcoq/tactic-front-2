@@ -1,7 +1,7 @@
-import Ember from 'ember';
+import { isEmpty } from '@ember/utils';
 
 export default function parseDuration(string) {
-  if (Ember.isEmpty(string) || string.match(/^\s+$/)) {
+  if (isEmpty(string) || string.match(/^\s+$/)) {
     return 0;
   }
 

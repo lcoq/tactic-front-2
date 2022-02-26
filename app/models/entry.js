@@ -1,8 +1,9 @@
 import { set } from '@ember/object';
 import Model, { attr, belongsTo } from '@ember-data/model';
-import { computed } from '@ember/object';
 import moment from 'moment';
 import EntryStateManagerModel from './entry-state-manager';
+import { dependentKeyCompat } from '@ember/object/compat';
+import { createCache, getValue } from '@glimmer/tracking/primitives/cache';
 import { tracked } from '@glimmer/tracking';
 
 export default class EntryModel extends Model {
@@ -12,29 +13,31 @@ export default class EntryModel extends Model {
   @belongsTo user;
   @belongsTo project;
 
-  @computed('project')
-  get initialProject() {
-    return this.project;
-  }
-  set initialProject(value) {
-    return value;
-  }
+  @tracked initialProject = null;
 
-  @computed('project', 'initialProject')
   get projectHasChanged() {
     return this.project !== this.initialProject;
   }
 
-  @computed('startedAt', 'stoppedAt')
   get durationInSeconds() {
-    if (this.startedAt && this.stoppedAt) {
-      return moment(this.stoppedAt).diff(this.startedAt, 'seconds');
-    }
+    return getValue(this._durationInSecondsCache);
   }
 
-  @computed('startedAt', 'stoppedAt')
+  @dependentKeyCompat
   get isStarted() {
     return this.startedAt && !this.stoppedAt;
+  }
+
+  @dependentKeyCompat
+  get isStopped() {
+    return !this.isStarted;
+  }
+
+  save() {
+    return super.save(...arguments).then(() => {
+      this.initialProject = null;
+      return this;
+    });
   }
 
   start() {
@@ -45,6 +48,17 @@ export default class EntryModel extends Model {
 
   stop() {
     set(this, 'stoppedAt', new Date());
+  }
+
+  async setProject(newProject) {
+    if (!this.initialProject) {
+      this.project.then((project) => (this.initialProject = project));
+    }
+    this.project = newProject;
+  }
+
+  rollbackProject() {
+    set(this, 'project', this.initialProject);
   }
 
   updateToDate(newDate) {
@@ -64,12 +78,16 @@ export default class EntryModel extends Model {
     set(this, 'stoppedAt', newStoppedAt.toDate());
   }
 
-  rollbackProject() {
-    set(this, 'project', this.initialProject);
-  }
-
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
     set(this, 'stateManager', new EntryStateManagerModel({ source: this }));
   }
+
+  _durationInSecondsCache = createCache(() => {
+    if (this.startedAt && this.stoppedAt) {
+      return moment(this.stoppedAt).diff(this.startedAt, 'seconds');
+    } else {
+      return null;
+    }
+  });
 }

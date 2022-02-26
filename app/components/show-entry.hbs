@@ -1,28 +1,29 @@
-<li class="entry {{this.classNames}}" data-test-entry="{{this.entry.id}}" {{on-focus-out-click this.closeEdit this.isEditing}}>
+<li class="entry {{this.classNames}}" data-test-entry="{{this.entry.id}}" {{this.onFocusOutClickModifier this.closeEdit}}>
 
   {{#unless this.rounding}}
     <div class="entry-actions no-print">
       {{#if this.isErrored}}
-        <a {{on "click" this.retrySaveOrDeleteEntry}} class="entry-action entry-action-retry touch" data-test-entry-retry>
-        </a>
+        <button type="button" {{on "click" this.retrySaveOrDeleteEntry}} class="entry-action entry-action-retry touch" data-test-entry-retry>
+          Retry
+        </button>
       {{/if}}
       {{#if this.canRevert}}
-        <a {{on "click" this.revertEditEntry}} class="entry-action entry-action-revert touch" data-test-entry-edit-rollback>
-          <img class="entry-action-cancel-img" src="/assets/images/revert.svg" alt="Revert" />
-        </a>
+        <button type="button" {{on "click" this.revertEditEntry}} class="entry-action entry-action-revert touch" data-test-entry-edit-rollback>
+          Revert
+        </button>
       {{/if}}
       {{#if this.isClear}}
-        <a {{on "click" this.markEntryForDelete}} class="entry-action entry-action-delete touch" data-test-entry-delete>
-          <img class="entry-action-delete-img" src="/assets/images/trash.svg" alt="Delete" />
-        </a>
-        <a {{on "click" this.editEntryDate}} class="entry-action entry-action-change-date touch" data-test-entry-edit-date>
-          <img class="entry-action-delete-img" src="/assets/images/calendar.svg" alt="Change date" />
-        </a>
+        <button type="button" {{on "click" this.markEntryForDelete}} class="entry-action entry-action-delete touch" data-test-entry-delete>
+          Delete
+        </button>
+        <button type="button" {{on "click" this.editEntryDate}} class="entry-action entry-action-change-date touch" data-test-entry-edit-date>
+          Change date
+        </button>
       {{/if}}
       {{#if this.canRestartEntry}}
-        <a {{on "click" this.restartEntry}} class="entry-action entry-action-restart touch" data-test-entry-restart>
+        <button type="button" {{on "click" this.restartEntry}} class="entry-action entry-action-restart touch" data-test-entry-restart>
           <img class="entry-action-restart-img" src="/assets/images/play.svg" alt="Restart" />
-        </a>
+        </button>
       {{/if}}
     </div>
   {{/unless}}
@@ -53,7 +54,7 @@
     {{#if this.isEditing}}
       <div class="entry-project touch it-entry-project">
         <EntryChooseProject
-          @projectName={{unbound this.entry.project.name}}
+          @projectName={{this.entry.project.name}}
           @classNamePrefix="entry-edit"
           @searchProjects={{this.searchProjects}}
           @selectProject={{this.selectProject}}

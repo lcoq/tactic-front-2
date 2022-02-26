@@ -1,9 +1,8 @@
 import { module, test } from 'qunit';
-import { visit, currentURL } from '@ember/test-helpers';
+import { visit } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 import { setupUtils } from '../utils/setup';
-import { Response } from 'miragejs';
 import moment from 'moment';
 
 import mirageGetEntriesRoute from '../../mirage/routes/get-entries';

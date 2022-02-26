@@ -1,18 +1,15 @@
 import { modifier } from 'ember-modifier';
+import { next } from '@ember/runloop';
 
-export default modifier(function onFocusOutClick(
-  element,
-  [callback, condition] /*named*/
-) {
+export default modifier(function onFocusOutClick(element, [callback]) {
   function clickElement(event) {
-    if (
-      condition &&
-      document.body.contains(event.target) &&
-      !element.contains(event.target)
-    ) {
+    if (!element.contains(event.target)) {
       callback();
     }
   }
-  window.addEventListener('click', clickElement);
+  /* run on `next` in order to avoid the click that opens the entry edit to
+     propagate here and directly close the edit */
+  next(() => window.addEventListener('click', clickElement), 100);
+
   return () => window.removeEventListener('click', clickElement);
 });

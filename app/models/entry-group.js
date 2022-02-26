@@ -1,15 +1,17 @@
-import EmberObject from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { mapBy, sum } from '@ember/object/computed';
 
-export default class EntryGroupModel extends EmberObject {
+export default class EntryGroupModel {
   @tracked entries = null;
 
-  init() {
-    super.init(...arguments);
+  constructor(attributes) {
+    Object.assign(this, attributes);
     this.entries ??= [];
   }
 
-  @mapBy('entries', 'durationInSeconds') _entriesDurationsInSeconds;
-  @sum('_entriesDurationsInSeconds') durationInSeconds;
+  get durationInSeconds() {
+    return this.entries.reduce(
+      (sum, entry) => sum + entry.durationInSeconds,
+      0
+    );
+  }
 }

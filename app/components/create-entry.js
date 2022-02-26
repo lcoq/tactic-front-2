@@ -1,10 +1,8 @@
 import Component from '@glimmer/component';
-import { reads } from '@ember/object/computed';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import formatDuration from '../utils/format-duration';
-import { get, set } from '@ember/object';
 
 export default class CreateEntryComponent extends Component {
   @service deferer;
@@ -12,24 +10,30 @@ export default class CreateEntryComponent extends Component {
   @tracked clock = null;
   @tracked clockTimer = null;
 
-  @reads('args.entry') entry;
-  @reads('args.isSaveErrored') isSaveErrored;
-
-  @reads('args.searchProjects') searchProjects;
-  @reads('args.didUpdateEntry') didUpdateEntry;
-  @reads('args.retrySaveEntry') retrySaveEntry;
-
-  @reads('entry.isStarted') isStarted;
-
-  @computed('entry.project.name')
-  get projectName() {
-    return get(this, 'entry.project.name');
-  }
-  set projectName(value) {
-    return value;
+  get entry() {
+    return this.args.entry;
   }
 
-  @computed('entry.startedAt', 'clock')
+  get isSaveErrored() {
+    return this.args.isSaveErrored;
+  }
+
+  get searchProjects() {
+    return this.args.searchProjects;
+  }
+
+  get didUpdateEntry() {
+    return this.args.didUpdateEntry;
+  }
+
+  get retrySaveEntry() {
+    return this.args.retrySaveEntry;
+  }
+
+  get isStarted() {
+    return this.entry.isStarted;
+  }
+
   get entryDuration() {
     return formatDuration(this.entry.startedAt, this.clock);
   }
@@ -52,11 +56,9 @@ export default class CreateEntryComponent extends Component {
     this.deferer.cancel('create-entry:clock', this.clockTimer);
     this.clockTimer = null;
     this.args.stopTimer();
-    this.projectName = null;
   }
 
   @action selectProject(project) {
-    this.projectName = project && project.name;
     this.args.setProject(project);
   }
 

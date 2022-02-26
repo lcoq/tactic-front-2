@@ -10,7 +10,7 @@ export default class ApplicationRoute extends Route {
       return this.store
         .queryRecord('session', {})
         .then((session) => {
-          return this.authentication.authenticate(session);
+          this.authentication.authenticate(session);
         })
         .catch(() => {});
     }

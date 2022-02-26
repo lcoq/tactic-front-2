@@ -1,8 +1,8 @@
 <div class="entry-create {{if this.isSaveErrored "errored"}}" data-test-running-entry>
   <div class="entry-actions no-print">
     {{#if this.isSaveErrored}}
-      <a {{on "click" this.retrySaveEntry}} class="entry-action entry-action-retry touch" data-test-running-entry-retry>
-      </a>
+      <button type="button" {{on "click" this.retrySaveEntry}} class="entry-action entry-action-retry touch" data-test-running-entry-retry>
+      </button>
     {{/if}}
   </div>
   <Input
@@ -13,7 +13,7 @@
     data-test-running-entry-title />
   <div class="entry-create-project-container">
      <EntryChooseProject
-       @projectName={{this.projectName}}
+       @projectName={{this.entry.project.name}}
        @classNamePrefix="entry-create"
        @searchProjects={{this.searchProjects}}
        @selectProject={{this.selectProject}}

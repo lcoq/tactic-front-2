@@ -29,7 +29,7 @@ export default function (config) {
   return createServer({
     ...config,
     routes,
-    trackRequests: true
+    trackRequests: true,
   });
 }
 
@@ -43,7 +43,7 @@ function routes() {
       return new Response(422, {}, {});
     }
   });
-  this.post('/sessions', function (schema, request) {
+  this.post('/sessions', function (schema /*, request*/) {
     let attrs = this.normalizedRequestAttrs();
     const user = schema.users.find(attrs.userId);
     if (user && user.password === attrs.password) {

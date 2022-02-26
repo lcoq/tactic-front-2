@@ -150,11 +150,17 @@
   justify-content: center;
   align-items: center;
   padding: $sp-sm 0;
+  box-sizing: content-box;
 }
 
 .entry-action-delete-img, .entry-action-cancel-img, .entry-action-restart-img {
   width: 16px;
   height: 16px;
+}
+
+.entry-action {
+  text-indent: -9999px;
+  white-space: nowrap;
 }
 
 .entry-action-retry {
@@ -166,6 +172,27 @@
   &:hover {
     background-image: url('/assets/images/refresh.svg');
   }
+}
+
+.entry-action-revert {
+  background-image: url('/assets/images/revert.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px;
+}
+
+.entry-action-delete {
+  background-image: url('/assets/images/trash.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px;
+}
+
+.entry-action-change-date {
+  background-image: url('/assets/images/calendar.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px;
 }
 
 .entry-content {

@@ -5,8 +5,8 @@ import moment from 'moment';
 export default class EntryGroupByDayListModel extends EntryGroupModel {
   @tracked groups = [];
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
     this._addEntries(this.entries);
   }
 
@@ -67,7 +67,7 @@ export default class EntryGroupByDayListModel extends EntryGroupModel {
 
   _createGroup(day) {
     const momentDay = moment(day);
-    const group = EntryGroupModel.create({ day });
+    const group = new EntryGroupModel({ day });
     const insertIndex = this._findInsertIndex(this.groups, (g) =>
       momentDay.isAfter(g.day)
     );

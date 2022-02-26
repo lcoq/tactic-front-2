@@ -1,6 +1,5 @@
 import Component from '@glimmer/component';
-import { action, computed } from '@ember/object';
-import { reads } from '@ember/object/computed';
+import { action } from '@ember/object';
 import { isEmpty, isPresent } from '@ember/utils';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
@@ -11,28 +10,26 @@ export default class EntryChooseProjectComponent extends Component {
   @tracked projects = null;
   @tracked hoveredProject = null;
 
-  @reads('args.classNamePrefix') classNamePrefix;
-  @reads('args.focusOnInput') focusOnInput;
+  get classNamePrefix() {
+    return this.args.classNamePrefix;
+  }
 
-  @computed('args.projectName')
+  get focusOnInput() {
+    return this.args.focusOnInput;
+  }
+
   get projectName() {
     return this.args.projectName;
   }
-  set projectName(value) {
-    return value;
-  }
 
-  @computed('classNamePrefix')
   get inputClasses() {
     return `text-input ${this.classNamePrefix}-project`;
   }
 
-  @computed('classNamePrefix')
   get projectsListClasses() {
     return `${this.classNamePrefix}-project-choices`;
   }
 
-  @computed('classNamePrefix')
   get projectClasses() {
     return `${this.classNamePrefix}-project-choice touch`;
   }
@@ -54,18 +51,17 @@ export default class EntryChooseProjectComponent extends Component {
   }
 
   @action keyPressed(event) {
+    const inputValue = event.target.value;
     if (event.key === 'Enter') {
-      this._selectOrClearIfEmpty();
+      this._selectOrClearIfEmpty(inputValue);
     } else if (event.key === 'ArrowDown') {
       this._moveHoveredProject(+1);
     } else if (event.key === 'ArrowUp') {
       this._moveHoveredProject(-1);
     } else {
       this.args.keyPressed?.();
-      this.deferer.debounce(
-        'entry-choose-project:search',
-        this,
-        this._searchProjects
+      this.deferer.debounce('entry-choose-project:search', this, () =>
+        this._searchProjects(inputValue)
       );
     }
   }
@@ -82,13 +78,12 @@ export default class EntryChooseProjectComponent extends Component {
     this.hoveredProject = this.projects.objectAt(index);
   }
 
-  _selectOrClearIfEmpty() {
-    const newProject = isPresent(this.projectName) ? this.hoveredProject : null;
+  _selectOrClearIfEmpty(value) {
+    const newProject = isPresent(value) ? this.hoveredProject : null;
     this.selectProject(newProject);
   }
 
-  _searchProjects() {
-    const query = this.projectName;
+  _searchProjects(query) {
     this.args.searchProjects(query).then((projects) => {
       this._eventuallyUpdateProjects(projects);
     });

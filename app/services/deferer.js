@@ -3,7 +3,6 @@ import { debounce, later, cancel } from '@ember/runloop';
 
 import ENV from '../config/environment';
 const isTest = ENV.environment === 'test';
-const isntTest = !isTest;
 
 const TEST_DELAY = 5;
 const ENTRY_SAVE_DELAY = isTest ? TEST_DELAY : 3000;
@@ -34,16 +33,12 @@ export default class DefererService extends Service {
     this._cancel(key, timer);
   }
 
-  usesNativeTimeout(key) {
+  usesNativeTimeout(/* key */) {
     return false;
   }
 
   wait(key) {
     return this.waitsByKey[key];
-  }
-
-  init() {
-    super.init(...arguments);
   }
 
   _later(key, target, method, wait) {

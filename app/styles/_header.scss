@@ -47,7 +47,8 @@
   line-height: $btn-size;
   padding: 0 $sp;
 
-  &:hover, &.active {
+  &:hover,
+  &.active {
     color: $clr4;
     background-color: $clr6;
   }

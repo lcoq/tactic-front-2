@@ -32,9 +32,9 @@ a {
   line-height: $btn-size-sm;
 
   &:before {
-    content: "";
+    content: '';
     position: absolute;
-    top: - $sp-sm;
+    top: -$sp-sm;
     left: $sp-xs;
     width: 0;
     height: 0;

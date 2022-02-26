@@ -25,7 +25,9 @@
   }
 }
 
-.reviews-filter-users, .reviews-filter-clients, .reviews-filter-projects {
+.reviews-filter-users,
+.reviews-filter-clients,
+.reviews-filter-projects {
   width: 20%;
 
   .reviews-filter-item-list {
@@ -40,7 +42,8 @@
   padding: 0 $sp-sm;
 }
 
-.reviews-filter-header-title, .reviews-filter-header-count {
+.reviews-filter-header-title,
+.reviews-filter-header-count {
   display: inline-block;
   color: $clr5;
 }
@@ -90,7 +93,8 @@
   align-items: baseline;
 }
 
-.reviews-filter-item-checkbox, .reviews-filter-item-checkbox-txt {
+.reviews-filter-item-checkbox,
+.reviews-filter-item-checkbox-txt {
   vertical-align: middle;
   color: $clr2;
 }
@@ -100,7 +104,8 @@
   margin-right: $sp-sm;
 }
 
-.reviews-filter-from, .reviews-filter-to {
+.reviews-filter-from,
+.reviews-filter-to {
   display: flex;
   align-items: baseline;
   cursor: pointer;
@@ -114,11 +119,13 @@
   margin-left: auto;
 }
 
-.reviews-filter-from-txt, .reviews-filter-to-txt {
+.reviews-filter-from-txt,
+.reviews-filter-to-txt {
   margin-right: $sp;
 }
 
-.reviews-filter-from-date, .reviews-filter-to-date {
+.reviews-filter-from-date,
+.reviews-filter-to-date {
   display: none;
   position: absolute;
   top: 100%;

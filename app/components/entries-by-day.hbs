@@ -1,13 +1,24 @@
 <section class="entry-group-list">
   <h2 class="entry-group-list-duration only-print">
-    Total: {{format-duration this.list.durationInSeconds}}
+    Total:
+    {{format-duration this.list.durationInSeconds}}
   </h2>
   {{#each this.list.groups as |group|}}
     <section class="entry-group" data-test-entry-group>
       <header class="entry-group-header">
-        <h2 title={{moment-format group.day "YYYY-MM-DD"}} class="entry-group-header-title no-print" data-test-entry-group-title>{{entry-group-day group.day}}</h2>
-        <h2 class="entry-group-header-title only-print">{{moment-format group.day "YYYY-MM-DD"}}</h2>
-        <div class="entry-group-header-duration" data-test-entry-group-duration>{{format-duration group.durationInSeconds}}</div>
+        <h2
+          title={{moment-format group.day "YYYY-MM-DD"}}
+          class="entry-group-header-title no-print"
+          data-test-entry-group-title
+        >{{entry-group-day group.day}}</h2>
+        <h2 class="entry-group-header-title only-print">{{moment-format
+            group.day
+            "YYYY-MM-DD"
+          }}</h2>
+        <div
+          class="entry-group-header-duration"
+          data-test-entry-group-duration
+        >{{format-duration group.durationInSeconds}}</div>
       </header>
       <ul class="entry-group-item-list">
         {{#each group.entries as |entry|}}
@@ -19,7 +30,8 @@
             @didDeleteEntry={{this.didDeleteEntry}}
             @didRevertEntry={{this.didRevertEntry}}
             @restartEntry={{this.restartEntry}}
-            @searchProjects={{this.searchProjects}} />
+            @searchProjects={{this.searchProjects}}
+          />
         {{/each}}
       </ul>
     </section>

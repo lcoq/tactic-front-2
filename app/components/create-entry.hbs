@@ -1,7 +1,15 @@
-<div class="entry-create {{if this.isSaveErrored "errored"}}" data-test-running-entry>
+<div
+  class="entry-create {{if this.isSaveErrored 'errored'}}"
+  data-test-running-entry
+>
   <div class="entry-actions no-print">
     {{#if this.isSaveErrored}}
-      <button type="button" {{on "click" this.retrySaveEntry}} class="entry-action entry-action-retry touch" data-test-running-entry-retry>
+      <button
+        type="button"
+        {{on "click" this.retrySaveEntry}}
+        class="entry-action entry-action-retry touch"
+        data-test-running-entry-retry
+      >
       </button>
     {{/if}}
   </div>
@@ -10,21 +18,33 @@
     class="entry-create-title text-input"
     placeholder="What are you working on ?"
     {{on "keyup" this.startTimerOrTriggerUpdate}}
-    data-test-running-entry-title />
+    data-test-running-entry-title
+  />
   <div class="entry-create-project-container">
-     <EntryChooseProject
-       @projectName={{this.entry.project.name}}
-       @classNamePrefix="entry-create"
-       @searchProjects={{this.searchProjects}}
-       @selectProject={{this.selectProject}}
-       @keyPressed={{this.startTimer}} />
+    <EntryChooseProject
+      @projectName={{this.entry.project.name}}
+      @classNamePrefix="entry-create"
+      @searchProjects={{this.searchProjects}}
+      @selectProject={{this.selectProject}}
+      @keyPressed={{this.startTimer}}
+    />
   </div>
   <div class="entry-create-duration touch" data-test-running-entry-duration>
     {{if this.isStarted this.entryDuration "00:00:00"}}
   </div>
   {{#if this.isStarted}}
-    <button class="entry-create-stop touch" data-test-stop-entry type="button" {{on "click" this.stopTimer}}>Stop</button>
+    <button
+      class="entry-create-stop touch"
+      data-test-stop-entry
+      type="button"
+      {{on "click" this.stopTimer}}
+    >Stop</button>
   {{else}}
-    <button class="entry-create-start touch" data-test-start-entry type="button" {{on "click" this.startTimer}}>Start</button>
+    <button
+      class="entry-create-start touch"
+      data-test-start-entry
+      type="button"
+      {{on "click" this.startTimer}}
+    >Start</button>
   {{/if}}
 </div>

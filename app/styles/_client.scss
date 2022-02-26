@@ -8,7 +8,13 @@
   min-height: $btn-size-sm;
 }
 
-.client:hover, .client.invalid, .client.save-errored, .client.delete-errored, .client.deleting, .client.pending, .client.editing {
+.client:hover,
+.client.invalid,
+.client.save-errored,
+.client.delete-errored,
+.client.deleting,
+.client.pending,
+.client.editing {
   .client-actions {
     display: flex;
   }
@@ -28,11 +34,13 @@
   }
 }
 
-.client.invalid, .client.save-errored {
+.client.invalid,
+.client.save-errored {
   background-color: $clr9;
 }
 
-.client.deleting, .client.delete-errored {
+.client.deleting,
+.client.delete-errored {
   background-color: $clr16;
 }
 
@@ -63,7 +71,9 @@
   align-items: center;
 }
 
-.client-action-invalid-img, .client-action-delete-img, .client-action-cancel-img {
+.client-action-invalid-img,
+.client-action-delete-img,
+.client-action-cancel-img {
   width: 16px;
   height: 16px;
 }

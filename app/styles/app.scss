@@ -1,21 +1,21 @@
-@import "reset";
+@import 'reset';
 
-@import "variables";
-@import "responsive";
+@import 'variables';
+@import 'responsive';
 
 @media screen {
-  @import "global";
-  @import "layout";
-  @import "header";
-  @import "calendar";
+  @import 'global';
+  @import 'layout';
+  @import 'header';
+  @import 'calendar';
 
-  @import "login";
-  @import "entry";
-  @import "reviews";
-  @import "projects";
-  @import "client";
+  @import 'login';
+  @import 'entry';
+  @import 'reviews';
+  @import 'projects';
+  @import 'client';
 }
 
 @media print {
-  @import "print";
+  @import 'print';
 }

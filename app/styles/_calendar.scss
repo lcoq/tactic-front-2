@@ -30,7 +30,8 @@
   padding: 0 $sp-sm $sp-sm $sp-sm;
 }
 
-.ui-datepicker-prev, .ui-datepicker-next {
+.ui-datepicker-prev,
+.ui-datepicker-next {
   display: inline-block;
   width: 20px;
   height: 20px;
@@ -61,5 +62,5 @@
 }
 
 .ui-datepicker-today {
-  font-weight: bold
+  font-weight: bold;
 }

@@ -14,7 +14,12 @@
   line-height: $btn-size;
 }
 
-.project:hover, .project.invalid, .project.errored, .project.deleting, .project.pending, .project.editing {
+.project:hover,
+.project.invalid,
+.project.errored,
+.project.deleting,
+.project.pending,
+.project.editing {
   .project-actions {
     display: flex;
   }
@@ -24,7 +29,9 @@
   background-color: $clr7;
 }
 
-.project.invalid, .project.errored, .project.deleting {
+.project.invalid,
+.project.errored,
+.project.deleting {
   background-color: $clr9;
 }
 
@@ -54,7 +61,9 @@
   align-items: center;
 }
 
-.project-action-invalid-img, .project-action-delete-img, .project-action-cancel-img {
+.project-action-invalid-img,
+.project-action-delete-img,
+.project-action-cancel-img {
   width: 16px;
   height: 16px;
 }

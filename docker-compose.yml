@@ -10,7 +10,7 @@ services:
     tmpfs:
       - /myapp/tmp
     ports:
-      - "4200:4200"
+      - '4200:4200'
   test:
     image: danlynn/ember-cli:4.1.1
     command: ember test --server
@@ -19,5 +19,5 @@ services:
     tmpfs:
       - /myapp/tmp
     ports:
-      - "7020:7020"
-      - "7357:7357"
+      - '7020:7020'
+      - '7357:7357'

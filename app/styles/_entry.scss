@@ -1,36 +1,46 @@
-.entry-root-group-list, .entry-group-list {
+.entry-root-group-list,
+.entry-group-list {
   width: 100%;
   color: $clr2;
 }
 
-.entry-root-group-list-header, .entry-root-group-header, .entry-group-header {
+.entry-root-group-list-header,
+.entry-root-group-header,
+.entry-group-header {
   display: flex;
   align-items: center;
   padding: $sp-sm;
 }
 
-.entry-root-group-header-title, .entry-group-header-title {
+.entry-root-group-header-title,
+.entry-group-header-title {
   font-size: $fs-lg;
   font-weight: bold;
   white-space: nowrap;
 }
 
-.entry-root-group-header-duration, .entry-group-header-duration {
+.entry-root-group-header-duration,
+.entry-group-header-duration {
   margin-left: $sp;
   font-weight: bold;
   font-size: $fs-sm;
 }
 
-.entry-root-group-list-header-actions, .entry-root-group-header-actions, .entry-group-header-actions {
+.entry-root-group-list-header-actions,
+.entry-root-group-header-actions,
+.entry-group-header-actions {
   margin-left: auto;
 }
 
-.entry-root-group-list-header-action, .entry-root-group-header-action, .entry-group-header-action {
+.entry-root-group-list-header-action,
+.entry-root-group-header-action,
+.entry-group-header-action {
   padding: $sp-xs $sp-xs;
   font-weight: bold;
 }
 
-.entry-root-group-list-header-action, .entry-group-header-action {
+.entry-root-group-list-header-action,
+.entry-group-header-action {
   color: $clr4;
 }
 
@@ -104,7 +114,10 @@
   min-width: 600px;
 }
 
-.entry:hover, .entry.errored, .entry.deleting, .entry.pending {
+.entry:hover,
+.entry.errored,
+.entry.deleting,
+.entry.pending {
   .entry-action {
     visibility: visible;
   }
@@ -120,7 +133,8 @@
   background-color: $clr7;
 }
 
-.entry.errored, .entry.deleting {
+.entry.errored,
+.entry.deleting {
   background-color: $clr9;
 }
 
@@ -153,7 +167,9 @@
   box-sizing: content-box;
 }
 
-.entry-action-delete-img, .entry-action-cancel-img, .entry-action-restart-img {
+.entry-action-delete-img,
+.entry-action-cancel-img,
+.entry-action-restart-img {
   width: 16px;
   height: 16px;
 }
@@ -200,13 +216,20 @@
   align-items: center;
 }
 
-.entry-date, .entry-title, .entry-duration, .entry-started-at, .entry-stopped-at {
+.entry-date,
+.entry-title,
+.entry-duration,
+.entry-started-at,
+.entry-stopped-at {
   display: flex;
   align-items: center;
   min-height: $btn-size;
 }
 
-.entry-project, .entry-duration, .entry-started-at, .entry-stopped-at {
+.entry-project,
+.entry-duration,
+.entry-started-at,
+.entry-stopped-at {
   line-height: $btn-size;
 }
 
@@ -221,12 +244,16 @@
   line-height: 30px;
 }
 
-.entry-title-no-title, .entry-project-no-project {
+.entry-title-no-title,
+.entry-project-no-project {
   font-style: italic;
   white-space: nowrap;
 }
 
-.entry-project, .entry-duration, .entry-started-at, .entry-stopped-at {
+.entry-project,
+.entry-duration,
+.entry-started-at,
+.entry-stopped-at {
   padding: 0 $sp;
   justify-content: center;
   flex-wrap: nowrap;
@@ -244,7 +271,8 @@
   min-width: 80px;
 }
 
-.entry-started-at, .entry-stopped-at {
+.entry-started-at,
+.entry-stopped-at {
   color: $clr5;
   font-size: $fs-xs;
   width: 5%;
@@ -255,19 +283,24 @@
   padding-left: $sp-sm;
 }
 
-.entry-edit-project, .entry-edit-duration, .entry-edit-started-at, .entry-edit-stopped-at {
+.entry-edit-project,
+.entry-edit-duration,
+.entry-edit-started-at,
+.entry-edit-stopped-at {
   text-align: center;
   max-width: 100%;
 }
 
-.entry-edit-project-choices, .entry-create-project-choices {
+.entry-edit-project-choices,
+.entry-create-project-choices {
   position: absolute;
   background-color: $clr3;
   z-index: 1;
   min-width: 100%;
 }
 
-.entry-edit-project-choice, .entry-create-project-choice {
+.entry-edit-project-choice,
+.entry-create-project-choice {
   padding: 0 $sp;
   white-space: nowrap;
 
@@ -297,7 +330,8 @@
   margin-bottom: $sp;
 }
 
-.entry-create-title, .entry-create-project {
+.entry-create-title,
+.entry-create-project {
   border-bottom: 1px solid $clr3;
 
   &:hover {
@@ -331,7 +365,8 @@
   color: $clr5;
 }
 
-.entry-create-start, .entry-create-stop {
+.entry-create-start,
+.entry-create-stop {
   padding: $sp-xs 60px;
   color: $clr10;
 }

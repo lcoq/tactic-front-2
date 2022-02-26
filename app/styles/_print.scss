@@ -25,7 +25,8 @@ body {
   margin-bottom: $sp;
 }
 
-.reviews-filter-header, .reviews-filter-header-title {
+.reviews-filter-header,
+.reviews-filter-header-title {
   display: inline;
   font-weight: bold;
 }
@@ -45,7 +46,8 @@ body {
   content: ': ';
 }
 
-.reviews-filter-from, .reviews-filter-to {
+.reviews-filter-from,
+.reviews-filter-to {
   display: inline;
   font-size: $fs-xl;
 }
@@ -70,19 +72,25 @@ body {
   margin-bottom: $sp-lg;
 }
 
-.entry-root-group-list-header, .entry-root-group-header, .entry-group-header {
+.entry-root-group-list-header,
+.entry-root-group-header,
+.entry-group-header {
   display: flex;
   padding: $sp-sm;
   margin: $sp-xs 0;
 }
 
-.entry-root-group-list-header-title, .entry-root-group-header-title, .entry-group-header-title {
+.entry-root-group-list-header-title,
+.entry-root-group-header-title,
+.entry-group-header-title {
   display: inline;
   margin-right: $sp-sm;
   font-weight: bold;
 }
 
-.entry-root-group-list-header-duration, .entry-root-group-header-duration, .entry-group-header-duration {
+.entry-root-group-list-header-duration,
+.entry-root-group-header-duration,
+.entry-group-header-duration {
   display: inline;
 }
 
@@ -97,7 +105,6 @@ body {
   border: 1px solid $clr2;
 }
 
-
 .entry-group-header {
   border-bottom: 1px solid $clr2;
 }
@@ -110,7 +117,6 @@ body {
 .entry-root-group-header-duration {
   font-weight: bold;
 }
-
 
 /* entry */
 

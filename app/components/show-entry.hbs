@@ -1,35 +1,71 @@
-<li class="entry {{this.classNames}}" data-test-entry="{{this.entry.id}}" {{this.onFocusOutClickModifier this.closeEdit}}>
+<li
+  class="entry {{this.classNames}}"
+  data-test-entry="{{this.entry.id}}"
+  {{this.onFocusOutClickModifier this.closeEdit}}
+>
 
   {{#unless this.rounding}}
     <div class="entry-actions no-print">
       {{#if this.isErrored}}
-        <button type="button" {{on "click" this.retrySaveOrDeleteEntry}} class="entry-action entry-action-retry touch" data-test-entry-retry>
+        <button
+          type="button"
+          {{on "click" this.retrySaveOrDeleteEntry}}
+          class="entry-action entry-action-retry touch"
+          data-test-entry-retry
+        >
           Retry
         </button>
       {{/if}}
       {{#if this.canRevert}}
-        <button type="button" {{on "click" this.revertEditEntry}} class="entry-action entry-action-revert touch" data-test-entry-edit-rollback>
+        <button
+          type="button"
+          {{on "click" this.revertEditEntry}}
+          class="entry-action entry-action-revert touch"
+          data-test-entry-edit-rollback
+        >
           Revert
         </button>
       {{/if}}
       {{#if this.isClear}}
-        <button type="button" {{on "click" this.markEntryForDelete}} class="entry-action entry-action-delete touch" data-test-entry-delete>
+        <button
+          type="button"
+          {{on "click" this.markEntryForDelete}}
+          class="entry-action entry-action-delete touch"
+          data-test-entry-delete
+        >
           Delete
         </button>
-        <button type="button" {{on "click" this.editEntryDate}} class="entry-action entry-action-change-date touch" data-test-entry-edit-date>
+        <button
+          type="button"
+          {{on "click" this.editEntryDate}}
+          class="entry-action entry-action-change-date touch"
+          data-test-entry-edit-date
+        >
           Change date
         </button>
       {{/if}}
       {{#if this.canRestartEntry}}
-        <button type="button" {{on "click" this.restartEntry}} class="entry-action entry-action-restart touch" data-test-entry-restart>
-          <img class="entry-action-restart-img" src="/assets/images/play.svg" alt="Restart" />
+        <button
+          type="button"
+          {{on "click" this.restartEntry}}
+          class="entry-action entry-action-restart touch"
+          data-test-entry-restart
+        >
+          <img
+            class="entry-action-restart-img"
+            src="/assets/images/play.svg"
+            alt="Restart"
+          />
         </button>
       {{/if}}
     </div>
   {{/unless}}
 
   <div class="entry-content">
-    {{#if this.isEditingDate}}<div class="entry-edit-date" {{datepicker this.entry.startedAt this.updateEntryDate}}/>{{/if}}
+    {{#if this.isEditingDate}}<div
+        class="entry-edit-date"
+        {{datepicker this.entry.startedAt this.updateEntryDate}}
+      ></div>{{/if}}
 
     {{#if this.isEditing}}
       <div class="entry-title">
@@ -39,10 +75,15 @@
           @enter={{this.closeEdit}}
           {{select-on-focus}}
           {{focus-if (eq this.fieldNameToFocusOnEdit "title")}}
-          data-test-entry-edit-title />
+          data-test-entry-edit-title
+        />
       </div>
     {{else}}
-      <div {{on "click" (fn this.editEntry "title")}} class="entry-title touch" data-test-entry-title>
+      <div
+        {{on "click" (fn this.editEntry "title")}}
+        class="entry-title touch"
+        data-test-entry-title
+      >
         {{#if this.entry.title}}
           {{this.entry.title}}
         {{else}}
@@ -58,10 +99,15 @@
           @classNamePrefix="entry-edit"
           @searchProjects={{this.searchProjects}}
           @selectProject={{this.selectProject}}
-          @focusOnInput={{eq this.fieldNameToFocusOnEdit "project"}} />
+          @focusOnInput={{eq this.fieldNameToFocusOnEdit "project"}}
+        />
       </div>
     {{else}}
-      <div {{on "click" (fn this.editEntry "project")}} class="entry-project touch" data-test-entry-project>
+      <div
+        {{on "click" (fn this.editEntry "project")}}
+        class="entry-project touch"
+        data-test-entry-project
+      >
         {{#if this.entry.project}}
           {{this.entry.project.name}}
         {{else}}
@@ -73,16 +119,21 @@
     {{#if this.isEditing}}
       <div class="entry-duration touch">
         <Input
-           @value={{this.formattedDuration}}
+          @value={{this.formattedDuration}}
           class="entry-edit-duration text-input"
           @enter={{this.closeEdit}}
           {{select-on-focus}}
           {{focus-if (eq this.fieldNameToFocusOnEdit "duration")}}
           {{on "focusout" this.formattedDurationChanged}}
-          data-test-entry-edit-duration />
+          data-test-entry-edit-duration
+        />
       </div>
     {{else}}
-      <div {{on "click" (fn this.editEntry "duration")}} class="entry-duration touch" data-test-entry-duration>
+      <div
+        {{on "click" (fn this.editEntry "duration")}}
+        class="entry-duration touch"
+        data-test-entry-duration
+      >
         {{format-duration this.entry.durationInSeconds}}
       </div>
     {{/if}}
@@ -95,10 +146,15 @@
           @enter={{this.closeEdit}}
           {{select-on-focus}}
           {{focus-if (eq this.fieldNameToFocusOnEdit "startedAt")}}
-          data-test-entry-edit-started-at />
+          data-test-entry-edit-started-at
+        />
       </div>
     {{else}}
-      <div {{on "click" (fn this.editEntry "startedAt")}} class="entry-started-at touch no-print" data-test-entry-started-at>
+      <div
+        {{on "click" (fn this.editEntry "startedAt")}}
+        class="entry-started-at touch no-print"
+        data-test-entry-started-at
+      >
         {{#if this.entry.startedAt}}
           {{moment-format this.entry.startedAt "H:mm"}}
         {{/if}}
@@ -113,10 +169,15 @@
           @enter={{this.closeEdit}}
           {{select-on-focus}}
           {{focus-if (eq this.fieldNameToFocusOnEdit "stoppedAt")}}
-          data-test-entry-edit-stopped-at />
+          data-test-entry-edit-stopped-at
+        />
       </div>
     {{else}}
-      <div {{on "click" (fn this.editEntry "stoppedAt")}} class="entry-stopped-at touch no-print" data-test-entry-stopped-at>
+      <div
+        {{on "click" (fn this.editEntry "stoppedAt")}}
+        class="entry-stopped-at touch no-print"
+        data-test-entry-stopped-at
+      >
         {{#if this.entry.stoppedAt}}
           {{moment-format this.entry.stoppedAt "H:mm"}}
         {{/if}}

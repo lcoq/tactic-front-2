@@ -95,6 +95,7 @@ module('Acceptance | index', function (hooks) {
     assert.strictEqual(currentURL(), '/', 'should remains on index');
   });
 
+  // prettier-ignore
   test('shows recent user entries grouped by day', async function (assert) { // eslint-disable-line
     const user = await this.utils.authenticate();
 

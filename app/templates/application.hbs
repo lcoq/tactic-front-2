@@ -6,16 +6,27 @@
   <div class="header-brand-container">
     <h1 class="header-brand">Tactic</h1>
     {{#if this.isAuthenticated}}
-      <LinkTo @route="login" class="header-brand-user no-print" data-test-login-link>@ {{this.currentUserName}}</LinkTo>
+      <LinkTo
+        @route="login"
+        class="header-brand-user no-print"
+        data-test-login-link
+      >@ {{this.currentUserName}}</LinkTo>
     {{/if}}
   </div>
 
   {{#if this.isAuthenticated}}
     <nav class="header-nav no-print">
       <section class="header-nav-section">
-        <LinkTo @route="index" data-test-index-link class="header-nav-section-title touch">Timer</LinkTo>
+        <LinkTo
+          @route="index"
+          data-test-index-link
+          class="header-nav-section-title touch"
+        >Timer</LinkTo>
       </section>
-      <UserSummary @weekEntries={{this.weekEntries}} @monthEntries={{this.monthEntries}} />
+      <UserSummary
+        @weekEntries={{this.weekEntries}}
+        @monthEntries={{this.monthEntries}}
+      />
     </nav>
   {{/if}}
 </header>

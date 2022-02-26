@@ -105,14 +105,14 @@
 }
 
 .entry:hover, .entry.errored, .entry.deleting, .entry.pending {
-  .entry-actions {
-    display: flex;
+  .entry-action {
+    visibility: visible;
   }
 }
 
 .entry-create.errored {
-  .entry-actions {
-    display: flex;
+  .entry-action {
+    visibility: visible;
   }
 }
 
@@ -138,13 +138,14 @@
 }
 
 .entry-actions {
-  display: none;
+  display: flex;
   position: absolute;
   right: 100%;
   top: 0;
 }
 
 .entry-action {
+  visibility: hidden;
   display: flex;
   justify-content: center;
   align-items: center;

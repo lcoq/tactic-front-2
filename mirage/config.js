@@ -60,5 +60,15 @@ function routes() {
   this.patch('/entries/:id');
   this.delete('/entries/:id');
 
-  this.get('/projects');
+  this.get('/projects', (schema) => {
+    return schema.projects.all().sort(sortByName);
+  });
+
+  this.get('/clients', (schema) => {
+    return schema.clients.all().sort(sortByName);
+  });
+}
+
+function sortByName(a, b) {
+  return a.name < b.name ? -1 : 1;
 }

@@ -55,6 +55,17 @@ module('Acceptance | application', function (hooks) {
       .hasAttribute('href', '/', 'should links to index page');
   });
 
+  test('shows projects link when authenticated', async function (assert) {
+    await this.utils.authenticate();
+    await visit('/');
+    assert
+      .dom('[data-test-projects-link]')
+      .exists('should have link to projects page');
+    assert
+      .dom('[data-test-projects-link]')
+      .hasAttribute('href', '/projects', 'should links to projects page');
+  });
+
   test('shows week user summary when authenticated', async function (assert) {
     const user = await this.utils.authenticate();
 

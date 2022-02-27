@@ -1,0 +1,29 @@
+{{page-title "Projects"}}
+
+<section class="project-group-list-container">
+  <h1 class="project-group-list-title">Projects</h1>
+  {{#each @model.groups as |group|}}
+    <section class="project-group" data-test-client-with-projects>
+      <ShowClient @client={{group.client}} />
+      <ul class="project-group-item-list">
+        {{#each group.projects as |project|}}
+          <ShowProject @project={{project}} />
+        {{/each}}
+        <li class="project project-create touch" data-test-new-project>
+          <span class="project-create-plus">+</span>
+          Create new project
+        </li>
+      </ul>
+    </section>
+  {{/each}}
+  <section class="project-group project-group-create" data-test-client-new>
+    <header class="client">
+      <h2 class="client-title touch">
+        <span class="client-title-txt">
+          <span class="client-create-plus">+</span>
+          <span class="client-create-plus-txt">Create new client</span>
+        </span>
+      </h2>
+    </header>
+  </section>
+</section>

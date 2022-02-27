@@ -23,6 +23,13 @@
           class="header-nav-section-title touch"
         >Timer</LinkTo>
       </section>
+      <section class="header-nav-section">
+        <LinkTo
+          @route="projects"
+          data-test-projects-link
+          class="header-nav-section-title touch"
+        >Projects</LinkTo>
+      </section>
       <UserSummary
         @weekEntries={{this.weekEntries}}
         @monthEntries={{this.monthEntries}}

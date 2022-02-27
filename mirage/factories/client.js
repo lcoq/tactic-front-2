@@ -3,6 +3,6 @@ import { faker } from '@faker-js/faker';
 
 export default Factory.extend({
   name() {
-    return faker.unique(faker.company.productName);
+    return faker.unique(faker.company.companyName);
   },
 });

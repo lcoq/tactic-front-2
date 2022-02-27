@@ -1,7 +1,6 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
-import { tracked } from '@glimmer/tracking';
 import formatDuration from '../utils/format-duration';
 
 export default class CreateEntryComponent extends Component {

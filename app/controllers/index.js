@@ -175,7 +175,7 @@ export default class IndexController extends Controller {
   }
 
   _entryStoppedOnlyLocally = null;
-  _lastRetrySaveEntryStoppedOnlyLocallyTime = new Date().getTime();
+  _lastRetrySaveEntryStoppedOnlyLocallyTime = 0;
   _retrySaveEntryStoppedOnlyLocallyPromise = reject();
 
   _reloadOrScheduleUserSummary() {

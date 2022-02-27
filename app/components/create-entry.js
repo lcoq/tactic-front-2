@@ -6,9 +6,11 @@ import formatDuration from '../utils/format-duration';
 
 export default class CreateEntryComponent extends Component {
   @service deferer;
+  @service('clock') clockService;
 
-  @tracked clock = null;
-  @tracked clockTimer = null;
+  get clock() {
+    return this.clockService.clock;
+  }
 
   get entry() {
     return this.args.entry;
@@ -49,32 +51,13 @@ export default class CreateEntryComponent extends Component {
   @action startTimer() {
     if (this.isStarted) return;
     this.args.startTimer();
-    this._updateClock();
   }
 
   @action stopTimer() {
-    this.deferer.cancel('create-entry:clock', this.clockTimer);
-    this.clockTimer = null;
     this.args.stopTimer();
   }
 
   @action selectProject(project) {
     this.args.setProject(project);
-  }
-
-  constructor() {
-    super(...arguments);
-    if (this.entry.isStarted) {
-      this._updateClock();
-    }
-  }
-
-  _updateClock() {
-    this.clock = new Date();
-    this.clockTimer = this.deferer.later(
-      'create-entry:clock',
-      this,
-      this._updateClock
-    );
   }
 }

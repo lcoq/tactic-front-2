@@ -1030,6 +1030,9 @@ module('Acceptance | index', function (hooks) {
     assert
       .dom(`[data-test-running-entry] [data-test-entry-edit-project]`)
       .hasValue('Tactic', 'should set running entry project name');
+    assert
+      .dom(`[data-test-running-entry] [data-test-running-entry-duration]`)
+      .includesText('00:00:', 'should starts entry timer');
   });
 
   test('restarts entry stop the running and restart the entry', async function (assert) {

@@ -126,6 +126,9 @@ export default class IndexController extends Controller {
         },
         () => {
           if (stateManager.isSaveErrored) {
+            if (this._isStoppedOnlyLocally(entry)) {
+              this._entryStoppedOnlyLocally = entry;
+            }
             // TODO move new entry state manager logic to the entry state manager ?
             entry.stateManager.transitionTo('saveError');
           }
@@ -146,17 +149,34 @@ export default class IndexController extends Controller {
      new running entry because there can't be 2 running entries server-side at
      the same time. */
   _saveEntryStoppedOnlyLocally() {
-    const entryStoppedOnlyLocally = this.entryList.entries.find((e) => {
-      const changedAttributes = e.changedAttributes();
-      return (
-        changedAttributes.stoppedAt && changedAttributes.stoppedAt[0] === null
-      );
-    });
-    const promise = entryStoppedOnlyLocally
-      ? entryStoppedOnlyLocally.stateManager.send('retry')
-      : resolve();
-    return promise;
+    const entryStoppedOnlyLocally = this._entryStoppedOnlyLocally;
+    if (!entryStoppedOnlyLocally) return resolve();
+
+    /* avoid saving tries on each character typed */
+    const debounce = 1.5 * 1000;
+    const newTime = new Date().getTime();
+    if (newTime - this._lastRetrySaveEntryStoppedOnlyLocallyTime < debounce) {
+      return this._retrySaveEntryStoppedOnlyLocallyPromise;
+    }
+    this._lastRetrySaveEntryStoppedOnlyLocallyTime = newTime;
+
+    /* ensure previous `retry` is done in order to avoid send `retry` on PendingSave state */
+    this._retrySaveEntryStoppedOnlyLocallyPromise =
+      this._retrySaveEntryStoppedOnlyLocallyPromise
+        .then(null, () => {
+          return entryStoppedOnlyLocally.stateManager.send('retry');
+        })
+        .then(() => {
+          this._entryStoppedOnlyLocally = null;
+          this._retrySaveEntryStoppedOnlyLocallyPromise = reject();
+          return resolve();
+        });
+    return this._retrySaveEntryStoppedOnlyLocallyPromise;
   }
+
+  _entryStoppedOnlyLocally = null;
+  _lastRetrySaveEntryStoppedOnlyLocallyTime = new Date().getTime();
+  _retrySaveEntryStoppedOnlyLocallyPromise = reject();
 
   _reloadOrScheduleUserSummary() {
     if (this.waitingEntries.length === 0) {
@@ -173,5 +193,12 @@ export default class IndexController extends Controller {
 
   _scheduleReloadUserSummary() {
     this.shouldUpdateSummary = true;
+  }
+
+  _isStoppedOnlyLocally(entry) {
+    const changedAttributes = entry.changedAttributes();
+    return (
+      changedAttributes.stoppedAt && changedAttributes.stoppedAt[0] === null
+    );
   }
 }

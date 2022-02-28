@@ -149,7 +149,7 @@ class PendingSaveStateModel extends StateModel {
 
   _cancelTimer() {
     const timer = this._saveTimer;
-    if (timer) {
+    if (timer !== null) {
       this.deferer.cancel('mutable-record-state-manager:save', timer);
       this._saveTimer = null;
     }
@@ -206,7 +206,7 @@ class PendingDeleteStateModel extends StateModel {
 
   _cancelTimer() {
     const timer = this._deleteTimer;
-    if (timer) {
+    if (timer !== null) {
       this.deferer.cancel('mutable-record-state-manager:delete', timer);
       this._deleteTimer = null;
     }

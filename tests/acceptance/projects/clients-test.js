@@ -170,7 +170,7 @@ module('Acceptance | Projects > Clients', function (hooks) {
     );
   });
 
-  test('warn on invalid client and allows to edit it again', async function (assert) {
+  test('warns on invalid client and allows to edit it again', async function (assert) {
     const client = this.server.create('client', { name: 'Productivity' });
     await this.utils.authentication.authenticate();
     await visit('/projects');
@@ -286,7 +286,7 @@ module('Acceptance | Projects > Clients', function (hooks) {
     );
   });
 
-  test('warn on invalid newly created client and delete it on rollback', async function (assert) {
+  test('warns on invalid newly created client and delete it on rollback', async function (assert) {
     await this.utils.authentication.authenticate();
     await visit('/projects');
     await click('[data-test-client-new]');

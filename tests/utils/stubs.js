@@ -39,7 +39,7 @@ const api = {
     );
     const initialWait = this.stub.call(this, deferer, 'wait', function (key) {
       if (key === keyForNativeTimeout) {
-        return 10;
+        return 20;
       } else {
         return initialWait.call(deferer);
       }

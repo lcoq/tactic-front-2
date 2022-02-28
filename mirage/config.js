@@ -61,6 +61,9 @@ function routes() {
   this.delete('/entries/:id');
 
   this.get('/projects', (schema) => schema.projects.all().sort(sortByName));
+  this.post('/projects');
+  this.patch('/projects/:id');
+  this.delete('/projects/:id');
 
   this.get('/clients', (schema) => schema.clients.all().sort(sortByName));
   this.post('/clients');

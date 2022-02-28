@@ -28,7 +28,7 @@ module('Acceptance | Projects > Page', function (hooks) {
   });
 
   test('show projects grouped by client', async function (assert) {
-    assert.expect(24);
+    assert.expect(18);
 
     await this.utils.authentication.authenticate();
 
@@ -99,16 +99,6 @@ module('Acceptance | Projects > Page', function (hooks) {
             `${projectId} should compute its name`
           );
       });
-
-      assert
-        .dom(client.querySelector('[data-test-new-project]'))
-        .exists('should show new project action');
-      assert
-        .dom(client.querySelector('[data-test-new-project]'))
-        .includesText(
-          'Create new project',
-          'should show new project action label'
-        );
     });
   });
 });

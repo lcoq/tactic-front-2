@@ -3,7 +3,10 @@
 <section class="project-group-list-container">
   <h1 class="project-group-list-title">Projects</h1>
   {{#each @model.groups as |group|}}
-    <section class="project-group" data-test-client-with-projects>
+    <section
+      class="project-group"
+      data-test-client-with-projects="{{or group.client.id '-1'}}"
+    >
       <ShowClient
         @client={{group.client}}
         @startEdit={{this.startEditClient}}
@@ -15,9 +18,22 @@
       />
       <ul class="project-group-item-list">
         {{#each group.projects as |project|}}
-          <ShowProject @project={{project}} />
+          <ShowProject
+            @project={{project}}
+            @deleteIsDisabled={{project.client.stateManager.isPendingDelete}}
+            @startEdit={{this.startEditProject}}
+            @stopEdit={{this.stopEditProject}}
+            @cancelEdit={{this.cancelEditProject}}
+            @markForDelete={{this.markProjectForDelete}}
+            @didDelete={{this.didDeleteProject}}
+            @retrySaveOrDelete={{this.retrySaveOrDeleteProject}}
+          />
         {{/each}}
-        <li class="project project-create touch" data-test-new-project>
+        <li
+          {{on "click" (fn this.buildProject group.client)}}
+          class="project project-create touch"
+          data-test-project-new
+        >
           <span class="project-create-plus">+</span>
           Create new project
         </li>

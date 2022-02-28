@@ -1,6 +1,6 @@
 <section
   class="client {{this.classNames}}"
-  data-test-client="{{this.client.id}}"
+  data-test-client="{{or this.client.id '-1'}}"
   {{this.onFocusOutClickModifier this.closeEdit}}
 >
 

@@ -1,6 +1,15 @@
-export function authenticate() {
-  const user = this.server.create('user');
-  const session = this.server.create('session', { user: user });
+function authenticate() {
+  const user = this._context.server.create('user');
+  const session = this._context.server.create('session', { user: user });
   document.cookie = `token=${session.token}; path=/`;
   return user;
+}
+
+export default function setupAuthentication(hooks) {
+  hooks.beforeEach(function () {
+    this.utils.authentication = {
+      authenticate,
+      _context: this,
+    };
+  });
 }

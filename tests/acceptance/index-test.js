@@ -16,67 +16,10 @@ import { Response } from 'miragejs';
 
 import mirageGetEntriesRoute from '../../mirage/routes/get-entries';
 
-function setupStubs(hooks) {
-  hooks.beforeEach(function () {
-    this.stubbedCallbacks = [];
-  });
-  hooks.afterEach(function () {
-    this.stubbedCallbacks.forEach((callback) => callback());
-  });
-}
-
-function stub(target, methodName, replacement) {
-  const initial = target[methodName];
-  target[methodName] = replacement;
-  this.stubbedCallbacks.push(() => (target[methodName] = initial));
-  return initial;
-}
-
-/* This stubs the deferer service by removing running entry clock updates.
-   This avoids infinite loop issue due to constant restart of the timer.
- */
-function stubCreateEntryClock() {
-  const deferer = this.owner.lookup('service:deferer');
-  const initialLater = stub.call(this, deferer, 'later', function (key) {
-    if (key === 'create-entry:clock') {
-      return 12345;
-    } else {
-      return initialLater.apply(deferer, arguments);
-    }
-  });
-}
-
-/* This stubs the deferer service to use native timeout with "reasonable" delay.
-   This allows to test `rollback` on entry as `await` will not wait the
-   pending save entry state to actually save the entry */
-function stubForNativeTimeoutOn(keyForNativeTimeout) {
-  const deferer = this.owner.lookup('service:deferer');
-  const initialUsesNativeTimeout = stub.call(
-    this,
-    deferer,
-    'usesNativeTimeout',
-    function (key) {
-      if (key === keyForNativeTimeout) {
-        return true;
-      } else {
-        return initialUsesNativeTimeout.call(deferer);
-      }
-    }
-  );
-  const initialWait = stub.call(this, deferer, 'wait', function (key) {
-    if (key === keyForNativeTimeout) {
-      return 10;
-    } else {
-      return initialWait.call(deferer);
-    }
-  });
-}
-
 module('Acceptance | index', function (hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
   setupUtils(hooks);
-  setupStubs(hooks);
 
   test('redirects to login when not authenticated', async function (assert) {
     await visit('/');
@@ -90,14 +33,14 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('remains on index when a valid session token is stored in cookies', async function (assert) {
-    await this.utils.authenticate();
+    await this.utils.authentication.authenticate();
     await visit('/');
     assert.strictEqual(currentURL(), '/', 'should remains on index');
   });
 
   // prettier-ignore
   test('shows recent user entries grouped by day', async function (assert) { // eslint-disable-line
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
 
     const projectTactic = this.server.create('project', { name: 'Tactic' });
     const projectOther = this.server.create('project', { name: 'Other' });
@@ -338,7 +281,7 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('updates entry title', async function (assert) {
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
@@ -364,7 +307,7 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('updates entry started at', async function (assert) {
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
@@ -390,7 +333,7 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('updates entry stopped at', async function (assert) {
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
@@ -416,7 +359,7 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('updates entry stopped at after duration update', async function (assert) {
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
 
     const startedAt = moment()
       .startOf('day')
@@ -450,7 +393,7 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('updates project', async function (assert) {
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     const entry = this.server.create('entry', { user });
 
     this.server.create('project', { name: 'Tactic' });
@@ -486,7 +429,7 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('updates started at and stopped at date', async function (assert) {
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     const startedAt = moment()
       .startOf('day')
       .subtract(1, 'day')
@@ -531,7 +474,7 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('updates entry a single time after multiple changes', async function (assert) {
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
 
@@ -582,9 +525,11 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('updates entry and rollback', async function (assert) {
-    stubForNativeTimeoutOn.call(this, 'mutable-record-state-manager:save');
+    this.utils.stubs.stubForNativeTimeoutOn(
+      'mutable-record-state-manager:save'
+    );
 
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     const entry = this.server.create('entry', {
       user,
       title: 'My initial title',
@@ -643,7 +588,7 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('deletes entry', async function (assert) {
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     this.server.create('entry', { user });
     const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
@@ -664,9 +609,11 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('deletes entry and rollback', async function (assert) {
-    stubForNativeTimeoutOn.call(this, 'mutable-record-state-manager:delete');
+    this.utils.stubs.stubForNativeTimeoutOn(
+      'mutable-record-state-manager:delete'
+    );
 
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     this.server.create('entry', { user });
     const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
@@ -695,7 +642,7 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('allows to retry entry update on server error', async function (assert) {
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
     this.server.patch('/entries/:id', () => new Response(500, {}, {}));
@@ -728,7 +675,7 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('allows to retry entry deletion on server error', async function (assert) {
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     const entry = this.server.create('entry', { user });
     this.server.get('/entries', mirageGetEntriesRoute.specificEntries([entry]));
     this.server.delete('/entries/:id', () => new Response(500, {}, {}));
@@ -753,9 +700,9 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('starts entry on start click', async function (assert) {
-    stubCreateEntryClock.call(this);
+    this.utils.stubs.stubCreateEntryClock();
 
-    await this.utils.authenticate();
+    await this.utils.authentication.authenticate();
     await visit('/');
     assert.dom(`[data-test-start-entry]`).exists('should show start button');
     await click(`[data-test-start-entry]`);
@@ -776,9 +723,9 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('starts entry update the favicon', async function (assert) {
-    stubCreateEntryClock.call(this);
+    this.utils.stubs.stubCreateEntryClock();
 
-    await this.utils.authenticate();
+    await this.utils.authentication.authenticate();
     await visit('/');
 
     /* `assert.dom` does not work here, probably because this is "outside" of
@@ -825,9 +772,9 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('starts entry on title type', async function (assert) {
-    stubCreateEntryClock.call(this);
+    this.utils.stubs.stubCreateEntryClock();
 
-    this.utils.authenticate();
+    this.utils.authentication.authenticate();
     await visit('/');
     assert
       .dom(`[data-test-running-entry-title]`)
@@ -855,11 +802,11 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('starts entry on project search type', async function (assert) {
-    stubCreateEntryClock.call(this);
+    this.utils.stubs.stubCreateEntryClock();
 
     const project = this.server.create('project', { name: 'Tactic' });
 
-    await this.utils.authenticate();
+    await this.utils.authentication.authenticate();
     await visit('/');
     assert
       .dom(`[data-test-running-entry] [data-test-entry-edit-project]`)
@@ -899,9 +846,9 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('starts entry allows to retry save on server error', async function (assert) {
-    stubCreateEntryClock.call(this);
+    this.utils.stubs.stubCreateEntryClock();
 
-    await this.utils.authenticate();
+    await this.utils.authentication.authenticate();
     this.server.post('/entries', () => new Response(500, {}, {}));
     await visit('/');
     await typeIn(`[data-test-running-entry-title]`, 'My entry title');
@@ -927,9 +874,9 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('loads the running entry when it exists', async function (assert) {
-    stubCreateEntryClock.call(this);
+    this.utils.stubs.stubCreateEntryClock();
 
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     const project = this.server.create('project', { name: 'Tactic' });
     const runningEntry = this.server.create(
       'entry',
@@ -967,9 +914,9 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('stops the running entry', async function (assert) {
-    stubCreateEntryClock.call(this);
+    this.utils.stubs.stubCreateEntryClock();
 
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     const project = this.server.create('project', { name: 'Tactic' });
     const runningEntry = this.server.create(
       'entry',
@@ -1006,9 +953,9 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('restarts entry', async function (assert) {
-    stubCreateEntryClock.call(this);
+    this.utils.stubs.stubCreateEntryClock();
 
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     const project = this.server.create('project', { name: 'Tactic' });
     const entry = this.server.create('entry', {
       user,
@@ -1036,9 +983,9 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('restarts entry stop the running and restart the entry', async function (assert) {
-    stubCreateEntryClock.call(this);
+    this.utils.stubs.stubCreateEntryClock();
 
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     const runningEntry = this.server.create('entry', { user }, 'running');
     this.server.get(
       '/entries',
@@ -1084,9 +1031,9 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('restarts entry stop the running and restart the entry even when the stop results in server error', async function (assert) {
-    stubCreateEntryClock.call(this);
+    this.utils.stubs.stubCreateEntryClock();
 
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     const runningEntry = this.server.create('entry', { user }, 'running');
     this.server.get(
       '/entries',
@@ -1122,9 +1069,9 @@ module('Acceptance | index', function (hooks) {
   });
 
   test('saves entry stopped locally but resulted in server error before saving new running entry', async function (assert) {
-    stubCreateEntryClock.call(this);
+    this.utils.stubs.stubCreateEntryClock();
 
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     const runningEntry = this.server.create('entry', { user }, 'running');
     this.server.get(
       '/entries',

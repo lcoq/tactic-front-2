@@ -31,7 +31,7 @@ module('Acceptance | application', function (hooks) {
   setupUtils(hooks);
 
   test('shows login link when authenticated', async function (assert) {
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
     await visit('/');
     assert
       .dom('[data-test-login-link]')
@@ -45,7 +45,7 @@ module('Acceptance | application', function (hooks) {
   });
 
   test('shows index link when authenticated', async function (assert) {
-    await this.utils.authenticate();
+    await this.utils.authentication.authenticate();
     await visit('/');
     assert
       .dom('[data-test-index-link]')
@@ -56,7 +56,7 @@ module('Acceptance | application', function (hooks) {
   });
 
   test('shows projects link when authenticated', async function (assert) {
-    await this.utils.authenticate();
+    await this.utils.authentication.authenticate();
     await visit('/');
     assert
       .dom('[data-test-projects-link]')
@@ -67,7 +67,7 @@ module('Acceptance | application', function (hooks) {
   });
 
   test('shows week user summary when authenticated', async function (assert) {
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
 
     const weekEntries = [
       this.server.create('entry', {
@@ -103,7 +103,7 @@ module('Acceptance | application', function (hooks) {
   });
 
   test('shows monthly user summary when authenticated', async function (assert) {
-    const user = await this.utils.authenticate();
+    const user = await this.utils.authentication.authenticate();
 
     const monthEntries = [
       this.server.create('entry', {

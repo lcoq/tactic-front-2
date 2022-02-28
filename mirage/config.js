@@ -67,6 +67,8 @@ function routes() {
   this.get('/clients', (schema) => {
     return schema.clients.all().sort(sortByName);
   });
+  this.patch('/clients/:id');
+  this.delete('/clients/:id');
 }
 
 function sortByName(a, b) {

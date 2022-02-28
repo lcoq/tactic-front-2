@@ -165,16 +165,6 @@
   align-items: center;
   padding: $sp-sm 0;
   box-sizing: content-box;
-}
-
-.entry-action-delete-img,
-.entry-action-cancel-img,
-.entry-action-restart-img {
-  width: 16px;
-  height: 16px;
-}
-
-.entry-action {
   text-indent: -9999px;
   white-space: nowrap;
 }
@@ -206,6 +196,13 @@
 
 .entry-action-change-date {
   background-image: url('/assets/images/calendar.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px;
+}
+
+.entry-action-restart {
+  background-image: url('/assets/images/play.svg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: 16px;

@@ -15,8 +15,8 @@
 .client.deleting,
 .client.pending,
 .client.editing {
-  .client-actions {
-    display: flex;
+  .client-action {
+    visibility: visible;
   }
 }
 
@@ -58,7 +58,7 @@
 }
 
 .client-actions {
-  display: none;
+  display: flex;
   position: absolute;
   left: 0;
   top: 50%;
@@ -66,16 +66,13 @@
 }
 
 .client-action {
+  visibility: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.client-action-invalid-img,
-.client-action-delete-img,
-.client-action-cancel-img {
-  width: 16px;
-  height: 16px;
+  box-sizing: content-box;
+  text-indent: -9999px;
+  white-space: nowrap;
 }
 
 .client-action-retry {
@@ -87,6 +84,27 @@
   &:hover {
     background-image: url('/assets/images/refresh.svg');
   }
+}
+
+.client-action-edit-invalid {
+  background-image: url('/assets/images/warn.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px;
+}
+
+.client-action-revert {
+  background-image: url('/assets/images/revert.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px;
+}
+
+.client-action-delete {
+  background-image: url('/assets/images/trash.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px;
 }
 
 .client-title {

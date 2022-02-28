@@ -28,6 +28,13 @@ export default class ProjectGroupByClientListModel {
     });
   }
 
+  removeClient(client) {
+    const group = this._findGroupByClient(client);
+    this.groups.removeObject(group);
+    this.projects.removeObjects(group.projects);
+    this.clients.removeObject(client);
+  }
+
   _createGroup(client) {
     this.groups.pushObject(new GroupModel({ client }));
   }
@@ -40,6 +47,12 @@ export default class ProjectGroupByClientListModel {
   _findGroupForProject(project) {
     return this.groups.find(
       (g) => g.client.get('id') === (project.belongsTo('client').id() || '0')
+    );
+  }
+
+  _findGroupByClient(client) {
+    return this.groups.find((g) =>
+      client ? g.client === client : g.client.id === '0'
     );
   }
 }

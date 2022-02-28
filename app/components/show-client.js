@@ -4,8 +4,6 @@ import OnFocusOutClickModifier from '../modifiers/on-focus-out-click';
 import NoopModifier from '../modifiers/noop';
 
 export default class ShowClientComponent extends Component {
-  // TODO on did delete / off did delete
-
   get client() {
     return this.args.client;
   }

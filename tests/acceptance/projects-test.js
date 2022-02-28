@@ -190,6 +190,7 @@ module('Acceptance | projects', function (hooks) {
 
   test('deletes client', async function (assert) {
     const client = this.server.create('client', { name: 'Productivity' });
+    this.server.create('project', { client });
     await this.utils.authentication.authenticate();
     await visit('/projects');
     assert

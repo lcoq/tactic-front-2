@@ -22,7 +22,7 @@ export default class ProjectsRoute extends Route {
       ({ clients, projects }) => {
         return new ProjectGroupByClientListModel({
           clients: [new NullClientModel(), ...clients.toArray()],
-          projects: projects,
+          projects: projects.toArray(),
         });
       }
     );

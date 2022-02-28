@@ -1,5 +1,6 @@
 import setupAuthentication from './authentication';
 import setupStubs from './stubs';
+import setupSleep from './sleep';
 
 export function setupUtils(hooks) {
   hooks.beforeEach(function () {
@@ -11,4 +12,5 @@ export function setupUtils(hooks) {
 
   setupAuthentication(hooks);
   setupStubs(hooks);
+  setupSleep(hooks);
 }

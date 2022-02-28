@@ -498,7 +498,7 @@ module('Acceptance | Projects > Projects', function (hooks) {
     await click(
       `[data-test-client-with-projects="-1"] [data-test-project-new]`
     );
-    await click('[data-test-header]'); // ensure client is now created (with id=1) for next DOM find
+    await this.utils.sleep(50); // ensure client is now created (with id=1) for next DOM find
     assert
       .dom(`[data-test-client-with-projects="1"] [data-test-project="-1"]`)
       .exists('should add the project in the client group');

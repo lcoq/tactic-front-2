@@ -4,7 +4,11 @@
   <h1 class="project-group-list-title">Projects</h1>
   {{#each @model.groups as |group|}}
     <section
-      class="project-group"
+      class="project-group
+        {{if
+          group.client.stateManager.isPendingDeleteOrDeleteErrored
+          'deleting'
+        }}"
       data-test-client-with-projects="{{or group.client.id '-1'}}"
     >
       <ShowClient

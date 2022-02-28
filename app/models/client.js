@@ -12,4 +12,18 @@ export default class ClientModel extends Model {
     super(...arguments);
     set(this, 'stateManager', new ClientStateManagerModel({ source: this }));
   }
+
+  destroyRecord() {
+    this.deleteRecord();
+    return this.save().then(() => {
+      this._unloadProjects();
+      return this;
+    });
+  }
+
+  _unloadProjects() {
+    const projects = this.hasMany('projects').value() ?? [];
+    projects.forEach((p) => p.unloadRecord());
+    this.unloadRecord();
+  }
 }

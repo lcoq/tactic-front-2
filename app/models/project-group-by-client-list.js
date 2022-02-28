@@ -28,6 +28,10 @@ export default class ProjectGroupByClientListModel {
     });
   }
 
+  addClient(client) {
+    this._createGroup(client);
+  }
+
   removeClient(client) {
     const group = this._findGroupByClient(client);
     this.groups.removeObject(group);

@@ -1,7 +1,10 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
+import { service } from '@ember/service';
 
 export default class ProjectsController extends Controller {
+  @service store;
+
   get projectByClientList() {
     return this.model;
   }
@@ -31,5 +34,11 @@ export default class ProjectsController extends Controller {
 
   @action retrySaveOrDeleteClient(client) {
     client.stateManager.send('retry');
+  }
+
+  @action buildClient() {
+    const client = this.store.createRecord('client');
+    client.stateManager.send('edit');
+    this.projectByClientList.addClient(client);
   }
 }

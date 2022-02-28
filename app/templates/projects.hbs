@@ -24,14 +24,18 @@
       </ul>
     </section>
   {{/each}}
-  <section class="project-group project-group-create" data-test-client-new>
-    <header class="client">
+  <section class="project-group project-group-create">
+    <section
+      {{on "click" this.buildClient}}
+      class="client"
+      data-test-client-new
+    >
       <h2 class="client-title touch">
         <span class="client-title-txt">
           <span class="client-create-plus">+</span>
           <span class="client-create-plus-txt">Create new client</span>
         </span>
       </h2>
-    </header>
+    </section>
   </section>
 </section>

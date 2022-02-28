@@ -273,6 +273,8 @@ export default class MutableRecordStateManagerModel extends StateManagerModel {
   checkDirty(source) {
     if (source.isDeleted && !source.hasDirtyAttributes) {
       return false;
+    } else if (source.isNew) {
+      return true;
     } else {
       return Object.keys(source.changedAttributes()).length !== 0;
     }

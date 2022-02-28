@@ -60,13 +60,10 @@ function routes() {
   this.patch('/entries/:id');
   this.delete('/entries/:id');
 
-  this.get('/projects', (schema) => {
-    return schema.projects.all().sort(sortByName);
-  });
+  this.get('/projects', (schema) => schema.projects.all().sort(sortByName));
 
-  this.get('/clients', (schema) => {
-    return schema.clients.all().sort(sortByName);
-  });
+  this.get('/clients', (schema) => schema.clients.all().sort(sortByName));
+  this.post('/clients');
   this.patch('/clients/:id');
   this.delete('/clients/:id');
 }

@@ -109,13 +109,6 @@ module('Acceptance | projects', function (hooks) {
           'should show new project action label'
         );
     });
-
-    assert
-      .dom('[data-test-client-new]')
-      .exists('should show new client action');
-    assert
-      .dom('[data-test-client-new]')
-      .includesText('Create new client', 'should show new client action label');
   });
 
   test('updates client', async function (assert) {
@@ -328,6 +321,100 @@ module('Acceptance | projects', function (hooks) {
       client.name,
       'My new client name',
       'should update client name'
+    );
+  });
+
+  test('creates new client', async function (assert) {
+    await this.utils.authentication.authenticate();
+    await visit('/projects');
+
+    assert
+      .dom('[data-test-client-new]')
+      .exists('should show new client action');
+    assert
+      .dom('[data-test-client-new]')
+      .includesText('Create new client', 'should show new client action label');
+
+    await click('[data-test-client-new]');
+    assert
+      .dom('[data-test-client-edit-name]')
+      .exists('should show new client name input');
+    assert
+      .dom('[data-test-client-edit-name]')
+      .isFocused('should focus new client name input');
+
+    await fillIn(`[data-test-client-edit-name]`, 'My new client name');
+    await click('[data-test-header]');
+
+    assert.strictEqual(
+      this.server.db.clients.length,
+      1,
+      'should have created client'
+    );
+    assert.strictEqual(
+      this.server.db.clients[0].name,
+      'My new client name',
+      'should have set client name'
+    );
+  });
+
+  test('creates new client and rollback', async function (assert) {
+    this.utils.stubs.stubForNativeTimeoutOn(
+      'mutable-record-state-manager:save'
+    );
+
+    await this.utils.authentication.authenticate();
+    await visit('/projects');
+    await click('[data-test-client-new]');
+    await fillIn(`[data-test-client-edit-name]`, 'My new client name');
+    await click('[data-test-header]');
+    assert
+      .dom(`[data-test-client-edit-rollback]`)
+      .exists('should show rollback');
+    await click(`[data-test-client-edit-rollback]`);
+
+    assert
+      .dom('[data-test-client]')
+      .exists(
+        { count: 1 },
+        'should have remove unsaved client after rollback (only "No client" remains)'
+      );
+    assert.strictEqual(
+      this.server.db.clients.length,
+      0,
+      'should not have created client'
+    );
+  });
+
+  test('warn on invalid newly created client and delete it on rollback', async function (assert) {
+    await this.utils.authentication.authenticate();
+    await visit('/projects');
+    await click('[data-test-client-new]');
+    await fillIn(`[data-test-client-edit-name]`, '');
+    await click('[data-test-header]');
+    assert.strictEqual(
+      this.server.db.clients.length,
+      0,
+      'should not have created client'
+    );
+    assert
+      .dom(`[data-test-client-edit-invalid]`)
+      .exists('should show client invalid edit action');
+    assert
+      .dom(`[data-test-client-edit-rollback]`)
+      .exists('should show client rollback action');
+
+    await click('[data-test-client-edit-rollback]');
+    assert
+      .dom('[data-test-client]')
+      .exists(
+        { count: 1 },
+        'should have remove unsaved client after rollback (only "No client" remains)'
+      );
+    assert.strictEqual(
+      this.server.db.clients.length,
+      0,
+      'should not have created client'
     );
   });
 });

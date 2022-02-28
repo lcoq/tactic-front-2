@@ -2,7 +2,6 @@ import { set } from '@ember/object';
 import Model, { attr, belongsTo } from '@ember-data/model';
 import moment from 'moment';
 import EntryStateManagerModel from './entry-state-manager';
-import { dependentKeyCompat } from '@ember/object/compat';
 import { createCache, getValue } from '@glimmer/tracking/primitives/cache';
 import { tracked } from '@glimmer/tracking';
 
@@ -15,6 +14,8 @@ export default class EntryModel extends Model {
 
   @tracked initialProject = null;
 
+  stateManager = null;
+
   get projectHasChanged() {
     return this.project !== this.initialProject;
   }
@@ -23,12 +24,10 @@ export default class EntryModel extends Model {
     return getValue(this._durationInSecondsCache);
   }
 
-  @dependentKeyCompat
   get isStarted() {
     return this.startedAt && !this.stoppedAt;
   }
 
-  @dependentKeyCompat
   get isStopped() {
     return !this.isStarted;
   }

@@ -27,8 +27,9 @@ module('Acceptance | projects', function (hooks) {
     assert.strictEqual(currentURL(), '/projects', 'should remains on projects');
   });
 
-  // prettier-ignore
-  test('show projects grouped by client', async function (assert) { // eslint-disable-line
+  test('show projects grouped by client', async function (assert) {
+    assert.expect(24);
+
     await this.utils.authentication.authenticate();
 
     this.server.create('project', { name: 'Music' });

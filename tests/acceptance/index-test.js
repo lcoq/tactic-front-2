@@ -38,8 +38,9 @@ module('Acceptance | index', function (hooks) {
     assert.strictEqual(currentURL(), '/', 'should remains on index');
   });
 
-  // prettier-ignore
-  test('shows recent user entries grouped by day', async function (assert) { // eslint-disable-line
+  test('shows recent user entries grouped by day', async function (assert) {
+    assert.expect(66);
+
     const user = await this.utils.authentication.authenticate();
 
     const projectTactic = this.server.create('project', { name: 'Tactic' });

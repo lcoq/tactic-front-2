@@ -27,8 +27,8 @@ module('Acceptance | projects', function (hooks) {
     assert.strictEqual(currentURL(), '/projects', 'should remains on projects');
   });
 
-  test('show projects grouped by client', async function (assert) {
-    // eslint-disable-line
+  // prettier-ignore
+  test('show projects grouped by client', async function (assert) { // eslint-disable-line
     await this.utils.authentication.authenticate();
 
     this.server.create('project', { name: 'Music' });
@@ -307,7 +307,9 @@ module('Acceptance | projects', function (hooks) {
       .dom(`[data-test-client="${client.id}"] [data-test-client-edit-invalid]`)
       .exists('should show client invalid edit action');
 
-    await click(`[data-test-client="${client.id}"] [data-test-client-edit-invalid]`);
+    await click(
+      `[data-test-client="${client.id}"] [data-test-client-edit-invalid]`
+    );
     assert
       .dom(`[data-test-client="${client.id}"] [data-test-client-edit-name]`)
       .exists('should show client name input');
@@ -327,5 +329,5 @@ module('Acceptance | projects', function (hooks) {
       'My new client name',
       'should update client name'
     );
-  })
+  });
 });

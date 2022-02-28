@@ -7,6 +7,7 @@
   <div class="client-actions">
     {{#if this.isErrored}}
       <button
+        type="button"
         {{on "click" this.retrySaveOrDelete}}
         class="client-action client-action-retry touch"
         data-test-client-retry
@@ -16,6 +17,7 @@
     {{/if}}
     {{#if this.isInvalid}}
       <button
+        type="button"
         {{on "click" this.startEdit}}
         class="client-action client-action-edit-invalid touch"
         data-test-client-edit-invalid
@@ -25,6 +27,7 @@
     {{/if}}
     {{#if this.canRevert}}
       <button
+        type="button"
         {{on "click" this.revertEdit}}
         class="client-action client-action-revert touch"
         data-test-client-edit-rollback
@@ -34,6 +37,7 @@
     {{/if}}
     {{#if this.isClear}}
       <button
+        type="button"
         {{on "click" this.markForDelete}}
         class="client-action client-action-delete touch"
         data-test-client-delete

@@ -90,6 +90,11 @@ module('Acceptance | Reviews > Entries', function (hooks) {
         `[data-test-project-group="${projectTactic.id}"] [data-test-entry="${entry.id}"]`
       )
       .exists('should show entry in the new project group');
+    assert
+      .dom(
+        `[data-test-entry="${entry.id}"] [data-test-project="${projectTactic.id}"]`
+      )
+      .exists('should show project entry in the entry');
   });
 
   test('deletes entry and removes it from the project list', async function (assert) {

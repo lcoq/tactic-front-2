@@ -34,7 +34,7 @@ export default class EntryModel extends Model {
 
   save() {
     return super.save(...arguments).then(() => {
-      this.initialProject = null;
+      this.initialProject = this.project;
       return this;
     });
   }

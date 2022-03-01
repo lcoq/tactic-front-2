@@ -3,9 +3,25 @@ import { tracked } from '@glimmer/tracking';
 export default class EntryGroupModel {
   @tracked entries = null;
 
+  addEntry(entry) {
+    this.entries.pushObject(entry);
+  }
+
+  addEntries(entries) {
+    entries.forEach(this.addEntry, this);
+  }
+
+  removeEntry(entry) {
+    this.entries.removeObject(entry);
+  }
+
+  removeEntries(entries) {
+    entries.forEach(this.removeEntry, this);
+  }
+
   constructor(attributes) {
-    Object.assign(this, attributes);
-    this.entries ??= [];
+    Object.assign(this, attributes, { entries: [] });
+    if (attributes.entries) this.addEntries(attributes.entries);
   }
 
   get durationInSeconds() {

@@ -1,12 +1,14 @@
+/* eslint-disable ember/no-get */
+
 import EntryGroupTreeModel from './entry-group-tree';
 import EntryGroupByProjectListModel from './entry-group-by-project-list';
 import findInsertIndex from '../utils/find-insert-index';
+import { get } from '@ember/object';
 
 export default class EntryGroupByClientAndProjectListModel extends EntryGroupTreeModel {
   findGroupForEntry(entry) {
-    const project = entry.belongsTo('project').value();
-    const clientId = project ? project.belongsTo('client').id() : null;
-    return this.groups.find((g) => (g.client?.id || null) === clientId);
+    const clientId = entry.get('project.client.id');
+    return this.groups.find((g) => get(g, 'client.id') === clientId);
   }
 
   createGroupForEntry(entry) {
@@ -16,9 +18,9 @@ export default class EntryGroupByClientAndProjectListModel extends EntryGroupTre
   }
 
   findGroupInsertIndex(group) {
-    const clientName = group.client?.name;
+    const clientName = get(group, 'client.name');
     return clientName
-      ? findInsertIndex(this.groups, (g) => clientName < g.client?.name)
+      ? findInsertIndex(this.groups, (g) => clientName < get(g, 'client.name'))
       : 0;
   }
 }

@@ -43,7 +43,10 @@ module('Acceptance | Reviews > Entries', function (hooks) {
     });
 
     const client = this.server.create('client', { name: 'Productivity' });
-    const projectTactic = this.server.create('project', { name: 'Tactic', client });
+    const projectTactic = this.server.create('project', {
+      name: 'Tactic',
+      client,
+    });
 
     await visit('/reviews');
     await click(`[data-test-entry="${entry.id}"] [data-test-entry-project]`);
@@ -91,10 +94,8 @@ module('Acceptance | Reviews > Entries', function (hooks) {
       )
       .exists('should show entry in the new project group');
     assert
-      .dom(
-        `[data-test-entry="${entry.id}"] [data-test-project="${projectTactic.id}"]`
-      )
-      .exists('should show project entry in the entry');
+      .dom(`[data-test-entry="${entry.id}"] [data-test-entry-project]`)
+      .hasText('Tactic', 'should show project entry in the entry');
   });
 
   test('deletes entry and removes it from the project list', async function (assert) {

@@ -1,5 +1,10 @@
 {{page-title "Reviews"}}
 
 {{#if this.entriesByClientAndProject}}
-  <EntriesByClientAndProject @list={{this.entriesByClientAndProject}} />
+  <EntriesByClientAndProject
+    @list={{this.entriesByClientAndProject}}
+    @didUpdateEntry={{this.didUpdateEntry}}
+    @didDeleteEntry={{this.didDeleteEntry}}
+    @searchProjects={{this.searchProjects}}
+  />
 {{/if}}

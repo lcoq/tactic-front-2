@@ -30,7 +30,7 @@ module('Acceptance | Reviews > Page', function (hooks) {
   });
 
   test('shows current month user entries by default', async function (assert) {
-    assert.expect(137);
+    assert.expect(139);
 
     const user = await this.utils.authentication.authenticate();
     const otherUser = this.server.create('user');
@@ -299,6 +299,13 @@ module('Acceptance | Reviews > Page', function (hooks) {
     ];
 
     await visit('/reviews');
+
+    assert
+      .dom('[data-test-entries-total-duration]')
+      .exists('should show total duration');
+    assert
+      .dom('[data-test-entries-total-duration]')
+      .hasText('14:22:50', 'should compute total duration');
 
     assert
       .dom('[data-test-client-group]')

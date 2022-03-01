@@ -1,6 +1,9 @@
 import Controller from '@ember/controller';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
+import { isEmpty } from '@ember/utils';
+import { resolve } from 'rsvp';
 import moment from 'moment';
 
 import EntryGroupByClientAndProjectListModel from '../models/entry-group-by-client-and-project-list';
@@ -36,6 +39,21 @@ export default class ReviewsController extends Controller {
       'user-id': this.selectedUserIds,
       'project-id': this.selectedProjectIds,
     };
+  }
+
+  @action searchProjects(query) {
+    if (isEmpty(query)) {
+      return resolve();
+    }
+    return this.store.query('project', { filter: { query: query } });
+  }
+
+  @action didUpdateEntry(entry) {
+    // TODO update user summary ?
+  }
+
+  @action didDeleteEntry(entry) {
+    // TODO update user summary
   }
 
   async reloadEntries() {

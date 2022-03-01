@@ -12,6 +12,8 @@ export default class EntryGroupModel {
     entries.forEach(this.addEntry, this);
   }
 
+  updateEntry() {}
+
   removeEntry(entry) {
     this.entries.removeObject(entry);
   }

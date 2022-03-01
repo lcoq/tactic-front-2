@@ -1,7 +1,29 @@
 <section class="entry-root-group-list">
+
+  {{#if this.multipleGroups}}
+    <div class="entry-root-group-list-header with-actions">
+      <h2 class="entry-root-group-list-header-title">Total</h2>
+      <div
+        class="entry-root-group-list-header-duration"
+        data-test-entries-total-duration
+      >
+        {{format-duration this.totalDurationInSeconds}}{{! rounding }}
+      </div>
+      <div class="entry-root-group-list-header-actions">
+        <button
+          type="button"
+          class="entry-root-group-list-header-action no-print touch"
+        >CSV</button>{{! TODO CSV}}
+      </div>
+    </div>
+  {{/if}}
+
   {{#each this.groups as |group|}}
-    <section class="entry-root-group" data-test-client-group>
-      <header class="entry-root-group-header with-actions">
+    <section
+      class="entry-root-group"
+      data-test-client-group="{{or group.client.id '-1'}}"
+    >
+      <div class="entry-root-group-header with-actions">
         <h2 class="entry-root-group-header-title" data-test-client-group-name>
           {{if group.client.name group.client.name "No client"}}
         </h2>
@@ -9,16 +31,21 @@
           class="entry-root-group-header-duration"
           data-test-client-group-duration
         >
-          {{format-duration group.durationInSeconds}}
+          {{format-duration group.durationInSeconds}}{{! rounding }}
         </div>
         <div class="entry-root-group-header-actions">
           <button
             type="button"
             class="entry-root-group-header-action no-print touch"
-          >CSV</button>
+          >CSV</button>{{! TODO CSV}}
         </div>
-      </header>
-      <EntriesByProject @list={{group}} />
+      </div>
+      <EntriesByProject
+        @list={{group}}
+        @didUpdateEntry={{this.didUpdateEntry}}
+        @didDeleteEntry={{this.didDeleteEntry}}
+        @searchProjects={{this.searchProjects}}
+      />
     </section>
   {{/each}}
 </section>

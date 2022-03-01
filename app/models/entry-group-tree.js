@@ -30,6 +30,9 @@ export default class EntryGroupTreeModel extends EntryGroupModel {
       this.removeEntry(entry);
       this.addEntry(entry);
     }
+    if (newGroup) {
+      newGroup.updateEntry(entry);
+    }
   }
 
   _addEntryToGroups(entry) {

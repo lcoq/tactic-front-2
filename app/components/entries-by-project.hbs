@@ -1,6 +1,9 @@
 <section class="entry-group-list">
   {{#each this.groups as |group|}}
-    <section class="entry-group" data-test-project-group>
+    <section
+      class="entry-group"
+      data-test-project-group="{{or group.project.id '-1'}}"
+    >
       <header class="entry-group-header with-actions">
         <h2 class="entry-group-header-title" data-test-project-group-name>
           {{if group.project.name group.project.name "No project"}}
@@ -18,7 +21,13 @@
       </header>
       <ul class="entry-group-item-list">
         {{#each group.entries as |entry|}}
-          <ShowEntry @entry={{entry}} @showDate="true" />
+          <ShowEntry
+            @entry={{entry}}
+            @showDate="true"
+            @didUpdateEntry={{this.didUpdateEntry}}
+            @didDeleteEntry={{this.didDeleteEntry}}
+            @searchProjects={{this.searchProjects}}
+          />
         {{/each}}
       </ul>
     </section>

@@ -12,12 +12,8 @@
   padding: $sp-sm;
 }
 
-.entry-root-group-list-header.with-actions {
-  padding: $sp-xs $sp-sm;
-}
-.entry-root-group-header.with-actions {
-  padding: $sp-xxs $sp-sm;
-}
+.entry-root-group-list-header.with-actions,
+.entry-root-group-header.with-actions,
 .entry-group-header.with-actions {
   padding: 0 $sp-sm;
 }

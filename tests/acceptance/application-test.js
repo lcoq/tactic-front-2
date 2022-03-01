@@ -2,9 +2,9 @@ import { module, test } from 'qunit';
 import { visit } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
-import { setupUtils } from '../utils/setup';
 import moment from 'moment';
 
+import { setupUtils } from '../utils/setup';
 import mirageGetEntriesRoute from '../../mirage/routes/get-entries';
 
 function isCurrentWeekRequest(request, userId) {
@@ -64,6 +64,17 @@ module('Acceptance | application', function (hooks) {
     assert
       .dom('[data-test-projects-link]')
       .hasAttribute('href', '/projects', 'should links to projects page');
+  });
+
+  test('shows reviews link when authenticated', async function (assert) {
+    await this.utils.authentication.authenticate();
+    await visit('/');
+    assert
+      .dom('[data-test-reviews-link]')
+      .exists('should have link to reviews page');
+    assert
+      .dom('[data-test-reviews-link]')
+      .hasAttribute('href', '/reviews', 'should links to reviews page');
   });
 
   test('shows week user summary when authenticated', async function (assert) {

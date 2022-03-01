@@ -25,6 +25,14 @@ export default class ShowEntryComponent extends Component {
     return this.args.entry;
   }
 
+  get showDate() {
+    return !!this.args.showDate;
+  }
+
+  get showProjectOnPrint() {
+    return !!this.args.showProjectOnPrint;
+  }
+
   get searchProjects() {
     return this.args.searchProjects;
   }

@@ -1,0 +1,24 @@
+<section class="entry-root-group-list">
+  {{#each this.groups as |group|}}
+    <section class="entry-root-group" data-test-client-group>
+      <header class="entry-root-group-header with-actions">
+        <h2 class="entry-root-group-header-title" data-test-client-group-name>
+          {{if group.client.name group.client.name "No client"}}
+        </h2>
+        <div
+          class="entry-root-group-header-duration"
+          data-test-client-group-duration
+        >
+          {{format-duration group.durationInSeconds}}
+        </div>
+        <div class="entry-root-group-header-actions">
+          <button
+            type="button"
+            class="entry-root-group-header-action no-print touch"
+          >CSV</button>
+        </div>
+      </header>
+      <EntriesByProject @list={{group}} />
+    </section>
+  {{/each}}
+</section>

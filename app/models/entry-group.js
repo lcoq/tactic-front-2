@@ -1,4 +1,5 @@
 import { tracked } from '@glimmer/tracking';
+import { A } from '@ember/array';
 
 export default class EntryGroupModel {
   @tracked entries = null;
@@ -20,7 +21,7 @@ export default class EntryGroupModel {
   }
 
   constructor(attributes) {
-    Object.assign(this, attributes, { entries: [] });
+    Object.assign(this, attributes, { entries: A([]) });
     if (attributes.entries) this.addEntries(attributes.entries);
   }
 

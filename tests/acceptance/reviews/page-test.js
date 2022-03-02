@@ -29,17 +29,12 @@ module('Acceptance | Reviews > Page', function (hooks) {
     assert.strictEqual(currentURL(), '/reviews', 'should remains on reviews');
   });
 
-  test('shows current month user entries by default', async function (assert) {
+  test('shows entries', async function (assert) {
     assert.expect(139);
 
     const user = await this.utils.authentication.authenticate();
-    const otherUser = this.server.create('user');
 
-    const beginningOfMonth = moment()
-      .startOf('month')
-      .hours(0)
-      .minutes(0)
-      .seconds(0);
+    const beginningOfMonth = moment().startOf('month');
 
     const clientLorem = this.server.create('client', { name: 'Lorem' });
     const projectIpsum = this.server.create('project', {
@@ -149,41 +144,7 @@ module('Acceptance | Reviews > Page', function (hooks) {
       }),
     ];
 
-    this.server.get('entries', (schema, request) => {
-      if (
-        request.queryParams['filter[since]'] &&
-        request.queryParams['filter[before]'] &&
-        request.queryParams['filter[user-id]'] &&
-        request.queryParams['filter[user-id]'].length == 1 &&
-        request.queryParams['filter[user-id]'][0] === user.id
-      ) {
-        return schema.entries.find(expectedEntries.mapBy('id'));
-      } else {
-        return mirageGetEntriesRoute.default()(schema, request);
-      }
-    });
-
-    /* entries not returned by filtered request */
-    this.server.create('entry', {
-      user,
-      project: null,
-      title: 'Old stuff',
-      startedAt: moment(beginningOfMonth)
-        .subtract(1, 'd')
-        .add(1, 'd')
-        .add(3, 'h'),
-      stoppedAt: moment(beginningOfMonth)
-        .subtract(1, 'd')
-        .add(2, 'h')
-        .add(4, 'h')
-        .add(15, 'm'),
-    });
-    this.server.create('entry', {
-      user: otherUser,
-      project: projectTactic,
-      startedAt: moment(beginningOfMonth).add(3, 'd').add(6, 'h'),
-      stoppedAt: moment(beginningOfMonth).add(3, 'd').add(7, 'h'),
-    });
+    this.server.get('entries', mirageGetEntriesRoute.filters(expectedEntries));
 
     const expectedNoClient = {
       name: 'No client',

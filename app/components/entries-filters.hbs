@@ -1,0 +1,123 @@
+<section class="reviews-filters">
+
+  <EntriesFilters::User
+    @all={{this.allUsers}}
+    @selectedIds={{this.selectedUserIds}}
+    @onChange={{this.changeSelectedUserIds}}
+  />
+
+  <section
+    class="reviews-filter reviews-filter-clients js-reviews-filter-clients
+      {{if this.allClientsAreSelected 'no-print'}}"
+  >
+    <div class="reviews-filter-header">
+      <h2 class="reviews-filter-header-title">Clients</h2>
+      <div
+        class="reviews-filter-header-count no-print"
+      >({{this.selectedClientIds.length}}/{{this.allClients.length}})</div>
+    </div>
+    <div class="reviews-filter-item-list-container">
+      <ul class="reviews-filter-item-list">
+        <li class="reviews-filter-item reviews-filter-item-toggle no-print">
+          <button type="button" {{on "click" this.checkAllClients}}>Select all</button>
+          <button type="button" {{on "click" this.uncheckAllClients}}>Select
+            none</button>
+        </li>
+        {{#each this.allClients as |client|}}
+          <li
+            class="reviews-filter-item reviews-filter-item-client
+              {{if
+                (not (includes client.id this.selectedClientIds))
+                'no-print'
+              }}"
+          >
+            <label class="reviews-filter-item-checkbox-container">
+              <input
+                {{on "change" (fn this.changeClientSelection client)}}
+                type="checkbox"
+                class="reviews-filter-item-checkbox no-print"
+                checked={{includes client.id this.selectedClientIds}}
+                data-test-filter-client="{{client.id}}"
+              />
+              <span
+                class="reviews-filter-item-checkbox-txt"
+              >{{client.name}}</span>
+            </label>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </section>
+
+  <section
+    class="reviews-filter reviews-filter-projects js-reviews-filter-projects
+      {{if this.allProjectsAreSelected 'no-print'}}"
+  >
+    <div class="reviews-filter-header">
+      <h2 class="reviews-filter-header-title">Projects</h2>
+      <div
+        class="reviews-filter-header-count no-print"
+      >({{this.selectedProjectIds.length}}/{{this.allProjects.length}})</div>
+    </div>
+    <div class="reviews-filter-item-list-container">
+      <ul class="reviews-filter-item-list">
+        <li class="reviews-filter-item reviews-filter-item-toggle no-print">
+          <button type="button" {{on "click" this.checkAllProjects}}>Select all</button>
+          <button type="button" {{on "click" this.uncheckAllProjects}}>Select
+            none</button>
+        </li>
+        {{#each this.allProjects as |project|}}
+          <li
+            class="reviews-filter-item reviews-filter-item-project
+              {{if
+                (not (includes project.id this.selectedProjectIds))
+                'no-print'
+              }}"
+          >
+            <label class="reviews-filter-item-checkbox-container">
+              <input
+                {{on "change" (fn this.changeProjectSelection project)}}
+                type="checkbox"
+                class="reviews-filter-item-checkbox no-print"
+                checked={{includes project.id this.selectedProjectIds}}
+                data-test-filter-project="{{project.id}}"
+              />
+              <span
+                class="reviews-filter-item-checkbox-txt"
+              >{{project.name}}</span>
+            </label>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </section>
+
+  <section class="reviews-filter reviews-filter-from">
+    <div class="reviews-filter-from-txt no-print">from</div>
+    <div class="reviews-filter-header">
+      <h2
+        {{on "click" this.changeSince}}
+        class="reviews-filter-header-title"
+        data-test-filter-since
+      >
+        {{moment-format this.since "YYYY/MM/DD"}}
+      </h2>
+      <div class="reviews-filter-from-date no-print"></div>
+    </div>
+  </section>
+
+  <section class="reviews-filter reviews-filter-to">
+    <div class="reviews-filter-to-txt no-print">to</div>
+    <div class="reviews-filter-header">
+      <h2
+        {{on "click" this.changeBefore}}
+        class="reviews-filter-header-title"
+        data-test-filter-before
+      >
+        {{moment-format this.before "YYYY/MM/DD"}}
+      </h2>
+      <div class="reviews-filter-to-date no-print"></div>
+    </div>
+  </section>
+
+</section>

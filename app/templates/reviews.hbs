@@ -1,5 +1,17 @@
 {{page-title "Reviews"}}
 
+<EntriesFilters
+  @allUsers={{this.allUsers}}
+  @allClients={{this.allClients}}
+  @allProjects={{this.allProjects}}
+  @selectedUserIds={{this.selectedUserIds}}
+  @selectedClientIds={{this.selectedClientIds}}
+  @selectedProjectIds={{this.selectedProjectIds}}
+  @since={{this.since}}
+  @before={{this.before}}
+  @changeSelectedUserIds={{this.changeSelectedUserIds}}
+/>
+
 {{#if this.entriesByClientAndProject}}
   <EntriesByClientAndProject
     @list={{this.entriesByClientAndProject}}

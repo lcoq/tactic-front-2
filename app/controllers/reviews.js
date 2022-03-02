@@ -16,6 +16,7 @@ export default class ReviewsController extends Controller {
   @tracked since = null;
   @tracked before = null;
   @tracked selectedUserIds = null;
+  @tracked selectedClientIds = null;
   @tracked selectedProjectIds = null;
 
   @tracked entriesByClientAndProject = null;
@@ -56,6 +57,11 @@ export default class ReviewsController extends Controller {
     // TODO update user summary
   }
 
+  @action async changeSelectedUserIds(newUserIds) {
+    this.selectedUserIds = newUserIds;
+    await this.reloadEntries();
+  }
+
   async reloadEntries() {
     const entries = await this.store.query('entry', { filter: this.filters });
     this.entriesByClientAndProject = new EntryGroupByClientAndProjectListModel({
@@ -72,6 +78,7 @@ export default class ReviewsController extends Controller {
     this.since = moment().startOf('month').toDate();
     this.before = moment().endOf('month').toDate();
     this.selectedUserIds = [this.authentication.userId];
+    this.selectedClientIds = this.allClients.mapBy('id');
     this.selectedProjectIds = this.allProjects.mapBy('id');
   }
 }

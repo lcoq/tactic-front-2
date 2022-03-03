@@ -1,3 +1,4 @@
+/* global $ */
 import Controller from '@ember/controller';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
@@ -107,6 +108,39 @@ export default class ReviewsController extends Controller {
     this.rounding = newRounding;
   }
 
+  @action generateCSV(filters = {}) {
+    let projectIds;
+    if (Object.prototype.hasOwnProperty.call(filters, 'client')) {
+      const clientId = (filters.client && filters.client.id) || '0';
+      let project;
+      projectIds = this.selectedProjectIds.filter((projectId) => {
+        project = this.allProjects.find((project) => project.id === projectId);
+        return clientId === (project.clientId || '0');
+      });
+    } else if (Object.prototype.hasOwnProperty.call(filters, 'project')) {
+      projectIds = [filters.project?.id || '0'];
+    } else {
+      projectIds = this.selectedProjectIds;
+    }
+
+    const adapter = this.store.adapterFor('entry');
+
+    const requestFilters = Object.assign({}, this.filters, {
+      'project-id': projectIds,
+    });
+    const requestOptions = this.rounding ? { rounded: 1 } : {};
+    const requestParams = Object.assign(
+      { filter: requestFilters, options: requestOptions },
+      adapter.headers
+    );
+
+    const pathWithoutParams =
+      adapter.buildURL('entry', null, null, 'query', requestParams) + '.csv';
+    const url = [pathWithoutParams, $.param(requestParams)].join('?');
+
+    this._downloadFile(url);
+  }
+
   async reloadEntries() {
     const entries = await this.store.query('entry', { filter: this.filters });
     this.entriesByClientAndProject = new EntryGroupByClientAndProjectListModel({
@@ -145,5 +179,15 @@ export default class ReviewsController extends Controller {
       return !removedClientIds.includes(project.clientId || '0');
     });
     return [...filteredProjectIds, ...projectIdsToAdd];
+  }
+
+  _downloadFile(url) {
+    const link = document.createElement('a');
+    link.setAttribute('download', '');
+    link.classList = ['hidden'];
+    link.href = url;
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
   }
 }

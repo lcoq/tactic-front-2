@@ -39,4 +39,12 @@ export default class EntriesByClientAndProjectComponent extends Component {
     this.list.removeEntry(entry);
     this.args.didDeleteEntry(entry);
   }
+
+  @action generateCSV() {
+    this.args.generateCSV();
+  }
+
+  @action generateClientCSV(client) {
+    this.args.generateCSV({ client });
+  }
 }

@@ -1,4 +1,5 @@
 import Component from '@glimmer/component';
+import { action } from '@ember/object';
 
 export default class EntriesByProjectComponent extends Component {
   get list() {
@@ -23,5 +24,9 @@ export default class EntriesByProjectComponent extends Component {
 
   get groups() {
     return this.list.groups;
+  }
+
+  @action generateCSV(project) {
+    this.args.generateCSV({ project });
   }
 }

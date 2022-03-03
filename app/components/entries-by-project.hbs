@@ -22,7 +22,10 @@
           <button
             type="button"
             class="entry-group-header-action no-print touch"
-          >CSV</button>
+            {{on "click" (fn this.generateCSV group.project)}}
+          >
+            CSV
+          </button>
         </div>
       </header>
       <ul class="entry-group-item-list">

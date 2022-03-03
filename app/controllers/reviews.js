@@ -16,6 +16,7 @@ export default class ReviewsController extends Controller {
 
   @tracked since = null;
   @tracked before = null;
+  @tracked query = null;
   @tracked selectedUserIds = null;
   @tracked selectedClientIds = null;
   @tracked selectedProjectIds = null;
@@ -43,12 +44,16 @@ export default class ReviewsController extends Controller {
   }
 
   get filters() {
-    return {
+    const filters = {
       since: this.since.toISOString(),
       before: this.before.toISOString(),
       'user-id': this.selectedUserIds,
       'project-id': this.selectedProjectIds,
     };
+    if (!isEmpty(this.query)) {
+      filters['query'] = this.query;
+    }
+    return filters;
   }
 
   @action searchProjects(query) {
@@ -104,6 +109,11 @@ export default class ReviewsController extends Controller {
     await this.reloadEntries();
   }
 
+  @action async changeQuery(newQuery) {
+    this.query = newQuery;
+    await this.reloadEntries();
+  }
+
   @action changeRounding(newRounding) {
     this.rounding = newRounding;
   }
@@ -156,6 +166,7 @@ export default class ReviewsController extends Controller {
   initializeFilters() {
     this.since = moment().startOf('month').toDate();
     this.before = moment().endOf('month').toDate();
+    this.query = null;
     this.selectedUserIds = [this.authentication.userId];
     this.selectedClientIds = this.allClients.mapBy('id');
     this.selectedProjectIds = this.allProjects.mapBy('id');

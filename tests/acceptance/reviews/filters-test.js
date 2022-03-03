@@ -1,5 +1,12 @@
 import { module, test } from 'qunit';
-import { visit, find, click, triggerEvent } from '@ember/test-helpers';
+import {
+  visit,
+  find,
+  click,
+  triggerEvent,
+  fillIn,
+  triggerKeyEvent,
+} from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 import moment from 'moment';
@@ -609,5 +616,38 @@ module('Acceptance | Reviews > Filters', function (hooks) {
           .format('YYYY/MM/DD'),
         'should update since filter'
       );
+  });
+
+  test('filters by query', async function (assert) {
+    const user = await this.utils.authentication.authenticate();
+    const entry = this.server.create('entry', { user });
+    const otherEntry = this.server.create('entry', { user });
+
+    await visit('/reviews');
+
+    assert.dom(`[data-test-entry="${entry.id}"]`).exists('should show entry');
+    assert
+      .dom(`[data-test-entry="${otherEntry.id}"]`)
+      .exists('should show other entry');
+
+    this.server.get(
+      'entries',
+      mirageGetEntriesRoute.filters(
+        [otherEntry],
+        (_, r) => r.queryParams['filter[query]'] === 'My query'
+      )
+    );
+
+    assert.dom('[data-test-filter-query]').exists('should show query input');
+
+    await fillIn('[data-test-filter-query]', 'My query');
+    await triggerKeyEvent('[data-test-filter-query]', 'keyup', 'Enter');
+
+    assert
+      .dom(`[data-test-entry="${entry.id}"]`)
+      .doesNotExist('should no longer show entry');
+    assert
+      .dom(`[data-test-entry="${otherEntry.id}"]`)
+      .exists('should still show other entry');
   });
 });

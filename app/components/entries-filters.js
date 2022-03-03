@@ -39,6 +39,10 @@ export default class EntriesFiltersComponent extends Component {
     return this.args.before;
   }
 
+  get query() {
+    return this.args.query;
+  }
+
   get rounding() {
     return this.args.rounding;
   }
@@ -72,6 +76,10 @@ export default class EntriesFiltersComponent extends Component {
     const newDateAtEndOfDay = moment(newDate).endOf('day').toDate();
     this.isEditingBefore = false;
     this.args.changeBefore(newDateAtEndOfDay);
+  }
+
+  @action changeQuery(event) {
+    this.args.changeQuery(event.target.value);
   }
 
   @action changeRounding(event) {

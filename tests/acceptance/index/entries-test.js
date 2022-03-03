@@ -206,6 +206,34 @@ module('Acceptance | Index > Entries', function (hooks) {
     );
   });
 
+  test('continues entry edit on calendar previous month click', async function (assert) {
+    const user = await this.utils.authentication.authenticate();
+    const entry = this.server.create('entry', {
+      user,
+      startedAt: moment().startOf('month').add(2, 'd')
+    });
+    await visit('/');
+
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-edit-date]`);
+    assert
+      .dom(`[data-test-entry="${entry.id}"] .ui-datepicker-calendar`)
+      .exists('should show datepicker calendar');
+
+    await click(`[data-test-entry="${entry.id}"] .ui-datepicker-prev`); // move to previous month
+    assert
+      .dom(`[data-test-entry="${entry.id}"] .ui-datepicker-calendar`)
+      .exists('should continue to show datepicker calendar');
+
+    await click(`.ui-datepicker-calendar [data-date="1"]`); // select 1st day of previous month
+
+    entry.reload();
+    assert.strictEqual(
+      entry.startedAt,
+      moment().startOf('month').subtract(1, 'month').toISOString(),
+      'should update entry started at'
+    );
+  });
+
   test('updates entry a single time after multiple changes', async function (assert) {
     const user = await this.utils.authentication.authenticate();
     const entry = this.server.create('entry', { user });
@@ -364,7 +392,6 @@ module('Acceptance | Index > Entries', function (hooks) {
     entry.reload();
     assert.notOk(entry.project, 'should clear entry project');
   });
-
 
   test('deletes entry', async function (assert) {
     const user = await this.utils.authentication.authenticate();

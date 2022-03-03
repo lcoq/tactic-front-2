@@ -1,0 +1,30 @@
+{{page-title "Reviews"}}
+
+<EntriesFilters
+  @allUsers={{this.allUsers}}
+  @allClients={{this.allClients}}
+  @allProjects={{this.allProjectsForSelectedClientIds}}
+  @selectedUserIds={{this.selectedUserIds}}
+  @selectedClientIds={{this.selectedClientIds}}
+  @selectedProjectIds={{this.selectedProjectIds}}
+  @since={{this.since}}
+  @before={{this.before}}
+  @rounding={{this.rounding}}
+  @changeSelectedUserIds={{this.changeSelectedUserIds}}
+  @changeSelectedClientIds={{this.changeSelectedClientIds}}
+  @changeSelectedProjectIds={{this.changeSelectedProjectIds}}
+  @changeSince={{this.changeSince}}
+  @changeBefore={{this.changeBefore}}
+  @changeRounding={{this.changeRounding}}
+/>
+
+{{#if this.entriesByClientAndProject}}
+  <EntriesByClientAndProject
+    @list={{this.entriesByClientAndProject}}
+    @rounding={{this.rounding}}
+    @didUpdateEntry={{this.didUpdateEntry}}
+    @didDeleteEntry={{this.didDeleteEntry}}
+    @searchProjects={{this.searchProjects}}
+    @generateCSV={{this.generateCSV}}
+  />
+{{/if}}

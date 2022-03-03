@@ -1,5 +1,11 @@
 import { module, test } from 'qunit';
-import { visit, click, fillIn, typeIn } from '@ember/test-helpers';
+import {
+  visit,
+  click,
+  fillIn,
+  typeIn,
+  triggerKeyEvent,
+} from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 import moment from 'moment';
@@ -206,6 +212,34 @@ module('Acceptance | Index > Entries', function (hooks) {
     );
   });
 
+  test('continues entry edit on calendar previous month click', async function (assert) {
+    const user = await this.utils.authentication.authenticate();
+    const entry = this.server.create('entry', {
+      user,
+      startedAt: moment().startOf('month').add(2, 'd'),
+    });
+    await visit('/');
+
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-edit-date]`);
+    assert
+      .dom(`[data-test-entry="${entry.id}"] .ui-datepicker-calendar`)
+      .exists('should show datepicker calendar');
+
+    await click(`[data-test-entry="${entry.id}"] .ui-datepicker-prev`); // move to previous month
+    assert
+      .dom(`[data-test-entry="${entry.id}"] .ui-datepicker-calendar`)
+      .exists('should continue to show datepicker calendar');
+
+    await click(`.ui-datepicker-calendar [data-date="1"]`); // select 1st day of previous month
+
+    entry.reload();
+    assert.strictEqual(
+      entry.startedAt,
+      moment().startOf('month').subtract(1, 'month').toISOString(),
+      'should update entry started at'
+    );
+  });
+
   test('updates entry a single time after multiple changes', async function (assert) {
     const user = await this.utils.authentication.authenticate();
     const entry = this.server.create('entry', { user });
@@ -318,6 +352,55 @@ module('Acceptance | Index > Entries', function (hooks) {
       '2022-02-22T18:50:00.000Z',
       'should not have updated entry stopped at'
     );
+  });
+
+  test('updates entry and rollback without updating project', async function (assert) {
+    this.utils.stubs.stubForNativeTimeoutOn(
+      'mutable-record-state-manager:save'
+    );
+
+    const user = await this.utils.authentication.authenticate();
+    const project = this.server.create('project', { name: 'Tactic' });
+    const entry = this.server.create('entry', { user, project });
+
+    await visit('/');
+
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-title]`);
+    await fillIn(
+      `[data-test-entry="${entry.id}"] [data-test-entry-edit-title]`,
+      'My new entry title'
+    );
+    await click('[data-test-header]');
+    await click(
+      `[data-test-entry="${entry.id}"] [data-test-entry-edit-rollback]`
+    );
+
+    assert.strictEqual(
+      this.server.pretender.handledRequests.filterBy('method', 'PATCH').length,
+      0,
+      'should not send PATCH entry'
+    );
+
+    assert
+      .dom(`[data-test-entry="${entry.id}"] [data-test-entry-project]`)
+      .hasText('Tactic', 'should keep initial project');
+  });
+
+  test('clears project', async function (assert) {
+    const user = await this.utils.authentication.authenticate();
+    const project = this.server.create('project', { name: 'Tactic' });
+    const entry = this.server.create('entry', { user, project });
+
+    await visit('/');
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-project]`);
+    await triggerKeyEvent(
+      `[data-test-entry="${entry.id}"] [data-test-entry-edit-project]`,
+      'keyup',
+      'Enter'
+    );
+
+    entry.reload();
+    assert.notOk(entry.project, 'should clear entry project');
   });
 
   test('deletes entry', async function (assert) {

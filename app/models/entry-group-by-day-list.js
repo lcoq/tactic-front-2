@@ -1,99 +1,26 @@
-import EntryGroupModel from './entry-group';
-import { tracked } from '@glimmer/tracking';
 import moment from 'moment';
 
-export default class EntryGroupByDayListModel extends EntryGroupModel {
-  @tracked groups = [];
+import EntryGroupTreeModel from './entry-group-tree';
+import ReverseChronologicalEntryGroupModel from './reverse-chronological-entry-group';
+import findInsertIndex from '../utils/find-insert-index';
 
-  constructor() {
-    super(...arguments);
-    this._addEntries(this.entries);
-  }
-
-  addEntry(entry) {
-    this._addEntries([entry]);
-  }
-
-  removeEntry(entry) {
-    const group = this._findGroupByEntry(entry);
-    this._removeEntryFromGroupAndPossiblyWholeGroup(group, entry);
-    this.entries.removeObject(entry);
-  }
-
-  updateEntry(entry) {
+export default class EntryGroupByDayListModel extends EntryGroupTreeModel {
+  findGroupForEntry(entry) {
     const day = this._entryDay(entry);
-    const previousGroup = this._findGroupByEntry(entry);
-    const newGroup = this._findGroup(day);
-    if (previousGroup !== newGroup) {
-      this._removeEntryFromGroupAndPossiblyWholeGroup(previousGroup, entry);
-      this.addEntry(entry);
-    }
+    return this.groups.find((g) => day.isSame(g.day));
   }
 
-  findEntry(callback) {
-    return this._entries.find(callback);
+  createGroupForEntry(entry) {
+    const day = this._entryDay(entry).toDate();
+    return new ReverseChronologicalEntryGroupModel({ day });
   }
 
-  _addEntries(entries) {
-    entries.forEach((entry) => {
-      this._addEntryAndPossiblyCreateGroup(entry);
-      this.entries.pushObject(entry);
-    });
-  }
-
-  _addEntryAndPossiblyCreateGroup(entry) {
-    const day = this._entryDay(entry);
-    const group = this._findOrCreateGroup(day);
-    this._addEntryToGroup(group, entry);
-  }
-
-  _findOrCreateGroup(day) {
-    return this._findGroup(day) || this._createGroup(day);
-  }
-
-  _addEntryToGroup(group, entry) {
-    const entries = group.entries;
-    const entryMomentStartedAt = moment(entry.startedAt);
-    const insertIndex = this._findInsertIndex(entries, (e) =>
-      entryMomentStartedAt.isAfter(e.startedAt)
-    );
-    entries.insertAt(insertIndex, entry);
-  }
-
-  _findGroup(day) {
-    const momentDay = moment(day);
-    return this.groups.find((g) => momentDay.isSame(g.day));
-  }
-
-  _createGroup(day) {
-    const momentDay = moment(day);
-    const group = new EntryGroupModel({ day });
-    const insertIndex = this._findInsertIndex(this.groups, (g) =>
-      momentDay.isAfter(g.day)
-    );
-    this.groups.insertAt(insertIndex, group);
-    return group;
-  }
-
-  _findGroupByEntry(entry) {
-    return this.groups.find((g) => g.entries.includes(entry));
-  }
-
-  _removeEntryFromGroupAndPossiblyWholeGroup(group, entry) {
-    if (group.entries.length === 1) {
-      this.groups.removeObject(group);
-    } else {
-      group.entries.removeObject(entry);
-    }
+  findGroupInsertIndex(group) {
+    const day = moment(group.day);
+    return findInsertIndex(this.groups, (g) => day.isAfter(g.day));
   }
 
   _entryDay(entry) {
-    return moment(entry.startedAt).startOf('day').toDate();
-  }
-
-  _findInsertIndex(array, callback) {
-    const nextObject = array.find(callback);
-    const nextObjectIndex = array.indexOf(nextObject);
-    return nextObjectIndex !== -1 ? nextObjectIndex : array.length;
+    return moment(entry.startedAt).startOf('day');
   }
 }

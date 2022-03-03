@@ -7,7 +7,7 @@
     <section class="entry-group" data-test-entry-group>
       <header class="entry-group-header">
         <h2
-          title={{moment-format group.day "YYYY-MM-DD"}}
+          title="{{moment-format group.day 'YYYY-MM-DD'}}"
           class="entry-group-header-title no-print"
           data-test-entry-group-title
         >{{entry-group-day group.day}}</h2>
@@ -24,6 +24,7 @@
         {{#each group.entries as |entry|}}
           <ShowEntry
             @entry={{entry}}
+            @showProjectOnPrint="false"
             @willUpdateEntry={{this.willUpdateEntry}}
             @didUpdateEntry={{this.didUpdateEntry}}
             @willDeleteEntry={{this.willDeleteEntry}}

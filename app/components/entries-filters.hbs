@@ -1,0 +1,72 @@
+<section class="reviews-filters">
+
+  <EntriesFilters::User
+    @all={{this.allUsers}}
+    @selectedIds={{this.selectedUserIds}}
+    @onChange={{this.changeSelectedUserIds}}
+  />
+
+  <EntriesFilters::Client
+    @all={{this.allClients}}
+    @selectedIds={{this.selectedClientIds}}
+    @onChange={{this.changeSelectedClientIds}}
+  />
+
+  <EntriesFilters::Project
+    @all={{this.allProjects}}
+    @selectedIds={{this.selectedProjectIds}}
+    @onChange={{this.changeSelectedProjectIds}}
+  />
+
+  <section class="reviews-filter reviews-filter-from">
+    <div class="reviews-filter-from-txt no-print">from</div>
+    <div
+      class="reviews-filter-header"
+      {{on "click" this.startEditSince}}
+      data-test-filter-since
+    >
+      <h2 class="reviews-filter-header-title">
+        {{moment-format this.since "YYYY/MM/DD"}}
+      </h2>
+      {{#if this.isEditingSince}}
+        <div
+          class="reviews-filter-from-date no-print"
+          {{datepicker this.since this.changeSince}}
+        ></div>
+      {{/if}}
+    </div>
+  </section>
+
+  <section class="reviews-filter reviews-filter-to">
+    <div class="reviews-filter-to-txt no-print">to</div>
+    <div
+      class="reviews-filter-header"
+      {{on "click" this.startEditBefore}}
+      data-test-filter-before
+    >
+      <h2 class="reviews-filter-header-title">
+        {{moment-format this.before "YYYY/MM/DD"}}
+      </h2>
+      {{#if this.isEditingBefore}}
+        <div
+          class="reviews-filter-to-date no-print"
+          {{datepicker this.before this.changeBefore}}
+        ></div>
+      {{/if}}
+    </div>
+  </section>
+
+  <section class="reviews-filter reviews-filter-rounding no-print">
+    <label class="reviews-filter-rounding-checkbox-container">
+      <input
+        {{on "change" this.changeRounding}}
+        type="checkbox"
+        checked={{this.rounding}}
+        class="reviews-filter-rounding-checkbox"
+        data-test-rounding
+      />
+      <span>Round</span>
+    </label>
+  </section>
+
+</section>

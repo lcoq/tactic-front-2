@@ -10,7 +10,6 @@ import NoopModifier from '../modifiers/noop';
 
 export default class ShowEntryComponent extends Component {
   @tracked fieldNameToFocusOnEdit = null;
-  @tracked rounding = false;
   @tracked isEditingDate = false;
 
   @tracked formattedDuration = null;
@@ -25,8 +24,20 @@ export default class ShowEntryComponent extends Component {
     return this.args.entry;
   }
 
+  get showDate() {
+    return !!this.args.showDate;
+  }
+
+  get showProjectOnPrint() {
+    return !!this.args.showProjectOnPrint;
+  }
+
   get searchProjects() {
     return this.args.searchProjects;
+  }
+
+  get rounding() {
+    return this.args.rounding;
   }
 
   get isClear() {
@@ -145,6 +156,7 @@ export default class ShowEntryComponent extends Component {
   }
 
   _openEdit(field) {
+    if (this.rounding) return;
     this._setFormattedStartedAndStoppedAt();
     if (field) this.fieldNameToFocusOnEdit = field;
     this.entry.stateManager.send('edit');

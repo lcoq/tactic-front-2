@@ -3,7 +3,10 @@ import { next } from '@ember/runloop';
 
 export default modifier(function onFocusOutClick(element, [callback]) {
   function clickElement(event) {
-    if (!element.contains(event.target)) {
+    if (
+      !element.contains(event.target) &&
+      !event.target.closest('.ui-datepicker-header')
+    ) {
       callback();
     }
   }

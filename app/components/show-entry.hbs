@@ -58,10 +58,18 @@
   {{/unless}}
 
   <div class="entry-content">
-    {{#if this.isEditingDate}}<div
+    {{#if this.isEditingDate}}
+      <div
         class="entry-edit-date"
         {{datepicker this.entry.startedAt this.updateEntryDate}}
-      ></div>{{/if}}
+      ></div>
+    {{/if}}
+
+    {{#if this.showDate}}
+      <div class="entry-date" data-test-entry-date>
+        {{moment-format this.entry.startedAt "DD/MM"}}
+      </div>
+    {{/if}}
 
     {{#if this.isEditing}}
       <div class="entry-title">
@@ -89,7 +97,7 @@
     {{/if}}
 
     {{#if this.isEditing}}
-      <div class="entry-project touch it-entry-project">
+      <div class="entry-project touch">
         <EntryChooseProject
           @projectName={{this.entry.project.name}}
           @classNamePrefix="entry-edit"
@@ -101,7 +109,8 @@
     {{else}}
       <div
         {{on "click" (fn this.editEntry "project")}}
-        class="entry-project touch"
+        class="entry-project touch
+          {{unless this.showProjectOnPrint 'no-print'}}"
         data-test-entry-project
       >
         {{#if this.entry.project}}
@@ -130,7 +139,13 @@
         class="entry-duration touch"
         data-test-entry-duration
       >
-        {{format-duration this.entry.durationInSeconds}}
+        {{format-duration
+          (if
+            this.rounding
+            this.entry.roundedDurationInSeconds
+            this.entry.durationInSeconds
+          )
+        }}
       </div>
     {{/if}}
 

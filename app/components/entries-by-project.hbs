@@ -1,0 +1,45 @@
+<section class="entry-group-list">
+  {{#each this.groups as |group|}}
+    <section
+      class="entry-group"
+      data-test-project-group="{{or group.project.id '-1'}}"
+    >
+      <header class="entry-group-header with-actions">
+        <h2 class="entry-group-header-title" data-test-project-group-name>
+          {{if group.project.name group.project.name "No project"}}
+        </h2>
+        <div
+          class="entry-group-header-duration"
+          data-test-project-group-duration
+        >{{format-duration
+            (if
+              this.rounding
+              group.roundedDurationInSeconds
+              group.durationInSeconds
+            )
+          }}</div>
+        <div class="entry-group-header-actions">
+          <button
+            type="button"
+            class="entry-group-header-action no-print touch"
+            {{on "click" (fn this.generateCSV group.project)}}
+          >
+            CSV
+          </button>
+        </div>
+      </header>
+      <ul class="entry-group-item-list">
+        {{#each group.entries as |entry|}}
+          <ShowEntry
+            @entry={{entry}}
+            @showDate="true"
+            @rounding={{this.rounding}}
+            @didUpdateEntry={{this.didUpdateEntry}}
+            @didDeleteEntry={{this.didDeleteEntry}}
+            @searchProjects={{this.searchProjects}}
+          />
+        {{/each}}
+      </ul>
+    </section>
+  {{/each}}
+</section>

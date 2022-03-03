@@ -9,19 +9,25 @@ export default class EntryModel extends Model {
   @attr('string') title;
   @attr('date') startedAt;
   @attr('date') stoppedAt;
+  @attr('number') roundedDuration;
   @belongsTo user;
   @belongsTo project;
 
+  @tracked initialProjectWasSet = false;
   @tracked initialProject = null;
 
   stateManager = null;
 
   get projectHasChanged() {
-    return this.project !== this.initialProject;
+    return this.initialProjectWasSet && this.project !== this.initialProject;
   }
 
   get durationInSeconds() {
     return getValue(this._durationInSecondsCache);
+  }
+
+  get roundedDurationInSeconds() {
+    return this.roundedDuration;
   }
 
   get isStarted() {
@@ -35,6 +41,7 @@ export default class EntryModel extends Model {
   save() {
     return super.save(...arguments).then(() => {
       this.initialProject = null;
+      this.initialProjectWasSet = false;
       return this;
     });
   }
@@ -50,14 +57,19 @@ export default class EntryModel extends Model {
   }
 
   async setProject(newProject) {
-    if (!this.initialProject) {
-      this.project.then((project) => (this.initialProject = project));
+    if (!this.initialProjectWasSet) {
+      this.project.then((project) => {
+        this.initialProject = project;
+        this.initialProjectWasSet = true;
+      });
     }
     this.project = newProject;
   }
 
   rollbackProject() {
-    set(this, 'project', this.initialProject);
+    if (this.initialProjectWasSet) {
+      set(this, 'project', this.initialProject);
+    }
   }
 
   updateToDate(newDate) {

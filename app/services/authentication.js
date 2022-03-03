@@ -37,7 +37,7 @@ export default class AuthenticationService extends Service {
   authenticate(session) {
     this.session = session;
     this._setToken(session.token);
-    set(this, 'userId', session.belongsTo('user').id());
+    set(this, 'userId', session.userId);
     this.eventEmitter.emit('authenticated');
   }
 

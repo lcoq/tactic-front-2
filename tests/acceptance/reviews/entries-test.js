@@ -5,6 +5,7 @@ import { setupMirage } from 'ember-cli-mirage/test-support';
 import moment from 'moment';
 
 import { setupUtils } from '../../utils/setup';
+import mirageGetEntriesRoute from '../../../mirage/routes/get-entries';
 
 module('Acceptance | Reviews > Entries', function (hooks) {
   setupApplicationTest(hooks);
@@ -98,6 +99,69 @@ module('Acceptance | Reviews > Entries', function (hooks) {
       .hasText('Tactic', 'should show project entry in the entry');
   });
 
+  test('updates entry and reload summary', async function (assert) {
+    const user = await this.utils.authentication.authenticate();
+    const entry = this.server.create('entry', {
+      user,
+      startedAt: moment().startOf('week').add(1, 'd'),
+      stoppedAt: moment().startOf('week').add(1, 'd').add(3, 'h'),
+    });
+
+    await visit('/reviews');
+
+    assert
+      .dom(`[data-test-user-week-duration]`)
+      .hasText('03:00:00', 'should include entry in week duration');
+    assert
+      .dom(`[data-test-user-month-duration]`)
+      .hasText('03:00:00', 'should include entry in month duration');
+
+    this.server.get('/entries', function (schema, request) {
+      if (request.queryParams['filter[current-week]'] === '1') {
+        return schema.entries.find([]);
+      } else if (request.queryParams['filter[current-month]'] === '1') {
+        return schema.entries.find([]);
+      } else {
+        return mirageGetEntriesRoute.default()(schema, request);
+      }
+    });
+
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-edit-date]`);
+    await click(`[data-test-entry="${entry.id}"] .ui-datepicker-prev`); // move to previous month
+    await click(
+      `[data-test-entry="${entry.id}"] .ui-datepicker-calendar [data-date="1"]`
+    ); // select 1st day of previous month
+
+    assert
+      .dom(`[data-test-user-week-duration]`)
+      .hasText('00:00:00', 'should no longer include entry in week duration');
+    assert
+      .dom(`[data-test-user-month-duration]`)
+      .hasText('00:00:00', 'should no longer include entry in month duration');
+  });
+
+  test('removes entry from list when the new date is out of range', async function (assert) {
+    const user = await this.utils.authentication.authenticate();
+    const entry = this.server.create('entry', {
+      user,
+      startedAt: moment().startOf('month').add(1, 'd'),
+    });
+
+    await visit('/reviews');
+
+    assert.dom(`[data-test-entry="${entry.id}"]`).exists('should show entry');
+
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-edit-date]`);
+    await click(`[data-test-entry="${entry.id}"] .ui-datepicker-prev`); // move to previous month
+    await click(
+      `[data-test-entry="${entry.id}"] .ui-datepicker-calendar [data-date="1"]`
+    ); // select 1st day of previous month
+
+    assert
+      .dom(`[data-test-entry="${entry.id}"]`)
+      .doesNotExist('should no longer show entry');
+  });
+
   test('deletes entry and removes it from the project list', async function (assert) {
     const user = await this.utils.authentication.authenticate();
     this.server.create('entry', { user });
@@ -155,5 +219,42 @@ module('Acceptance | Reviews > Entries', function (hooks) {
     assert
       .dom(`[data-test-client-group="${client.id}"]`)
       .doesNotExist('should remove client from list');
+  });
+
+  test('deletes entry and reload summary', async function (assert) {
+    const user = await this.utils.authentication.authenticate();
+    const entry = this.server.create('entry', {
+      user,
+      startedAt: moment().startOf('week').add(1, 'd'),
+      stoppedAt: moment().startOf('week').add(1, 'd').add(3, 'h'),
+    });
+
+    await visit('/reviews');
+
+    assert
+      .dom(`[data-test-user-week-duration]`)
+      .hasText('03:00:00', 'should include entry in week duration');
+    assert
+      .dom(`[data-test-user-month-duration]`)
+      .hasText('03:00:00', 'should include entry in month duration');
+
+    this.server.get('/entries', function (schema, request) {
+      if (request.queryParams['filter[current-week]'] === '1') {
+        return schema.entries.find([]);
+      } else if (request.queryParams['filter[current-month]'] === '1') {
+        return schema.entries.find([]);
+      } else {
+        return mirageGetEntriesRoute.default()(schema, request);
+      }
+    });
+
+    await click(`[data-test-entry="${entry.id}"] [data-test-entry-delete]`);
+
+    assert
+      .dom(`[data-test-user-week-duration]`)
+      .hasText('00:00:00', 'should no longer include entry in week duration');
+    assert
+      .dom(`[data-test-user-month-duration]`)
+      .hasText('00:00:00', 'should no longer include entry in month duration');
   });
 });

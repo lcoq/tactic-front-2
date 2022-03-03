@@ -5,4 +5,8 @@ export default class SessionModel extends Model {
   @attr name;
   @attr password;
   @belongsTo user;
+
+  get userId() {
+    return this.belongsTo('user').id();
+  }
 }

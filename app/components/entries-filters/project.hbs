@@ -1,11 +1,11 @@
 <section
-  class="reviews-filter reviews-filter-users
+  class="reviews-filter reviews-filter-projects js-reviews-filter-projects
     {{if this.allAreInitiallySelected 'no-print'}}"
   {{on-mouse-leave this.triggerChanges}}
-  data-test-filter-user-container
+  data-test-filter-project-container
 >
   <div class="reviews-filter-header">
-    <h2 class="reviews-filter-header-title">Users</h2>
+    <h2 class="reviews-filter-header-title">Projects</h2>
     <div
       class="reviews-filter-header-count no-print"
     >({{this.selectedIds.length}}/{{this.all.length}})</div>
@@ -20,21 +20,21 @@
           Select none
         </button>
       </li>
-      {{#each this.all as |user|}}
+      {{#each this.all as |project|}}
         <li
-          class="reviews-filter-item
-            {{if (not (includes user.id this.selectedIds)) 'no-print'}}"
+          class="reviews-filter-item reviews-filter-item-project
+            {{if (not (includes project.id this.selectedIds)) 'no-print'}}"
         >
           <label class="reviews-filter-item-checkbox-container">
             <input
-              {{on "change" (fn this.changeSelection user.id)}}
+              {{on "change" (fn this.changeSelection project.id)}}
               type="checkbox"
               class="reviews-filter-item-checkbox no-print"
-              checked={{includes user.id this.selectedIds}}
-              data-test-filter-user="{{user.id}}"
+              checked={{includes project.id this.selectedIds}}
+              data-test-filter-project="{{project.id}}"
             />
             <span class="reviews-filter-item-checkbox-txt">
-              {{user.name}}
+              {{project.name}}
             </span>
           </label>
         </li>

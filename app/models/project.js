@@ -12,4 +12,8 @@ export default class ProjectModel extends Model {
     super(...arguments);
     set(this, 'stateManager', new ProjectStateManagerModel({ source: this }));
   }
+
+  get clientId() {
+    return this.belongsTo('client').id();
+  }
 }

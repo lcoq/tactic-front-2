@@ -1,7 +1,12 @@
 const matchers = {
   isFilters(request) {
     const p = request.queryParams;
-    return p['filter[since]'] && p['filter[before]'] && p['filter[user-id]'];
+    return (
+      p['filter[since]'] &&
+      p['filter[before]'] &&
+      p['filter[user-id]'] &&
+      p['filter[project-id]']
+    );
   },
   isRunning(request) {
     return request.queryParams['filter[running]'] === '1';

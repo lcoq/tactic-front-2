@@ -1,7 +1,12 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import moment from 'moment';
 
 export default class EntriesFiltersComponent extends Component {
+  @tracked isEditingSince = false;
+  @tracked isEditingBefore = false;
+
   get allUsers() {
     return this.args.allUsers;
   }
@@ -34,31 +39,34 @@ export default class EntriesFiltersComponent extends Component {
     return this.args.before;
   }
 
-  get allClientsAreSelected() {
-    return this.selectedClientIds.length === this.allClients.length;
-  }
-
-  get allProjectsAreSelected() {
-    return this.selectedProjectIds.length === this.allProjects.length;
-  }
-
   @action changeSelectedUserIds(newUserIds) {
     this.args.changeSelectedUserIds(newUserIds);
   }
 
-  @action changeSince() {}
+  @action changeSelectedClientIds(newClientIds) {
+    this.args.changeSelectedClientIds(newClientIds);
+  }
 
-  @action changeBefore() {}
+  @action changeSelectedProjectIds(newProjectIds) {
+    this.args.changeSelectedProjectIds(newProjectIds);
+  }
 
-  @action checkAllClients() {}
+  @action startEditSince() {
+    this.isEditingSince = true;
+  }
 
-  @action uncheckAllClients() {}
+  @action changeSince(newDate) {
+    this.isEditingSince = false;
+    this.args.changeSince(newDate);
+  }
 
-  @action changeClientSelection(client) {}
+  @action startEditBefore() {
+    this.isEditingBefore = true;
+  }
 
-  @action checkAllProjects() {}
-
-  @action uncheckAllProjects() {}
-
-  @action changeProjectSelection(client) {}
+  @action changeBefore(newDate) {
+    const newDateAtEndOfDay = moment(newDate).endOf('day').toDate();
+    this.isEditingBefore = false;
+    this.args.changeBefore(newDateAtEndOfDay);
+  }
 }

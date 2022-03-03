@@ -244,4 +244,370 @@ module('Acceptance | Reviews > Filters', function (hooks) {
       .dom(`[data-test-entry="${otherUserEntry.id}"]`)
       .exists('should also show other user entry');
   });
+
+  test('filters by project', async function (assert) {
+    await this.utils.authentication.authenticate();
+
+    const project = this.server.create('project');
+    const otherProject = this.server.create('project');
+
+    const noProjectEntry = this.server.create('entry');
+    const projectEntry = this.server.create('entry', { project: project });
+    const otherProjectEntry = this.server.create('entry', {
+      project: otherProject,
+    });
+
+    await visit('/reviews');
+
+    assert
+      .dom(`[data-test-entry="${noProjectEntry.id}"]`)
+      .exists('should show no project entry at start');
+    assert
+      .dom(`[data-test-entry="${projectEntry.id}"]`)
+      .exists('should show project entry at start');
+    assert
+      .dom(`[data-test-entry="${otherProjectEntry.id}"]`)
+      .exists('should show other project entry at start');
+
+    this.server.get(
+      'entries',
+      mirageGetEntriesRoute.filters(
+        [noProjectEntry, otherProjectEntry],
+        (_, r) =>
+          r.queryParams['filter[project-id]'].length === 2 &&
+          r.queryParams['filter[project-id]'].includes(otherProject.id)
+      )
+    );
+
+    await click(`[data-test-filter-project="${project.id}"]`); // uncheck
+    await triggerEvent(
+      find('[data-test-filter-project-container]'),
+      'mouseleave'
+    );
+
+    assert
+      .dom(`[data-test-entry="${noProjectEntry.id}"]`)
+      .exists('should show no project entry');
+    assert
+      .dom(`[data-test-entry="${projectEntry.id}"]`)
+      .doesNotExist('should no longer show project entry');
+    assert
+      .dom(`[data-test-entry="${otherProjectEntry.id}"]`)
+      .exists('should show other project entry');
+
+    this.server.get(
+      'entries',
+      mirageGetEntriesRoute.filters(
+        [noProjectEntry, projectEntry],
+        (_, r) =>
+          r.queryParams['filter[project-id]'].length === 2 &&
+          r.queryParams['filter[project-id]'].includes(project.id)
+      )
+    );
+
+    await click(`[data-test-filter-project="${otherProject.id}"]`); // uncheck
+    await click(`[data-test-filter-project="${project.id}"]`);
+    await triggerEvent(
+      find('[data-test-filter-project-container]'),
+      'mouseleave'
+    );
+
+    assert
+      .dom(`[data-test-entry="${noProjectEntry.id}"]`)
+      .exists('should show no project entry');
+    assert
+      .dom(`[data-test-entry="${projectEntry.id}"]`)
+      .exists('should show project entry');
+    assert
+      .dom(`[data-test-entry="${otherProjectEntry.id}"]`)
+      .doesNotExist('should not show other project entry');
+
+    this.server.get(
+      'entries',
+      mirageGetEntriesRoute.filters(
+        [projectEntry, otherProjectEntry],
+        (_, r) => r.queryParams['filter[project-id]'].length === 2
+      )
+    );
+
+    await click(`[data-test-filter-project="0"]`); // uncheck
+    await click(`[data-test-filter-project="${otherProject.id}"]`); // uncheck
+    await triggerEvent(
+      find('[data-test-filter-project-container]'),
+      'mouseleave'
+    );
+
+    assert
+      .dom(`[data-test-entry="${noProjectEntry.id}"]`)
+      .doesNotExist('should no longer show no project entry');
+    assert
+      .dom(`[data-test-entry="${projectEntry.id}"]`)
+      .exists('should show project entry');
+    assert
+      .dom(`[data-test-entry="${otherProjectEntry.id}"]`)
+      .exists('should also show other project entry');
+  });
+
+  test('filters by minimum date', async function (assert) {
+    const user = await this.utils.authentication.authenticate();
+    const todayEntry = this.server.create('entry', {
+      user,
+      startedAt: moment().startOf('day').add(1, 'h'),
+    });
+    const yesterdayEntry = this.server.create('entry', {
+      user,
+      startedAt: moment().startOf('day').subtract(1, 'd'),
+    });
+    const tomorrowEntry = this.server.create('entry', {
+      user,
+      startedAt: moment().startOf('day').add(1, 'd'),
+    });
+
+    await visit('/reviews');
+    await click(`[data-test-filter-since]`);
+
+    assert
+      .dom(`[data-test-filter-since] .ui-datepicker-calendar`)
+      .exists('should show since datepicker calendar');
+    assert
+      .dom(`[data-test-filter-since] .ui-datepicker-today`)
+      .exists('should show datepicker today');
+
+    this.server.get(
+      'entries',
+      mirageGetEntriesRoute.filters(
+        [todayEntry, tomorrowEntry],
+        (_, r) =>
+          r.queryParams['filter[since]'] ===
+            moment().startOf('day').toISOString() &&
+          r.queryParams['filter[before]'] ===
+            moment().endOf('month').toISOString()
+      )
+    );
+
+    await click(`[data-test-filter-since] .ui-datepicker-today a`);
+
+    assert
+      .dom(`[data-test-entry="${yesterdayEntry.id}"]`)
+      .doesNotExist('should not show yesterday entry');
+    assert
+      .dom(`[data-test-entry="${todayEntry.id}"]`)
+      .exists('should show today entry');
+    assert
+      .dom(`[data-test-entry="${tomorrowEntry.id}"]`)
+      .exists('should show tomorrow entry');
+
+    await click(`[data-test-filter-since]`);
+
+    this.server.get(
+      'entries',
+      mirageGetEntriesRoute.filters(
+        [tomorrowEntry],
+        (_, r) =>
+          r.queryParams['filter[since]'] ===
+            moment().startOf('day').add(1, 'day').toISOString() &&
+          r.queryParams['filter[before]'] ===
+            moment().endOf('month').toISOString()
+      )
+    );
+
+    await click(`[data-test-filter-since] .ui-datepicker-today + td a`);
+
+    assert
+      .dom(`[data-test-entry="${yesterdayEntry.id}"]`)
+      .doesNotExist('should not show yesterday entry');
+    assert
+      .dom(`[data-test-entry="${todayEntry.id}"]`)
+      .doesNotExist('should no longer show today entry');
+    assert
+      .dom(`[data-test-entry="${tomorrowEntry.id}"]`)
+      .exists('should show tomorrow entry');
+  });
+
+  test('filters by minimum date change the maximum date if anterior', async function (assert) {
+    const user = await this.utils.authentication.authenticate();
+    const todayEntry = this.server.create('entry', {
+      user,
+      startedAt: moment().startOf('day').add(1, 'h'),
+    });
+    const nextMonthEntry = this.server.create('entry', {
+      user,
+      startedAt: moment().startOf('month').add(2, 'd'),
+    });
+
+    await visit('/reviews');
+    await click(`[data-test-filter-since]`);
+    await click(`[data-test-filter-since] .ui-datepicker-next`);
+
+    this.server.get(
+      'entries',
+      mirageGetEntriesRoute.filters(
+        [nextMonthEntry],
+        (_, r) =>
+          moment()
+            .startOf('month')
+            .add(1, 'month')
+            .isSame(r.queryParams['filter[since]']) &&
+          moment()
+            .startOf('month')
+            .add(1, 'month')
+            .endOf('day')
+            .isSame(r.queryParams['filter[before]'])
+      )
+    );
+
+    await click(
+      `[data-test-filter-since] .ui-datepicker-calendar [data-date="1"]`
+    );
+
+    assert
+      .dom(`[data-test-entry="${todayEntry.id}"]`)
+      .doesNotExist('should no longer show today entry');
+    assert
+      .dom(`[data-test-entry="${nextMonthEntry.id}"]`)
+      .exists('should show next month entry');
+
+    assert
+      .dom(`[data-test-filter-before]`)
+      .hasText(
+        moment().startOf('month').add(1, 'month').format('YYYY/MM/DD'),
+        'should update before filter'
+      );
+  });
+
+  test('filters by maximum date', async function (assert) {
+    const user = await this.utils.authentication.authenticate();
+    const todayEntry = this.server.create('entry', {
+      user,
+      startedAt: moment().startOf('day').add(1, 'h'),
+    });
+    const previousMonthEntry = this.server.create('entry', {
+      user,
+      startedAt: moment().startOf('month').subtract(1, 'd'),
+    });
+    const nextMonthEntry = this.server.create('entry', {
+      user,
+      startedAt: moment().startOf('month').add(1, 'd'),
+    });
+
+    await visit('/reviews');
+    await click(`[data-test-filter-before]`);
+
+    assert
+      .dom(`[data-test-filter-before] .ui-datepicker-calendar`)
+      .exists('should show before datepicker calendar');
+    assert
+      .dom(`[data-test-filter-before] .ui-datepicker-today`)
+      .exists('should show datepicker today');
+
+    this.server.get(
+      'entries',
+      mirageGetEntriesRoute.filters(
+        [todayEntry],
+        (_, r) =>
+          moment().startOf('month').isSame(r.queryParams['filter[since]']) &&
+          moment().endOf('day').isSame(r.queryParams['filter[before]'])
+      )
+    );
+
+    await click(`[data-test-filter-before] .ui-datepicker-today a`);
+
+    assert
+      .dom(`[data-test-entry="${previousMonthEntry.id}"]`)
+      .doesNotExist('should not show previous month entry');
+    assert
+      .dom(`[data-test-entry="${todayEntry.id}"]`)
+      .exists('should show today entry');
+    assert
+      .dom(`[data-test-entry="${nextMonthEntry.id}"]`)
+      .doesNotExist('should not show next month entry');
+
+    await click(`[data-test-filter-before]`);
+
+    this.server.get(
+      'entries',
+      mirageGetEntriesRoute.filters(
+        [nextMonthEntry],
+        (_, r) =>
+          moment().startOf('month').isSame(r.queryParams['filter[since]']) &&
+          moment()
+            .startOf('month')
+            .add(1, 'month')
+            .endOf('day')
+            .isSame(r.queryParams['filter[before]'])
+      )
+    );
+
+    await click(`[data-test-filter-before] .ui-datepicker-next`);
+    await click(
+      `[data-test-filter-before] .ui-datepicker-calendar [data-date="1"]`
+    );
+
+    assert
+      .dom(`[data-test-entry="${previousMonthEntry.id}"]`)
+      .doesNotExist('should not show previous month entry');
+    assert
+      .dom(`[data-test-entry="${todayEntry.id}"]`)
+      .doesNotExist('should no longer show today entry');
+    assert
+      .dom(`[data-test-entry="${nextMonthEntry.id}"]`)
+      .exists('should show next month entry');
+  });
+
+  test('filters by maximum date change the minimum date if anterior', async function (assert) {
+    const user = await this.utils.authentication.authenticate();
+    const todayEntry = this.server.create('entry', {
+      user,
+      startedAt: moment().startOf('day').add(1, 'h'),
+    });
+    const previousMonthEntry = this.server.create('entry', {
+      user,
+      startedAt: moment().startOf('month').subtract(1, 'month').add(2, 'd'),
+    });
+
+    await visit('/reviews');
+    await click(`[data-test-filter-before]`);
+
+    this.server.get(
+      'entries',
+      mirageGetEntriesRoute.filters(
+        [previousMonthEntry],
+        (_, r) =>
+          moment()
+            .startOf('month')
+            .subtract(1, 'month')
+            .add(19, 'd')
+            .isSame(r.queryParams['filter[since]']) &&
+          moment()
+            .startOf('month')
+            .subtract(1, 'month')
+            .add(19, 'd')
+            .endOf('day')
+            .isSame(r.queryParams['filter[before]'])
+      )
+    );
+
+    await click(`[data-test-filter-before] .ui-datepicker-prev`);
+    await click(
+      `[data-test-filter-before] .ui-datepicker-calendar [data-date="20"]`
+    );
+
+    assert
+      .dom(`[data-test-entry="${todayEntry.id}"]`)
+      .doesNotExist('should no longer show today entry');
+    assert
+      .dom(`[data-test-entry="${previousMonthEntry.id}"]`)
+      .exists('should show previous month entry');
+
+    assert
+      .dom(`[data-test-filter-since]`)
+      .hasText(
+        moment()
+          .startOf('month')
+          .subtract(1, 'month')
+          .add(19, 'd')
+          .format('YYYY/MM/DD'),
+        'should update since filter'
+      );
+  });
 });

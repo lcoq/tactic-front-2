@@ -18,7 +18,7 @@ export default class EntryModel extends Model {
   stateManager = null;
 
   get projectHasChanged() {
-    return this.initialProjectWasSet && (this.project !== this.initialProject);
+    return this.initialProjectWasSet && this.project !== this.initialProject;
   }
 
   get durationInSeconds() {

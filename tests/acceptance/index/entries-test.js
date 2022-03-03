@@ -1,5 +1,11 @@
 import { module, test } from 'qunit';
-import { visit, click, fillIn, typeIn, triggerKeyEvent } from '@ember/test-helpers';
+import {
+  visit,
+  click,
+  fillIn,
+  typeIn,
+  triggerKeyEvent,
+} from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 import moment from 'moment';
@@ -210,7 +216,7 @@ module('Acceptance | Index > Entries', function (hooks) {
     const user = await this.utils.authentication.authenticate();
     const entry = this.server.create('entry', {
       user,
-      startedAt: moment().startOf('month').add(2, 'd')
+      startedAt: moment().startOf('month').add(2, 'd'),
     });
     await visit('/');
 
@@ -375,9 +381,9 @@ module('Acceptance | Index > Entries', function (hooks) {
       'should not send PATCH entry'
     );
 
-    assert.
-      dom(`[data-test-entry="${entry.id}"] [data-test-entry-project]`).
-      hasText('Tactic', 'should keep initial project');
+    assert
+      .dom(`[data-test-entry="${entry.id}"] [data-test-entry-project]`)
+      .hasText('Tactic', 'should keep initial project');
   });
 
   test('clears project', async function (assert) {
@@ -387,7 +393,11 @@ module('Acceptance | Index > Entries', function (hooks) {
 
     await visit('/');
     await click(`[data-test-entry="${entry.id}"] [data-test-entry-project]`);
-    await triggerKeyEvent(`[data-test-entry="${entry.id}"] [data-test-entry-edit-project]`, 'keyup', 'Enter');
+    await triggerKeyEvent(
+      `[data-test-entry="${entry.id}"] [data-test-entry-edit-project]`,
+      'keyup',
+      'Enter'
+    );
 
     entry.reload();
     assert.notOk(entry.project, 'should clear entry project');

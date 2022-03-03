@@ -33,6 +33,13 @@ export default class ReviewsController extends Controller {
     return this.model.projects;
   }
 
+  get allProjectsForSelectedClientIds() {
+    if (!this.selectedClientIds) return [];
+    return this.allProjects.filter((p) => {
+      return this.selectedClientIds.includes(p.clientId || '0');
+    });
+  }
+
   get filters() {
     return {
       since: this.since.toISOString(),
@@ -50,15 +57,48 @@ export default class ReviewsController extends Controller {
   }
 
   @action didUpdateEntry(entry) {
-    // TODO update user summary ?
+    const since = moment(this.since);
+    const before = moment(this.before);
+    if (since.isAfter(entry.startedAt) || before.isBefore(entry.startedAt)) {
+      this.entriesByClientAndProject.removeEntry(entry);
+    }
+    this.userSummary.reload();
   }
 
-  @action didDeleteEntry(entry) {
-    // TODO update user summary
+  @action didDeleteEntry() {
+    this.userSummary.reload();
   }
 
   @action async changeSelectedUserIds(newUserIds) {
     this.selectedUserIds = newUserIds;
+    await this.reloadEntries();
+  }
+
+  @action async changeSelectedClientIds(newClientIds) {
+    const newProjectIds = this._buildNewProjectIdsForClientIds(newClientIds);
+    this.selectedClientIds = newClientIds;
+    this.selectedProjectIds = newProjectIds;
+    await this.reloadEntries();
+  }
+
+  @action async changeSelectedProjectIds(newProjectIds) {
+    this.selectedProjectIds = newProjectIds;
+    await this.reloadEntries();
+  }
+
+  @action async changeSince(newSince) {
+    if (moment(newSince).isAfter(this.before)) {
+      this.before = moment(newSince).endOf('day').toDate();
+    }
+    this.since = newSince;
+    await this.reloadEntries();
+  }
+
+  @action async changeBefore(newBefore) {
+    if (moment(newBefore).isBefore(this.since)) {
+      this.since = moment(newBefore).startOf('day').toDate();
+    }
+    this.before = newBefore;
     await this.reloadEntries();
   }
 
@@ -80,5 +120,24 @@ export default class ReviewsController extends Controller {
     this.selectedUserIds = [this.authentication.userId];
     this.selectedClientIds = this.allClients.mapBy('id');
     this.selectedProjectIds = this.allProjects.mapBy('id');
+  }
+
+  _buildNewProjectIdsForClientIds(newClientIds) {
+    const addedClientIds = newClientIds.filter(
+      (id) => !this.selectedClientIds.includes(id)
+    );
+    const removedClientIds = this.selectedClientIds.filter(
+      (id) => !newClientIds.includes(id)
+    );
+    const projectIdsToAdd = this.allProjects
+      .filter((p) => {
+        return addedClientIds.includes(p.clientId || '0');
+      })
+      .mapBy('id');
+    const filteredProjectIds = this.selectedProjectIds.filter((id) => {
+      const project = this.allProjects.findBy('id', id);
+      return !removedClientIds.includes(project.clientId || '0');
+    });
+    return [...filteredProjectIds, ...projectIdsToAdd];
   }
 }

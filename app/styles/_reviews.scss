@@ -1,6 +1,6 @@
 .reviews-filters {
   display: flex;
-  align-items: flex-start;
+  align-items: baseline;
 }
 
 .reviews-filter {
@@ -37,7 +37,7 @@
 
 .reviews-filter-header {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   position: relative;
   padding: 0 $sp-sm;
 }
@@ -70,6 +70,8 @@
   width: 100%;
   padding: $sp-sm 0;
   background-color: $clr3;
+  max-height: 60vh;
+  overflow-y: auto;
 }
 
 .reviews-filter-item {
@@ -130,7 +132,6 @@
 
 .reviews-filter-from-date,
 .reviews-filter-to-date {
-  display: none;
   position: absolute;
   top: 100%;
   left: 0;

@@ -63,7 +63,7 @@ export default class ProjectGroupByClientListModel {
 
   _findGroupForProject(project) {
     return this.groups.find(
-      (g) => g.client.get('id') === (project.belongsTo('client').id() || '0')
+      (g) => g.client.get('id') === (project.clientId || '0')
     );
   }
 

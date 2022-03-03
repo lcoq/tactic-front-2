@@ -18,6 +18,7 @@ export default class ReviewsController extends Controller {
   @tracked selectedUserIds = null;
   @tracked selectedClientIds = null;
   @tracked selectedProjectIds = null;
+  @tracked rounding = null;
 
   @tracked entriesByClientAndProject = null;
 
@@ -102,6 +103,10 @@ export default class ReviewsController extends Controller {
     await this.reloadEntries();
   }
 
+  @action changeRounding(newRounding) {
+    this.rounding = newRounding;
+  }
+
   async reloadEntries() {
     const entries = await this.store.query('entry', { filter: this.filters });
     this.entriesByClientAndProject = new EntryGroupByClientAndProjectListModel({
@@ -120,6 +125,7 @@ export default class ReviewsController extends Controller {
     this.selectedUserIds = [this.authentication.userId];
     this.selectedClientIds = this.allClients.mapBy('id');
     this.selectedProjectIds = this.allProjects.mapBy('id');
+    this.rounding = false;
   }
 
   _buildNewProjectIdsForClientIds(newClientIds) {

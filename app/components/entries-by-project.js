@@ -5,10 +5,6 @@ export default class EntriesByProjectComponent extends Component {
     return this.args.list;
   }
 
-  get groups() {
-    return this.list.groups;
-  }
-
   get searchProjects() {
     return this.args.searchProjects;
   }
@@ -19,5 +15,13 @@ export default class EntriesByProjectComponent extends Component {
 
   get didDeleteEntry() {
     return this.args.didDeleteEntry;
+  }
+
+  get rounding() {
+    return this.args.rounding;
+  }
+
+  get groups() {
+    return this.list.groups;
   }
 }

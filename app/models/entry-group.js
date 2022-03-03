@@ -33,4 +33,11 @@ export default class EntryGroupModel {
       0
     );
   }
+
+  get roundedDurationInSeconds() {
+    return this.entries.reduce(
+      (sum, entry) => sum + entry.roundedDurationInSeconds,
+      0
+    );
+  }
 }

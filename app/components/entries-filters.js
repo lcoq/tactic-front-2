@@ -39,6 +39,10 @@ export default class EntriesFiltersComponent extends Component {
     return this.args.before;
   }
 
+  get rounding() {
+    return this.args.rounding;
+  }
+
   @action changeSelectedUserIds(newUserIds) {
     this.args.changeSelectedUserIds(newUserIds);
   }
@@ -68,5 +72,9 @@ export default class EntriesFiltersComponent extends Component {
     const newDateAtEndOfDay = moment(newDate).endOf('day').toDate();
     this.isEditingBefore = false;
     this.args.changeBefore(newDateAtEndOfDay);
+  }
+
+  @action changeRounding(event) {
+    this.args.changeRounding(event.target.checked);
   }
 }

@@ -23,6 +23,18 @@ export default Factory.extend({
     return moment(this.startedAt).add(randHour, 'h').add(randMin, 'm').toDate();
   },
 
+  roundedDuration() {
+    if (!this.startedAt || !this.stoppedAt) return;
+    const duration = moment(this.stoppedAt).diff(this.startedAt, 'seconds');
+    const minutes = Math.floor(duration / 60.0);
+    const roundToMinutes = 5;
+    let roundedMinutes = minutes;
+    if (minutes % roundToMinutes !== 0) {
+      roundedMinutes += roundToMinutes - (minutes % roundToMinutes);
+    }
+    return roundedMinutes * 60;
+  },
+
   withoutTitle: trait({
     title() {
       return null;

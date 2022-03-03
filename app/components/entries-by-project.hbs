@@ -11,7 +11,13 @@
         <div
           class="entry-group-header-duration"
           data-test-project-group-duration
-        >{{format-duration group.durationInSeconds}}</div>
+        >{{format-duration
+            (if
+              this.rounding
+              group.roundedDurationInSeconds
+              group.durationInSeconds
+            )
+          }}</div>
         <div class="entry-group-header-actions">
           <button
             type="button"
@@ -24,6 +30,7 @@
           <ShowEntry
             @entry={{entry}}
             @showDate="true"
+            @rounding={{this.rounding}}
             @didUpdateEntry={{this.didUpdateEntry}}
             @didDeleteEntry={{this.didDeleteEntry}}
             @searchProjects={{this.searchProjects}}

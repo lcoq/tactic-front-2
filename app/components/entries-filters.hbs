@@ -56,4 +56,17 @@
     </div>
   </section>
 
+  <section class="reviews-filter reviews-filter-rounding no-print">
+    <label class="reviews-filter-rounding-checkbox-container">
+      <input
+        {{on "change" this.changeRounding}}
+        type="checkbox"
+        checked={{this.rounding}}
+        class="reviews-filter-rounding-checkbox"
+        data-test-rounding
+      />
+      <span>Round</span>
+    </label>
+  </section>
+
 </section>

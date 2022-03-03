@@ -97,7 +97,7 @@
     {{/if}}
 
     {{#if this.isEditing}}
-      <div class="entry-project touch it-entry-project">
+      <div class="entry-project touch">
         <EntryChooseProject
           @projectName={{this.entry.project.name}}
           @classNamePrefix="entry-edit"
@@ -139,7 +139,13 @@
         class="entry-duration touch"
         data-test-entry-duration
       >
-        {{format-duration this.entry.durationInSeconds}}
+        {{format-duration
+          (if
+            this.rounding
+            this.entry.roundedDurationInSeconds
+            this.entry.durationInSeconds
+          )
+        }}
       </div>
     {{/if}}
 

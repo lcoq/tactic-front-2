@@ -7,7 +7,13 @@
         class="entry-root-group-list-header-duration"
         data-test-entries-total-duration
       >
-        {{format-duration this.totalDurationInSeconds}}{{! rounding }}
+        {{format-duration
+          (if
+            this.rounding
+            this.totalRoundedDurationInSeconds
+            this.totalDurationInSeconds
+          )
+        }}
       </div>
       <div class="entry-root-group-list-header-actions">
         <button
@@ -31,7 +37,13 @@
           class="entry-root-group-header-duration"
           data-test-client-group-duration
         >
-          {{format-duration group.durationInSeconds}}{{! rounding }}
+          {{format-duration
+            (if
+              this.rounding
+              group.roundedDurationInSeconds
+              group.durationInSeconds
+            )
+          }}
         </div>
         <div class="entry-root-group-header-actions">
           <button
@@ -42,6 +54,7 @@
       </div>
       <EntriesByProject
         @list={{group}}
+        @rounding={{this.rounding}}
         @didUpdateEntry={{this.didUpdateEntry}}
         @didDeleteEntry={{this.didDeleteEntry}}
         @searchProjects={{this.searchProjects}}

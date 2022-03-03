@@ -9,6 +9,7 @@ export default class EntryModel extends Model {
   @attr('string') title;
   @attr('date') startedAt;
   @attr('date') stoppedAt;
+  @attr('number') roundedDuration;
   @belongsTo user;
   @belongsTo project;
 
@@ -23,6 +24,10 @@ export default class EntryModel extends Model {
 
   get durationInSeconds() {
     return getValue(this._durationInSecondsCache);
+  }
+
+  get roundedDurationInSeconds() {
+    return this.roundedDuration;
   }
 
   get isStarted() {

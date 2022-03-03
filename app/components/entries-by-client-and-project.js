@@ -6,6 +6,14 @@ export default class EntriesByClientAndProjectComponent extends Component {
     return this.args.list;
   }
 
+  get searchProjects() {
+    return this.args.searchProjects;
+  }
+
+  get rounding() {
+    return this.args.rounding;
+  }
+
   get groups() {
     return this.list.groups;
   }
@@ -18,8 +26,8 @@ export default class EntriesByClientAndProjectComponent extends Component {
     return this.list.durationInSeconds;
   }
 
-  get searchProjects() {
-    return this.args.searchProjects;
+  get totalRoundedDurationInSeconds() {
+    return this.list.roundedDurationInSeconds;
   }
 
   @action didUpdateEntry(entry) {

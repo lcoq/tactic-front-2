@@ -70,3 +70,21 @@
   </section>
 
 </section>
+
+<section class="reviews-filters">
+  <section class="reviews-filter reviews-filter-query">
+    {{#if this.query}}
+      <span class="only-print">
+        Search :
+        {{this.query}}
+      </span>
+    {{/if}}
+    <input
+      value={{this.query}}
+      {{on "change" this.changeQuery}}
+      placeholder="Search tasks ..."
+      class="reviews-filter-query-input no-print"
+      data-test-filter-query
+    />
+  </section>
+</section>

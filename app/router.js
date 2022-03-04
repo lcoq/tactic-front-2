@@ -10,4 +10,5 @@ Router.map(function () {
   this.route('login');
   this.route('projects');
   this.route('reviews');
+  this.route('stats');
 });

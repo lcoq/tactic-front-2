@@ -9,7 +9,7 @@ import {
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 
-module('Acceptance | login', function (hooks) {
+module('Acceptance | Login', function (hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 

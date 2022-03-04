@@ -1,0 +1,44 @@
+<section class="stats-container">
+
+  <EntriesFilters
+    @allUsers={{this.allUsers}}
+    @allClients={{this.allClients}}
+    @allProjects={{this.allProjectsForSelectedClientIds}}
+    @selectedUserIds={{this.selectedUserIds}}
+    @selectedClientIds={{this.selectedClientIds}}
+    @selectedProjectIds={{this.selectedProjectIds}}
+    @since={{this.since}}
+    @before={{this.before}}
+    @query={{this.query}}
+    @changeSelectedUserIds={{this.changeSelectedUserIds}}
+    @changeSelectedClientIds={{this.changeSelectedClientIds}}
+    @changeSelectedProjectIds={{this.changeSelectedProjectIds}}
+    @changeSince={{this.changeSince}}
+    @changeBefore={{this.changeBefore}}
+    @changeQuery={{this.changeQuery}}
+    @changeRounding={{this.changeRounding}}
+  >
+    <section class="reviews-filter reviews-filter-group no-print">
+      <div>group</div>
+      <div class="reviews-filter-header">
+        <select
+          {{on "change" this.changeGroup}}
+          class="reviews-filter-group-select"
+          data-test-filter-group
+        >
+          <option value="day" selected={{this.isDayGroup}}>Day</option>
+          <option value="month" selected={{this.isMonthGroup}}>Month</option>
+        </select>
+      </div>
+    </section>
+  </EntriesFilters>
+
+  {{#if this.statGroup}}
+    <ShowChart
+      @title={{this.statGroup.title}}
+      @scales={{this.statGroup.chartScales}}
+      @tooltip={{this.statGroup.tooltip}}
+      @data={{this.statGroup.chartData}}
+    />
+  {{/if}}
+</section>

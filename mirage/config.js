@@ -1,6 +1,8 @@
 import { Response } from 'miragejs';
 import { createServer } from 'miragejs';
+
 import getEntries from './routes/get-entries';
+import getStats from './routes/get-stats';
 
 export default function (config) {
   // These comments are here to help you get started. Feel free to delete them.
@@ -69,6 +71,9 @@ function routes() {
   this.post('/clients');
   this.patch('/clients/:id');
   this.delete('/clients/:id');
+
+  this.get('/stats/daily', getStats.daily());
+  this.get('/stats/monthly', getStats.monthly());
 }
 
 function sortByName(a, b) {

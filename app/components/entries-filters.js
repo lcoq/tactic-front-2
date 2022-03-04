@@ -47,6 +47,10 @@ export default class EntriesFiltersComponent extends Component {
     return this.args.rounding;
   }
 
+  get canRound() {
+    return !!this.args.changeRounding;
+  }
+
   @action changeSelectedUserIds(newUserIds) {
     this.args.changeSelectedUserIds(newUserIds);
   }

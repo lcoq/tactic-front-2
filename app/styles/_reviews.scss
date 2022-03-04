@@ -157,3 +157,13 @@
 .reviews-filter-query-input {
   width: 100%;
 }
+
+.reviews-filter-group {
+  display: flex;
+  gap: $sp-sm;
+  align-items: baseline;
+}
+
+.reviews-filter-group .reviews-filter-group-select {
+  padding: $sp-xs $sp-sm;
+}

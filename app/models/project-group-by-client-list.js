@@ -1,4 +1,5 @@
 import { tracked } from '@glimmer/tracking';
+import { A } from '@ember/array';
 
 class GroupModel {
   @tracked client = null;
@@ -19,13 +20,15 @@ export default class ProjectGroupByClientListModel {
   @tracked groups = [];
 
   constructor(attributes) {
-    Object.assign(this, attributes);
+    Object.assign(this, attributes, { projects: A([]) });
     this.clients.forEach((client) => {
       this._createGroup(client);
     });
-    this.projects.forEach((project) => {
-      this._addProject(project);
-    });
+    if (attributes.projects) {
+      attributes.projects.forEach((project) => {
+        this._addProject(project);
+      });
+    }
   }
 
   addClient(client) {

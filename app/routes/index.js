@@ -3,7 +3,7 @@ import { service } from '@ember/service';
 import { hash } from 'rsvp';
 
 import EntryGroupByDayList from '../models/entry-group-by-day-list';
-import EntriesCommitter from '../models/entries-committer';
+import StateManagerListCommitter from '../models/state-manager-list-committer';
 
 export default class IndexRoute extends Route {
   @service store;
@@ -47,21 +47,22 @@ export default class IndexRoute extends Route {
     /* see issue https://github.com/ember-learn/guides-source/issues/1590 */
     const controller = this.controller;
 
-    const entriesCommitter = new EntriesCommitter();
-    entriesCommitter.addObject(controller.newEntryStateManager);
-    entriesCommitter.addObjects(
-      controller.entryList.entries.mapBy('stateManager')
-    );
+    const committer = new StateManagerListCommitter();
+    committer.addObject(controller.newEntryStateManager);
+    committer.addObjects(controller.entryList.entries.mapBy('stateManager'));
 
-    if (!entriesCommitter.isClear) {
+    if (!committer.isClear) {
       transition.abort();
-      entriesCommitter.commit().then(
+      committer.commit().then(
         () => transition.retry(),
-        () =>
-          alert(
-            'Some edits cannot be saved, please review your changes or try again.'
-          )
+        () => this._alertCommitError()
       );
     }
+  }
+
+  _alertCommitError() {
+    return alert(
+      'Some edits cannot be saved, please review your changes or try again.'
+    );
   }
 }

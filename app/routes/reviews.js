@@ -4,7 +4,7 @@ import { hash } from 'rsvp';
 
 import NullClientModel from '../models/null-client';
 import NullProjectModel from '../models/null-project';
-import EntriesCommitter from '../models/entries-committer';
+import StateManagerListCommitter from '../models/state-manager-list-committer';
 
 export default class ReviewsRoute extends Route {
   @service store;
@@ -58,20 +58,23 @@ export default class ReviewsRoute extends Route {
     /* see issue https://github.com/ember-learn/guides-source/issues/1590 */
     const controller = this.controller;
 
-    const entriesCommitter = new EntriesCommitter();
-    entriesCommitter.addObjects(
+    const committer = new StateManagerListCommitter();
+    committer.addObjects(
       controller.entriesByClientAndProject.entries.mapBy('stateManager')
     );
 
-    if (!entriesCommitter.isClear) {
+    if (!committer.isClear) {
       transition.abort();
-      entriesCommitter.commit().then(
+      committer.commit().then(
         () => transition.retry(),
-        () =>
-          alert(
-            'Some edits cannot be saved, please review your changes or try again.'
-          )
+        () => this._alertCommitError()
       );
     }
+  }
+
+  _alertCommitError() {
+    return alert(
+      'Some edits cannot be saved, please review your changes or try again.'
+    );
   }
 }

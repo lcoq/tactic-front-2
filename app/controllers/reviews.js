@@ -24,6 +24,8 @@ export default class ReviewsController extends Controller {
 
   @tracked entriesByClientAndProject = null;
 
+  // TODO close since calendar on before calendar open
+
   get allUsers() {
     return this.model.users;
   }

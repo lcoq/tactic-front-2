@@ -1,17 +1,22 @@
 import { all } from 'rsvp';
 
-export default class EntriesCommitter {
+export default class StateManagerListCommitter {
   constructor() {
     this.list = [];
   }
 
   get isClear() {
     return (
+      this._invalidList.length === 0 &&
       this._editingList.length === 0 &&
       this._pendingSaveList.length === 0 &&
       this._pendingDeleteList.length === 0 &&
       this._erroredList.length === 0
     );
+  }
+
+  get hasInvalid() {
+    return this._invalidList.length > 0;
   }
 
   addObject(object) {
@@ -22,6 +27,10 @@ export default class EntriesCommitter {
     this.list.pushObjects(objects);
   }
 
+  clearInvalids() {
+    this._invalidList.forEach((e) => e.send('clear'));
+  }
+
   commit() {
     this._editingList.forEach((e) => e.send('markForSave'));
     return all([
@@ -29,6 +38,10 @@ export default class EntriesCommitter {
       ...this._pendingDeleteList.map((e) => e.send('forceDelete')),
       ...this._erroredList.map((e) => e.send('retry')),
     ]);
+  }
+
+  get _invalidList() {
+    return this.list.filterBy('isInvalid', true);
   }
 
   get _editingList() {

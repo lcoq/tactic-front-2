@@ -32,6 +32,7 @@
         <div
           class="reviews-filter-from-date no-print"
           {{datepicker this.since this.changeSince}}
+          {{on-focus-out-click this.cancelEditSince}}
         ></div>
       {{/if}}
     </div>
@@ -51,6 +52,7 @@
         <div
           class="reviews-filter-to-date no-print"
           {{datepicker this.before this.changeBefore}}
+          {{on-focus-out-click this.cancelEditBefore}}
         ></div>
       {{/if}}
     </div>

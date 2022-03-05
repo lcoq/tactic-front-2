@@ -482,6 +482,19 @@ module('Acceptance | Reviews > Filters', function (hooks) {
       );
   });
 
+  test('closes filter by minimum date on maximum date filter click', async function (assert) {
+    await this.utils.authentication.authenticate();
+    await visit('/reviews');
+    await click(`[data-test-filter-since]`);
+    assert
+      .dom(`[data-test-filter-since] .ui-datepicker-calendar`)
+      .exists('should show since datepicker calendar');
+    await click(`[data-test-filter-before]`);
+    assert
+      .dom(`[data-test-filter-since] .ui-datepicker-calendar`)
+      .doesNotExist('should remove since datepicker calendar');
+  });
+
   test('filters by maximum date', async function (assert) {
     const user = await this.utils.authentication.authenticate();
     const todayEntry = this.server.create('entry', {
@@ -616,6 +629,19 @@ module('Acceptance | Reviews > Filters', function (hooks) {
           .format('YYYY/MM/DD'),
         'should update since filter'
       );
+  });
+
+  test('closes filter by maximum date on minimum date filter click', async function (assert) {
+    await this.utils.authentication.authenticate();
+    await visit('/reviews');
+    await click(`[data-test-filter-before]`);
+    assert
+      .dom(`[data-test-filter-before] .ui-datepicker-calendar`)
+      .exists('should show before datepicker calendar');
+    await click(`[data-test-filter-since]`);
+    assert
+      .dom(`[data-test-filter-before] .ui-datepicker-calendar`)
+      .doesNotExist('should remove before datepicker calendar');
   });
 
   test('filters by query', async function (assert) {

@@ -72,6 +72,10 @@ export default class EntriesFiltersComponent extends Component {
     this.args.changeSince(newDate);
   }
 
+  @action cancelEditSince() {
+    this.isEditingSince = false;
+  }
+
   @action startEditBefore() {
     this.isEditingBefore = true;
   }
@@ -80,6 +84,10 @@ export default class EntriesFiltersComponent extends Component {
     const newDateAtEndOfDay = moment(newDate).endOf('day').toDate();
     this.isEditingBefore = false;
     this.args.changeBefore(newDateAtEndOfDay);
+  }
+
+  @action cancelEditBefore() {
+    this.isEditingBefore = false;
   }
 
   @action changeQuery(event) {

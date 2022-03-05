@@ -36,6 +36,10 @@ export default class IndexController extends Controller {
     return this.newEntryStateManager.isSaveErrored;
   }
 
+  get newEntryIsPendingSave() {
+    return this.newEntryStateManager.isPendingSave;
+  }
+
   @action willUpdateEntry(entry) {
     this.waitingEntries.pushObject(entry);
   }

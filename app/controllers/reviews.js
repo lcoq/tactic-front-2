@@ -8,18 +8,21 @@ import { resolve } from 'rsvp';
 import moment from 'moment';
 
 import EntryGroupByClientAndProjectListModel from '../models/entry-group-by-client-and-project-list';
+import { delegateTo } from '../utils/decorator';
 
 export default class ReviewsController extends Controller {
   @service store;
   @service authentication;
   @service userSummary;
+  @service filters;
 
-  @tracked since = null;
-  @tracked before = null;
-  @tracked query = null;
-  @tracked selectedUserIds = null;
-  @tracked selectedClientIds = null;
-  @tracked selectedProjectIds = null;
+  @delegateTo('filters') since;
+  @delegateTo('filters') before;
+  @delegateTo('filters') query;
+  @delegateTo('filters') selectedUserIds;
+  @delegateTo('filters') selectedClientIds;
+  @delegateTo('filters') selectedProjectIds;
+
   @tracked rounding = null;
 
   @tracked entriesByClientAndProject = null;
@@ -37,23 +40,7 @@ export default class ReviewsController extends Controller {
   }
 
   get allProjectsForSelectedClientIds() {
-    if (!this.selectedClientIds) return [];
-    return this.allProjects.filter((p) => {
-      return this.selectedClientIds.includes(p.clientId || '0');
-    });
-  }
-
-  get filters() {
-    const filters = {
-      since: this.since.toISOString(),
-      before: this.before.toISOString(),
-      'user-id': this.selectedUserIds,
-      'project-id': this.selectedProjectIds,
-    };
-    if (!isEmpty(this.query)) {
-      filters['query'] = this.query;
-    }
-    return filters;
+    return this.filters.projectsForSelectedClientIds;
   }
 
   @action searchProjects(query) {
@@ -77,40 +64,32 @@ export default class ReviewsController extends Controller {
   }
 
   @action async changeSelectedUserIds(newUserIds) {
-    this.selectedUserIds = newUserIds;
+    this.filters.changeSelectedUserIds(newUserIds);
     await this.reloadEntries();
   }
 
   @action async changeSelectedClientIds(newClientIds) {
-    const newProjectIds = this._buildNewProjectIdsForClientIds(newClientIds);
-    this.selectedClientIds = newClientIds;
-    this.selectedProjectIds = newProjectIds;
+    this.filters.changeSelectedClientIds(newClientIds);
     await this.reloadEntries();
   }
 
   @action async changeSelectedProjectIds(newProjectIds) {
-    this.selectedProjectIds = newProjectIds;
+    this.filters.changeSelectedProjectIds(newProjectIds);
     await this.reloadEntries();
   }
 
   @action async changeSince(newSince) {
-    if (moment(newSince).isAfter(this.before)) {
-      this.before = moment(newSince).endOf('day').toDate();
-    }
-    this.since = newSince;
+    this.filters.changeSince(newSince);
     await this.reloadEntries();
   }
 
   @action async changeBefore(newBefore) {
-    if (moment(newBefore).isBefore(this.since)) {
-      this.since = moment(newBefore).startOf('day').toDate();
-    }
-    this.before = newBefore;
+    this.filters.changeBefore(newBefore);
     await this.reloadEntries();
   }
 
   @action async changeQuery(newQuery) {
-    this.query = newQuery;
+    this.filters.changeQuery(newQuery);
     await this.reloadEntries();
   }
 
@@ -118,29 +97,22 @@ export default class ReviewsController extends Controller {
     this.rounding = newRounding;
   }
 
-  @action generateCSV(filters = {}) {
-    let projectIds;
-    if (Object.prototype.hasOwnProperty.call(filters, 'client')) {
-      const clientId = (filters.client && filters.client.id) || '0';
-      let project;
-      projectIds = this.selectedProjectIds.filter((projectId) => {
-        project = this.allProjects.find((project) => project.id === projectId);
-        return clientId === (project.clientId || '0');
-      });
-    } else if (Object.prototype.hasOwnProperty.call(filters, 'project')) {
-      projectIds = [filters.project?.id || '0'];
+  @action generateCSV(csvFilters = {}) {
+    let serializedFilters;
+    if (Object.prototype.hasOwnProperty.call(csvFilters, 'client')) {
+      const clientId = csvFilters.client?.id || '0';
+      serializedFilters = this.filters.serializeForClientId(clientId);
+    } else if (Object.prototype.hasOwnProperty.call(csvFilters, 'project')) {
+      const projectId = csvFilters.project?.id || '0';
+      serializedFilters = this.filters.serializeForProjectId(projectId);
     } else {
-      projectIds = this.selectedProjectIds;
+      serializedFilters = this.filters.serialized;
     }
 
     const adapter = this.store.adapterFor('entry');
-
-    const requestFilters = Object.assign({}, this.filters, {
-      'project-id': projectIds,
-    });
     const requestOptions = this.rounding ? { rounded: 1 } : {};
     const requestParams = Object.assign(
-      { filter: requestFilters, options: requestOptions },
+      { filter: serializedFilters, options: requestOptions },
       adapter.headers
     );
 
@@ -152,7 +124,9 @@ export default class ReviewsController extends Controller {
   }
 
   async reloadEntries() {
-    const entries = await this.store.query('entry', { filter: this.filters });
+    const entries = await this.store.query('entry', {
+      filter: this.filters.serialized,
+    });
     this.entriesByClientAndProject = new EntryGroupByClientAndProjectListModel({
       entries: entries.toArray(),
     });
@@ -164,32 +138,16 @@ export default class ReviewsController extends Controller {
   }
 
   initializeFilters() {
-    this.since = moment().startOf('month').toDate();
-    this.before = moment().endOf('month').toDate();
-    this.query = null;
-    this.selectedUserIds = [this.authentication.userId];
-    this.selectedClientIds = this.allClients.mapBy('id');
-    this.selectedProjectIds = this.allProjects.mapBy('id');
+    if (!this.filters.initialized) {
+      this.filters.initializeWith({
+        allClients: this.allClients,
+        allProjects: this.allProjects,
+        selectedUserIds: [this.authentication.userId],
+        selectedClientIds: this.allClients.mapBy('id'),
+        selectedProjectIds: this.allProjects.mapBy('id'),
+      });
+    }
     this.rounding = false;
-  }
-
-  _buildNewProjectIdsForClientIds(newClientIds) {
-    const addedClientIds = newClientIds.filter(
-      (id) => !this.selectedClientIds.includes(id)
-    );
-    const removedClientIds = this.selectedClientIds.filter(
-      (id) => !newClientIds.includes(id)
-    );
-    const projectIdsToAdd = this.allProjects
-      .filter((p) => {
-        return addedClientIds.includes(p.clientId || '0');
-      })
-      .mapBy('id');
-    const filteredProjectIds = this.selectedProjectIds.filter((id) => {
-      const project = this.allProjects.findBy('id', id);
-      return !removedClientIds.includes(project.clientId || '0');
-    });
-    return [...filteredProjectIds, ...projectIdsToAdd];
   }
 
   _downloadFile(url) {

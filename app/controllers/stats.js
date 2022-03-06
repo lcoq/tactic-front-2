@@ -2,21 +2,22 @@ import Controller from '@ember/controller';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { isEmpty } from '@ember/utils';
-import moment from 'moment';
+
+import { delegateTo } from '../utils/decorator';
 
 export default class StatsController extends Controller {
   @service store;
   @service authentication;
+  @service filters;
 
-  @tracked since = null;
-  @tracked before = null;
-  @tracked query = null;
-  @tracked selectedUserIds = null;
-  @tracked selectedClientIds = null;
-  @tracked selectedProjectIds = null;
+  @delegateTo('filters') since;
+  @delegateTo('filters') before;
+  @delegateTo('filters') query;
+  @delegateTo('filters') selectedUserIds;
+  @delegateTo('filters') selectedClientIds;
+  @delegateTo('filters') selectedProjectIds;
 
-  @tracked group = 'day'; // TODO avoid day group when too many entries
+  @tracked group = 'day';
   @tracked statGroup = null;
 
   get allUsers() {
@@ -32,10 +33,7 @@ export default class StatsController extends Controller {
   }
 
   get allProjectsForSelectedClientIds() {
-    if (!this.selectedClientIds) return [];
-    return this.allProjects.filter((p) => {
-      return this.selectedClientIds.includes(p.clientId || '0');
-    });
+    return this.filters.projectsForSelectedClientIds;
   }
 
   get isDayGroup() {
@@ -47,40 +45,32 @@ export default class StatsController extends Controller {
   }
 
   @action async changeSelectedUserIds(newUserIds) {
-    this.selectedUserIds = newUserIds;
+    this.filters.changeSelectedUserIds(newUserIds);
     await this.reload();
   }
 
   @action async changeSelectedClientIds(newClientIds) {
-    const newProjectIds = this._buildNewProjectIdsForClientIds(newClientIds);
-    this.selectedClientIds = newClientIds;
-    this.selectedProjectIds = newProjectIds;
+    this.filters.changeSelectedClientIds(newClientIds);
     await this.reload();
   }
 
   @action async changeSelectedProjectIds(newProjectIds) {
-    this.selectedProjectIds = newProjectIds;
+    this.filters.changeSelectedProjectIds(newProjectIds);
     await this.reload();
   }
 
   @action async changeSince(newSince) {
-    if (moment(newSince).isAfter(this.before)) {
-      this.before = moment(newSince).endOf('day').toDate();
-    }
-    this.since = newSince;
+    this.filters.changeSince(newSince);
     await this.reload();
   }
 
   @action async changeBefore(newBefore) {
-    if (moment(newBefore).isBefore(this.since)) {
-      this.since = moment(newBefore).startOf('day').toDate();
-    }
-    this.before = newBefore;
+    this.filters.changeBefore(newBefore);
     await this.reload();
   }
 
   @action async changeQuery(newQuery) {
-    this.query = newQuery;
+    this.filters.changeQuery(newQuery);
     await this.reload();
   }
 
@@ -89,22 +79,9 @@ export default class StatsController extends Controller {
     await this.reload();
   }
 
-  get filters() {
-    const filters = {
-      since: this.since.toISOString(),
-      before: this.before.toISOString(),
-      'user-id': this.selectedUserIds,
-      'project-id': this.selectedProjectIds,
-    };
-    if (!isEmpty(this.query)) {
-      filters['query'] = this.query;
-    }
-    return filters;
-  }
-
   async reload() {
     this.statGroup = await this.store.queryRecord('entries-stat-group', {
-      filter: this.filters,
+      filter: this.filters.serialized,
       _group: this.group,
     });
   }
@@ -115,30 +92,14 @@ export default class StatsController extends Controller {
   }
 
   initializeFilters() {
-    this.since = moment().startOf('month').toDate();
-    this.before = moment().endOf('month').toDate();
-    this.query = null;
-    this.selectedUserIds = [this.authentication.userId];
-    this.selectedClientIds = this.allClients.mapBy('id');
-    this.selectedProjectIds = this.allProjects.mapBy('id');
-  }
-
-  _buildNewProjectIdsForClientIds(newClientIds) {
-    const addedClientIds = newClientIds.filter(
-      (id) => !this.selectedClientIds.includes(id)
-    );
-    const removedClientIds = this.selectedClientIds.filter(
-      (id) => !newClientIds.includes(id)
-    );
-    const projectIdsToAdd = this.allProjects
-      .filter((p) => {
-        return addedClientIds.includes(p.clientId || '0');
-      })
-      .mapBy('id');
-    const filteredProjectIds = this.selectedProjectIds.filter((id) => {
-      const project = this.allProjects.findBy('id', id);
-      return !removedClientIds.includes(project.clientId || '0');
-    });
-    return [...filteredProjectIds, ...projectIdsToAdd];
+    if (!this.filters.initialized) {
+      this.filters.initializeWith({
+        allClients: this.allClients,
+        allProjects: this.allProjects,
+        selectedUserIds: [this.authentication.userId],
+        selectedClientIds: this.allClients.mapBy('id'),
+        selectedProjectIds: this.allProjects.mapBy('id'),
+      });
+    }
   }
 }

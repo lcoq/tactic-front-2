@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import {
   visit,
   find,
+  findAll,
   click,
   triggerEvent,
   fillIn,
@@ -418,7 +419,14 @@ module('Acceptance | Reviews > Filters', function (hooks) {
       )
     );
 
-    await click(`[data-test-filter-since] .ui-datepicker-today + td a`);
+    const calendarDays = findAll(
+      '[data-test-filter-since] .ui-datepicker-calendar td'
+    );
+    const todayIndex = calendarDays.findIndex((d) =>
+      Array.from(d.classList).includes('ui-datepicker-today')
+    );
+    const tomorrowDay = calendarDays[todayIndex + 1];
+    await click(tomorrowDay.querySelector('a'));
 
     assert
       .dom(`[data-test-entry="${yesterdayEntry.id}"]`)

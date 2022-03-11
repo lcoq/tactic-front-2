@@ -25,7 +25,7 @@ function isCurrentMonthRequest(request, userId) {
   );
 }
 
-module('Acceptance | application', function (hooks) {
+module('Acceptance | Application', function (hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
   setupUtils(hooks);

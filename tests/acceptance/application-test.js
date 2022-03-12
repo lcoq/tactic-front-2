@@ -30,20 +30,6 @@ module('Acceptance | Application', function (hooks) {
   setupMirage(hooks);
   setupUtils(hooks);
 
-  test('shows login link when authenticated', async function (assert) {
-    const user = await this.utils.authentication.authenticate();
-    await visit('/');
-    assert
-      .dom('[data-test-login-link]')
-      .exists('should have link to login page');
-    assert
-      .dom('[data-test-login-link]')
-      .hasAttribute('href', '/login', 'should links to login page');
-    assert
-      .dom('[data-test-login-link]')
-      .includesText(user.name, 'should show user name on link to login page');
-  });
-
   test('shows index link when authenticated', async function (assert) {
     await this.utils.authentication.authenticate();
     await visit('/');
@@ -78,7 +64,7 @@ module('Acceptance | Application', function (hooks) {
   });
 
   test('shows account link when authenticated', async function (assert) {
-    await this.utils.authentication.authenticate();
+    const user = await this.utils.authentication.authenticate();
     await visit('/');
     assert
       .dom('[data-test-account-link]')
@@ -86,6 +72,9 @@ module('Acceptance | Application', function (hooks) {
     assert
       .dom('[data-test-account-link]')
       .hasAttribute('href', '/account', 'should links to account page');
+    assert
+      .dom('[data-test-account-link]')
+      .includesText(user.name, 'should show user name on link to login page');
   });
 
   test('shows week user summary when authenticated', async function (assert) {

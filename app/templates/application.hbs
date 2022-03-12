@@ -5,13 +5,6 @@
 <header class="header" data-test-header>
   <div class="header-brand-container">
     <h1 class="header-brand">Tactic</h1>
-    {{#if this.isAuthenticated}}
-      <LinkTo
-        @route="login"
-        class="header-brand-user no-print"
-        data-test-login-link
-      >@ {{this.currentUserName}}</LinkTo>
-    {{/if}}
   </div>
 
   {{#if this.isAuthenticated}}

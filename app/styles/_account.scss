@@ -1,6 +1,21 @@
 .page-account {
 }
 
+.page-account-title-bar {
+  display: flex;
+  align-items: center;
+}
+
+.page-account-title-actions {
+  margin-left: auto;
+}
+
+.page-account-logout {
+  padding: $sp-sm $sp-lg;
+  color: white;
+  background-color: $clr15;
+}
+
 .page-account-title {
   font-size: $fs-xxl;
   font-weight: bold;

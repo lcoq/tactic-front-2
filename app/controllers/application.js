@@ -11,7 +11,7 @@ export default class ApplicationController extends Controller {
   }
 
   get currentUserName() {
-    return this.authentication.sessionName;
+    return this.authentication.userName;
   }
 
   get weekEntries() {

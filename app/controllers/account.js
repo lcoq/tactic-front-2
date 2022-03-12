@@ -1,9 +1,13 @@
 import Controller from '@ember/controller';
+import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 
 export default class AccountController extends Controller {
+  @service authentication;
+  @service router;
+
   @tracked showPassword = false;
   @tracked hasChanged = false;
 
@@ -57,9 +61,17 @@ export default class AccountController extends Controller {
       return;
     }
     this.user.save().then(
-      () => this._computeHasChanged(),
+      () => {
+        this._computeHasChanged();
+        this.authentication.userName = this.user.name;
+      },
       () => null /* nothing to do, user errors are displayed automatically */
     );
+  }
+
+  @action logout() {
+    this.authentication.deauthenticate();
+    this.router.transitionTo('login');
   }
 
   _computeHasChanged() {

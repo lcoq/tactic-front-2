@@ -30,7 +30,7 @@ module('Acceptance | Projects > Transition', function (hooks) {
     click('[data-test-header]'); // do not await here
     await this.utils.sleep(20);
 
-    click('[data-test-login-link]'); // do not `await` here
+    click('[data-test-reviews-link]'); // do not `await` here
     await this.utils.sleep(50);
 
     assert.strictEqual(
@@ -40,9 +40,9 @@ module('Acceptance | Projects > Transition', function (hooks) {
     );
 
     await click('[data-test-header]'); // `await` anything to wait end of run loops
-    assert.strictEqual(
+    assert.notStrictEqual(
       currentURL(),
-      '/login',
+      '/projects',
       'should transition after client save'
     );
   });
@@ -66,7 +66,7 @@ module('Acceptance | Projects > Transition', function (hooks) {
       ''
     );
     await click('[data-test-header]');
-    await click('[data-test-login-link]');
+    await click('[data-test-reviews-link]');
 
     assert.strictEqual(
       currentURL(),
@@ -100,9 +100,9 @@ module('Acceptance | Projects > Transition', function (hooks) {
       ''
     );
     await click('[data-test-header]');
-    await click('[data-test-login-link]');
+    await click('[data-test-reviews-link]');
 
-    assert.strictEqual(currentURL(), '/login', 'should transition');
+    assert.notStrictEqual(currentURL(), '/projects', 'should transition');
 
     assert.strictEqual(
       this.server.pretender.handledRequests.filterBy('method', 'PATCH').length,
@@ -131,7 +131,7 @@ module('Acceptance | Projects > Transition', function (hooks) {
     click('[data-test-header]'); // do not await here
     await this.utils.sleep(20);
 
-    click('[data-test-login-link]'); // do not `await` here
+    click('[data-test-reviews-link]'); // do not `await` here
     await this.utils.sleep(50);
 
     assert.strictEqual(
@@ -141,9 +141,9 @@ module('Acceptance | Projects > Transition', function (hooks) {
     );
 
     await click('[data-test-header]'); // `await` anything to wait end of run loops
-    assert.strictEqual(
+    assert.notStrictEqual(
       currentURL(),
-      '/login',
+      '/projects',
       'should transition after project save'
     );
   });
@@ -167,7 +167,7 @@ module('Acceptance | Projects > Transition', function (hooks) {
       ''
     );
     await click('[data-test-header]');
-    await click('[data-test-login-link]');
+    await click('[data-test-reviews-link]');
 
     assert.strictEqual(
       currentURL(),
@@ -201,9 +201,9 @@ module('Acceptance | Projects > Transition', function (hooks) {
       ''
     );
     await click('[data-test-header]');
-    await click('[data-test-login-link]');
+    await click('[data-test-reviews-link]');
 
-    assert.strictEqual(currentURL(), '/login', 'should transition');
+    assert.notStrictEqual(currentURL(), '/projects', 'should transition');
 
     assert.strictEqual(
       this.server.pretender.handledRequests.filterBy('method', 'PATCH').length,

@@ -1,4 +1,3 @@
-import { set } from '@ember/object';
 import Service from '@ember/service';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
@@ -8,20 +7,17 @@ import { isEmpty } from '@ember/utils';
 export default class AuthenticationService extends Service {
   @service cookieStore;
 
-  @tracked session;
-  @tracked userId;
-  @tracked token;
-
-  get isAuthenticated() {
-    return !isEmpty(this.session);
-  }
+  @tracked isAuthenticated = false;
+  @tracked userName = null;
+  @tracked userId = null;
+  @tracked token = null;
 
   get notAuthenticated() {
     return !this.isAuthenticated;
   }
 
   get sessionName() {
-    return this.session.name;
+    return this.userName;
   }
 
   get isRecoverable() {
@@ -35,10 +31,19 @@ export default class AuthenticationService extends Service {
   }
 
   authenticate(session) {
-    this.session = session;
+    this.isAuthenticated = true;
+    this.userName = session.name;
+    this.userId = session.userId;
     this._setToken(session.token);
-    set(this, 'userId', session.userId);
     this.eventEmitter.emit('authenticated');
+  }
+
+  deauthenticate() {
+    this.isAuthenticated = false;
+    this.userName = null;
+    this.userId = null;
+    this._setToken(null);
+    this.eventEmitter.emit('deauthenticated');
   }
 
   _retrieveToken() {

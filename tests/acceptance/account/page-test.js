@@ -28,6 +28,16 @@ module('Acceptance | Account > Page', function (hooks) {
     assert.strictEqual(currentURL(), '/account', 'should remains on account');
   });
 
+  test('logs out', async function (assert) {
+    await this.utils.authentication.authenticate();
+    await visit('/account');
+    assert.dom('[data-test-logout]').exists('should show logout button');
+    await click('[data-test-logout]');
+    assert.strictEqual(currentURL(), '/login', 'should redirect to login');
+    await visit('/');
+    assert.strictEqual(currentURL(), '/login', 'should redirect to login');
+  });
+
   test('shows user form', async function (assert) {
     const user = await this.utils.authentication.authenticate();
     await visit('/account');
@@ -163,5 +173,26 @@ module('Acceptance | Account > Page', function (hooks) {
     assert
       .dom('[data-test-user-name-error]')
       .doesNotExist('should no longer show name error');
+  });
+
+  test('updates account link user name after save', async function (assert) {
+    await this.utils.authentication.authenticate();
+    await visit('/account');
+    await fillIn('[data-test-user-name]', 'New name');
+    await click('[data-test-user-submit]');
+    assert
+      .dom('[data-test-account-link]')
+      .includesText('New name', 'should update acount link text');
+  });
+
+  test('rollbacks user changes on transition', async function (assert) {
+    const user = await this.utils.authentication.authenticate();
+    await visit('/account');
+    await fillIn('[data-test-user-name]', 'New name');
+    await visit('/');
+    await visit('/account');
+    assert
+      .dom('[data-test-user-name]')
+      .hasValue(user.name, 'should revert changes');
   });
 });

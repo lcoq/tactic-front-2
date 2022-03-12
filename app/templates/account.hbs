@@ -1,7 +1,19 @@
 {{page-title "Account"}}
 
 <section class="page-account">
-  <h1 class="page-account-title">My account</h1>
+  <div class="page-account-title-bar">
+    <h1 class="page-account-title">My account</h1>
+    <div class="page-account-title-actions">
+      <button
+        {{on "click" this.logout}}
+        type="button"
+        class="page-account-logout touch"
+        data-test-logout
+      >
+        Log out
+      </button>
+    </div>
+  </div>
 
   <form {{on "submit" this.confirmChanges}} class="account-form">
 

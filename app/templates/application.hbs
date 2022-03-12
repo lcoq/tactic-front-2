@@ -44,10 +44,19 @@
           class="header-nav-section-title touch"
         >Projects</LinkTo>
       </section>
-      <UserSummary
-        @weekEntries={{this.weekEntries}}
-        @monthEntries={{this.monthEntries}}
-      />
+      <section class="header-nav-section right">
+        <UserSummary
+          @weekEntries={{this.weekEntries}}
+          @monthEntries={{this.monthEntries}}
+        />
+      </section>
+      <section class="header-nav-section-account">
+        <LinkTo
+          @route="account"
+          data-test-account-link
+          class="header-nav-section-title touch"
+        >@ {{this.currentUserName}}</LinkTo>
+      </section>
     </nav>
   {{/if}}
 </header>

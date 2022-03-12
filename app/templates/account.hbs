@@ -1,0 +1,70 @@
+{{page-title "Account"}}
+
+<section class="page-account">
+  <h1 class="page-account-title">My account</h1>
+
+  <form {{on "submit" this.confirmChanges}} class="account-form">
+
+    <div class="account-form__row">
+      <label for="name" class="account-form__label">Name</label>
+      <div class="account-form__value">
+        <input
+          {{on "change" this.changeName}}
+          {{on "keyup" this.changeName}}
+          id="name"
+          type="text"
+          autocomplete="nickname"
+          class="account-form__input
+            {{if this.errors.name 'account-form__input--invalid'}}"
+          value={{this.name}}
+          required
+          data-test-user-name
+        />
+        {{#if this.errors.name}}
+          <ul class="account-form__error-list" data-test-user-name-error>
+            {{#each this.errors.name as |error|}}
+              <li class="account-form__error">{{error.message}}</li>
+            {{/each}}
+          </ul>
+        {{/if}}
+      </div>
+    </div>
+
+    <div class="account-form__row">
+      <label for="password" class="account-form__label">New Password</label>
+      <div class="account-form__value account-form__value--password">
+        <input
+          {{on "change" this.changePassword}}
+          {{on "keyup" this.changePassword}}
+          id="password"
+          type="{{if this.showPassword 'text' 'password'}}"
+          minlength="8"
+          autocomplete="new-password"
+          class="account-form__input account-form__input--password"
+          value={{this.password}}
+          data-test-user-password
+        />
+        <button
+          type="button"
+          {{on "click" this.toggleShowPassword}}
+          class="account-form__password-toggle touch"
+          data-test-user-password-toggle-display
+        >{{this.showPasswordLabel}}</button>
+      </div>
+    </div>
+
+    <div class="account-form__row account-form__row--single">
+      <div class="account-form__value">
+        <button
+          type="submit"
+          class="account-form__submit touch"
+          data-test-user-submit
+          disabled={{this.hasNoChange}}
+        >
+          Update
+        </button>
+      </div>
+    </div>
+
+  </form>
+</section>

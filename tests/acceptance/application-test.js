@@ -77,6 +77,17 @@ module('Acceptance | Application', function (hooks) {
       .hasAttribute('href', '/reviews', 'should links to reviews page');
   });
 
+  test('shows account link when authenticated', async function (assert) {
+    await this.utils.authentication.authenticate();
+    await visit('/');
+    assert
+      .dom('[data-test-account-link]')
+      .exists('should have link to account page');
+    assert
+      .dom('[data-test-account-link]')
+      .hasAttribute('href', '/account', 'should links to account page');
+  });
+
   test('shows week user summary when authenticated', async function (assert) {
     const user = await this.utils.authentication.authenticate();
 

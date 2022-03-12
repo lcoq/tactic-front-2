@@ -1,0 +1,85 @@
+.page-account {
+}
+
+.page-account-title {
+  font-size: $fs-xxl;
+  font-weight: bold;
+  padding: $sp 0;
+}
+
+.account-form {
+  display: flex;
+  flex-direction: column;
+  gap: $sp-lg;
+  margin: $sp-lg 0;
+  width: 60%;
+}
+
+.account-form__row {
+  display: flex;
+  align-items: baseline;
+  gap: $sp-lg;
+}
+
+.account-form__row--single:before {
+  content: ' ';
+  display: flex;
+  flex: 1;
+}
+
+.account-form__label {
+  flex: 1;
+  text-align: right;
+  color: $clr2;
+}
+
+.account-form__value {
+  flex: 2;
+}
+
+.account-form__input {
+  width: 100%;
+  padding: $sp-sm $sp-sm;
+  background-color: white;
+  border: 1px solid $clr6;
+}
+
+.account-form__value--password {
+  position: relative;
+}
+
+.account-form__password-toggle {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  text-transform: uppercase;
+  color: $clr8;
+  font-weight: bold;
+  font-size: $fs-sm;
+  line-height: $btn-size;
+}
+
+.account-form__submit {
+  padding: $sp-sm $sp-lg;
+  color: white;
+  background-color: $clr14;
+}
+
+.account-form__submit:disabled {
+  background-color: $clr6;
+  cursor: initial;
+}
+
+.account-form__input--invalid {
+  background-color: $clr16;
+}
+
+.account-form__error-list {
+  padding: $sp-sm;
+  color: darkred;
+  font-style: italic;
+}
+.account-form__error {
+  padding: $sp-xs;
+}

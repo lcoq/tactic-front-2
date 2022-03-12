@@ -11,4 +11,5 @@ Router.map(function () {
   this.route('projects');
   this.route('reviews');
   this.route('stats');
+  this.route('account');
 });

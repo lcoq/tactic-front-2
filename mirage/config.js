@@ -56,6 +56,8 @@ function routes() {
   });
 
   this.get('/users');
+  this.get('/users/:id');
+  this.patch('/users/:id');
 
   this.get('/entries', getEntries.default());
   this.post('/entries');

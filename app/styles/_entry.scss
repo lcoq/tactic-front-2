@@ -47,6 +47,10 @@
 .entry-root-group-list-header-action,
 .entry-group-header-action {
   color: $clr4;
+
+  &:hover {
+    color: black;
+  }
 }
 
 .entry-root-group-list-header {
@@ -92,6 +96,10 @@
 
 .entry-root-group-header-action {
   color: $clr7;
+
+  &:hover {
+    color: white;
+  }
 }
 
 .entry-group-header {
@@ -175,42 +183,45 @@
 }
 
 .entry-action-retry {
-  background-image: url('/assets/images/offline.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 16px;
+  background-color: #C62828;
+  mask: url(/assets/images/offline.svg) center / 16px no-repeat;
+  -webkit-mask: url(/assets/images/offline.svg) center / 16px no-repeat;
 
   &:hover {
-    background-image: url('/assets/images/refresh.svg');
+    background-color: black;
+    mask: url(/assets/images/refresh.svg) center / 16px no-repeat;
+    -webkit-mask: url(/assets/images/refresh.svg) center / 16px no-repeat;
   }
 }
 
 .entry-action-revert {
-  background-image: url('/assets/images/revert.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 16px;
+  mask: url(/assets/images/revert.svg) center / 16px no-repeat;
+  -webkit-mask: url(/assets/images/revert.svg) center / 16px no-repeat;
 }
 
 .entry-action-delete {
-  background-image: url('/assets/images/trash.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 16px;
+  mask: url(/assets/images/trash.svg) center / 16px no-repeat;
+  -webkit-mask: url(/assets/images/trash.svg) center / 16px no-repeat;
 }
-
 .entry-action-change-date {
-  background-image: url('/assets/images/calendar.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 16px;
+  mask: url(/assets/images/calendar.svg) center / 16px no-repeat;
+  -webkit-mask: url(/assets/images/calendar.svg) center / 16px no-repeat;
 }
 
 .entry-action-restart {
-  background-image: url('/assets/images/play.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 16px;
+  mask: url(/assets/images/play.svg) center / 16px no-repeat;
+  -webkit-mask: url(/assets/images/play.svg) center / 16px no-repeat;
+}
+
+.entry-action-revert,
+.entry-action-delete,
+.entry-action-change-date,
+.entry-action-restart {
+  background-color: black;
+
+  &:hover {
+    background-color: $clr20;
+  }
 }
 
 .entry-content {
@@ -376,7 +387,13 @@
 .entry-create-start {
   background-color: $clr14;
 }
+.entry-create-start:hover {
+  background-color: $clr18;
+}
 
 .entry-create-stop {
   background-color: $clr15;
+}
+.entry-create-stop:hover {
+  background-color: $clr19;
 }

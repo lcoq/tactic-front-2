@@ -4,27 +4,22 @@
   height: $btn-size;
   background-color: $clr2;
   color: $clr3;
-}
-
-.header-brand-container {
-  position: absolute;
-  display: flex;
   align-items: center;
-  height: $btn-size;
-  padding: 0 $sp;
 }
 
 .header-brand {
-  padding: 0 $sp-sm;
+  margin-right: $sp-lg;
+  padding: 0 $sp-sm 0 $sp-lg;
   font-size: $fs-xxl;
   font-weight: bold;
+  line-height: $fs-xxl;
 }
 
 .header-nav {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 0 100px 0 150px;
+  padding: 0 100px 0 0;
 }
 
 .header-nav-section {

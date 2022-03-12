@@ -157,6 +157,9 @@
 .reviews-filter-query-input {
   width: 100%;
 }
+.reviews-filter-query-input:hover::placeholder {
+  color: $clr2;
+}
 
 .reviews-filter-group {
   display: flex;

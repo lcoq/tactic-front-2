@@ -61,10 +61,7 @@ export default class AccountController extends Controller {
       return;
     }
     this.user.save().then(
-      () => {
-        this._computeHasChanged();
-        this.authentication.userName = this.user.name;
-      },
+      () => this._computeHasChanged(),
       () => null /* nothing to do, user errors are displayed automatically */
     );
   }
@@ -72,6 +69,11 @@ export default class AccountController extends Controller {
   @action logout() {
     this.authentication.deauthenticate();
     this.router.transitionTo('login');
+  }
+
+  @action updateConfig(config, event) {
+    config.value = event.target.checked;
+    config.save();
   }
 
   _computeHasChanged() {

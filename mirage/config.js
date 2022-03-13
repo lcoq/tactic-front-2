@@ -59,6 +59,12 @@ function routes() {
   this.get('/users/:id');
   this.patch('/users/:id');
 
+  this.patch('/users/:userId/configs/:configId', function (schema, request) {
+    const configId = request.params.configId;
+    const attributes = this.normalizedRequestAttrs('user-config');
+    return schema.userConfigs.find(configId).update(attributes);
+  });
+
   this.get('/entries', getEntries.default());
   this.post('/entries');
   this.patch('/entries/:id');

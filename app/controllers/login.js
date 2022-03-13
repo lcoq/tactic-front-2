@@ -11,12 +11,11 @@ export default class LoginController extends Controller {
     const loginUser = this.model.findBy('id', userId);
     this.store
       .createRecord('session', { user: loginUser.user, password: password })
-      .save()
-      .then((session) => {
-        this.authentication.authenticate(session);
-        this.router.transitionTo('index');
-      })
-      .catch(() => {
+      .save({ adapterOptions: { include: 'user,user.configs' } })
+      .then((session) => this.authentication.authenticate(session))
+      .then(() => this.router.transitionTo('index'))
+      .catch((error) => {
+        console.log(error);
         loginUser.hasError = true;
       });
   }

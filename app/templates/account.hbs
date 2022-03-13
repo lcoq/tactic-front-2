@@ -77,6 +77,37 @@
         </button>
       </div>
     </div>
-
   </form>
+
+  <h2 class="page-account-title">Settings</h2>
+
+  <section>
+    <ul>
+      {{#each this.user.configs as |config|}}
+        <li
+          class="config {{if config.isSaving 'config--disabled'}}"
+          data-test-config={{config.id}}
+        >
+          <div class="config__value">
+            <input
+              {{on "change" (fn this.updateConfig config)}}
+              type="checkbox"
+              checked={{config.value}}
+              disabled={{config.isSaving}}
+              class="config__checkbox"
+              data-test-config-input
+            />
+          </div>
+          <div class="config__info">
+            <div class="config__name" data-test-config-name>
+              {{config.name}}
+            </div>
+            <div class="config__description" data-test-config-description>
+              {{config.description}}
+            </div>
+          </div>
+        </li>
+      {{/each}}
+    </ul>
+  </section>
 </section>

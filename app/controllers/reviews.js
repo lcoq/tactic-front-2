@@ -147,7 +147,13 @@ export default class ReviewsController extends Controller {
         selectedProjectIds: this.allProjects.mapBy('id'),
       });
     }
-    this.rounding = false;
+    if (this.rounding === null) {
+      const roundingConfig = this.authentication.configs.findBy(
+        'id',
+        'reviews-rounding'
+      );
+      this.rounding = (roundingConfig && roundingConfig.value) || false;
+    }
   }
 
   _downloadFile(url) {

@@ -8,10 +8,8 @@ export default class ApplicationRoute extends Route {
   beforeModel() {
     if (this.authentication.isRecoverable) {
       return this.store
-        .queryRecord('session', {})
-        .then((session) => {
-          this.authentication.authenticate(session);
-        })
+        .queryRecord('session', { include: 'user,user.configs' })
+        .then((session) => this.authentication.authenticate(session))
         .catch(() => {});
     }
   }

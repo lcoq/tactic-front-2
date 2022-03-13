@@ -11,6 +11,28 @@ module('Acceptance | Reviews > Rounding', function (hooks) {
   setupMirage(hooks);
   setupUtils(hooks);
 
+  test('rounds by default when user has rounding config enabled', async function (assert) {
+    const user = this.server.create('user');
+    this.server.create('user-config', {
+      user,
+      id: 'reviews-rounding',
+      name: 'rounding',
+      type: 'boolean',
+      description: 'Rounding bool',
+      value: true,
+    });
+    await this.utils.authentication.authenticate(user);
+
+    await visit('/reviews');
+
+    assert.dom(`[data-test-rounding]`).exists('should show rounding checkbox');
+    assert
+      .dom(`[data-test-rounding]`)
+      .isChecked(
+        'should have rounding by default when user has rounding option enabled'
+      );
+  });
+
   test('rounds entries and groups durations', async function (assert) {
     const user = await this.utils.authentication.authenticate();
     const entry = this.server.create('entry', {
@@ -139,5 +161,22 @@ module('Acceptance | Reviews > Rounding', function (hooks) {
     assert
       .dom(`[data-test-entry="${entry.id}"] [data-test-entry-edit-project]`)
       .doesNotExist('should not show project edit');
+  });
+
+  test('keeps rounding state after transition', async function (assert) {
+    await this.utils.authentication.authenticate();
+    await visit('/reviews');
+    await click('[data-test-rounding]');
+
+    assert
+      .dom(`[data-test-rounding]`)
+      .isChecked('should have rounding enabled');
+
+    await visit('/');
+    await visit('/reviews');
+
+    assert
+      .dom(`[data-test-rounding]`)
+      .isChecked('should keep rounding enabled');
   });
 });

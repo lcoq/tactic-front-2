@@ -24,6 +24,7 @@ export default class AccountRoute extends Route {
 
   model() {
     return this.store.findRecord('user', this.authentication.userId, {
+      include: 'configs',
       reload: true,
     });
   }

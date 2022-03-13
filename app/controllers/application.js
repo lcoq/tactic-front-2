@@ -25,4 +25,9 @@ export default class ApplicationController extends Controller {
   get hasRunningEntry() {
     return this.runningEntry.isStarted;
   }
+
+  get summaryRounding() {
+    const config = this.authentication.configs.findBy('id', 'summary-rounding');
+    return (config && config.value) || false;
+  }
 }

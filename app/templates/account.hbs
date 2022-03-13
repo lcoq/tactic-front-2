@@ -105,6 +105,15 @@
             <div class="config__description" data-test-config-description>
               {{config.description}}
             </div>
+            {{#if (and config.value (eq config.id "teamwork"))}}
+              <LinkTo
+                @route="teamwork/config"
+                class="config__link"
+                data-test-config-link
+              >
+                Click here to configure
+              </LinkTo>
+            {{/if}}
           </div>
         </li>
       {{/each}}

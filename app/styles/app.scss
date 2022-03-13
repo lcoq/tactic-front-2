@@ -17,6 +17,10 @@
   @import 'chart';
   @import 'account';
   @import 'config';
+  @import 'page';
+
+  @import 'teamwork/domain-list';
+  @import 'teamwork/domain';
 }
 
 @media print {

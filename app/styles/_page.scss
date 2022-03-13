@@ -1,0 +1,13 @@
+.page {
+  &__title {
+    font-size: $fs-xxl;
+    font-weight: bold;
+    padding: $sp 0;
+  }
+
+  &__subtitle {
+    font-size: $fs-xl;
+    font-weight: bold;
+    padding: $sp 0;
+  }
+}

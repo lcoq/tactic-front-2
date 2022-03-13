@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { visit, click, settled } from '@ember/test-helpers';
+import { visit, click, settled, currentURL } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 
@@ -147,5 +147,37 @@ module('Acceptance | Account > Configs', function (hooks) {
     assert
       .dom(`[data-test-config="${config.id}"] [data-test-config-input]`)
       .isNotDisabled('should not disable input after save');
+  });
+
+  test('shows teamwork config link when teamwork config is enabled', async function (assert) {
+    const user = this.server.create('user');
+    const config = this.server.create('user-config', {
+      user,
+      id: 'teamwork',
+      name: 'teamwork',
+      type: 'boolean',
+      description: 'Teamwork integration',
+      value: false,
+    });
+
+    await this.utils.authentication.authenticate(user);
+    await visit('/account');
+
+    assert
+      .dom(`[data-test-config="${config.id}"] [data-test-config-link]`)
+      .doesNotExist('should not show teamwork link when disabled');
+
+    await click(`[data-test-config="${config.id}"] [data-test-config-input]`);
+
+    assert
+      .dom(`[data-test-config="${config.id}"] [data-test-config-link]`)
+      .exists('should show teamwork link when enabled');
+
+    await click(`[data-test-config="${config.id}"] [data-test-config-link]`);
+    assert.strictEqual(
+      currentURL(),
+      '/teamwork/config',
+      'should redirect to teamwork config'
+    );
   });
 });

@@ -82,6 +82,8 @@ function routes() {
 
   this.get('/stats/daily', getStats.daily());
   this.get('/stats/monthly', getStats.monthly());
+
+  this.get('/teamwork/domains', 'teamwork/domains');
 }
 
 function sortByName(a, b) {

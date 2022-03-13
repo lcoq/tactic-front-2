@@ -1,0 +1,32 @@
+.teamwork-domain {
+  display: flex;
+  gap: $sp;
+  border-bottom: 1px solid $clr6;
+  padding: $sp;
+
+  &:hover {
+    background-color: $clr7;
+  }
+
+  &__attr {
+    display: flex;
+    flex-direction: column;
+    gap: $sp-xs;
+
+    &--name {
+      width: 30%;
+    }
+    &--alias {
+      width: 30%;
+    }
+    &--token {
+      width: 30%;
+    }
+  }
+
+  &__label {
+    text-transform: lowercase;
+    font-variant: small-caps;
+    color: $clr8;
+  }
+}

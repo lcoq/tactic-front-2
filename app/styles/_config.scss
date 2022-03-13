@@ -30,4 +30,10 @@
   &__description {
     font-style: italic;
   }
+
+  &__link {
+    text-decoration: underline;
+    font-style: italic;
+    color: $clr21;
+  }
 }

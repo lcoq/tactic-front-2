@@ -12,4 +12,5 @@ Router.map(function () {
   this.route('reviews');
   this.route('stats');
   this.route('account');
+  this.route('teamwork/config');
 });

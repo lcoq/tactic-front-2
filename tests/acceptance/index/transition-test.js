@@ -1,5 +1,12 @@
 import { module, test } from 'qunit';
-import { visit, currentURL, click, typeIn, fillIn } from '@ember/test-helpers';
+import {
+  visit,
+  currentURL,
+  click,
+  typeIn,
+  fillIn,
+  settled,
+} from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 
@@ -35,7 +42,7 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until new entry save'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
+    await settled();
     assert.notStrictEqual(
       currentURL(),
       '/',
@@ -69,7 +76,7 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until new entry update'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
+    await settled();
     assert.notStrictEqual(
       currentURL(),
       '/',
@@ -104,7 +111,7 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until new entry update'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
+    await settled();
     assert.notStrictEqual(
       currentURL(),
       '/',
@@ -170,7 +177,7 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until entry save'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
+    await settled();
     assert.notStrictEqual(
       currentURL(),
       '/',
@@ -202,7 +209,7 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until entry save'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
+    await settled();
     assert.notStrictEqual(
       currentURL(),
       '/',
@@ -233,7 +240,7 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until entry save'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
+    await settled();
     assert.notStrictEqual(
       currentURL(),
       '/',
@@ -269,7 +276,7 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until entry save'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
+    await settled();
     assert.notStrictEqual(
       currentURL(),
       '/',
@@ -306,7 +313,7 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until entry save'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
+    await settled();
     assert.strictEqual(
       currentURL(),
       '/',

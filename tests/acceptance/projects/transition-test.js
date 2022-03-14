@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { visit, currentURL, click, fillIn } from '@ember/test-helpers';
+import { visit, currentURL, click, fillIn, settled } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 
@@ -39,7 +39,7 @@ module('Acceptance | Projects > Transition', function (hooks) {
       'should stay on projects page until client save'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
+    await settled();
     assert.notStrictEqual(
       currentURL(),
       '/projects',
@@ -140,7 +140,7 @@ module('Acceptance | Projects > Transition', function (hooks) {
       'should stay on projects page until project save'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
+    await settled();
     assert.notStrictEqual(
       currentURL(),
       '/projects',

@@ -71,6 +71,21 @@ export default class TeamworkDomainComponent extends Component {
     return names.map((n) => `teamwork-domain--${n}`).join(' ');
   }
 
+  get nameInputId() {
+    const id = this.domain.id ?? '-1';
+    return `${id}-name`;
+  }
+
+  get aliasInputId() {
+    const id = this.domain.id ?? '-1';
+    return `${id}-alias`;
+  }
+
+  get tokenInputId() {
+    const id = this.domain.id ?? '-1';
+    return `${id}-token`;
+  }
+
   @action startEdit(field) {
     if (this.isEditing) return;
     this._openEdit(field);

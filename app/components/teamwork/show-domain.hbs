@@ -52,12 +52,15 @@
     class="teamwork-domain__attr teamwork-domain__attr--name"
     data-test-domain-name-container
   >
-    <div class="teamwork-domain__label">Name</div>
+    <label for={{this.nameInputId}} class="teamwork-domain__label">
+      Name
+    </label>
     {{#if this.isEditing}}
       <input
+        id={{this.nameInputId}}
+        value={{this.domain.name}}
         {{on "change" this.changeName}}
         {{on "keyup" this.closeEditOnEnter}}
-        value={{this.domain.name}}
         {{select-on-focus}}
         {{focus-if (eq this.fieldNameToFocusOnEdit "name")}}
         data-test-domain-edit-name
@@ -73,12 +76,15 @@
     class="teamwork-domain__attr teamwork-domain__attr--alias"
     data-test-domain-alias-container
   >
-    <div class="teamwork-domain__label">Alias</div>
+    <label for={{this.aliasInputId}} class="teamwork-domain__label">
+      Alias
+    </label>
     {{#if this.isEditing}}
       <input
+        id={{this.aliasInputId}}
+        value={{this.domain.alias}}
         {{on "change" this.changeAlias}}
         {{on "keyup" this.closeEditOnEnter}}
-        value={{this.domain.alias}}
         {{select-on-focus}}
         {{focus-if (eq this.fieldNameToFocusOnEdit "alias")}}
         data-test-domain-edit-alias
@@ -94,12 +100,15 @@
     class="teamwork-domain__attr teamwork-domain__attr--token"
     data-test-domain-token-container
   >
-    <div class="teamwork-domain__label">API Token</div>
+    <label for={{this.tokenInputId}} class="teamwork-domain__label">
+      API Token
+    </label>
     {{#if this.isEditing}}
       <input
+        id={{this.tokenInputId}}
+        value={{this.domain.token}}
         {{on "change" this.changeToken}}
         {{on "keyup" this.closeEditOnEnter}}
-        value={{this.domain.token}}
         {{select-on-focus}}
         {{focus-if (eq this.fieldNameToFocusOnEdit "token")}}
         data-test-domain-edit-token

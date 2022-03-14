@@ -1,0 +1,113 @@
+<li
+  class="teamwork-domain {{this.classNames}}"
+  data-test-domain={{this.domain.id}}
+  {{this.onFocusOutClickModifier this.closeEdit}}
+>
+
+  <div class="teamwork-domain__actions">
+    {{#if this.isErrored}}
+      <button
+        type="button"
+        {{on "click" this.retrySaveOrDelete}}
+        class="teamwork-domain__action teamwork-domain__action--retry"
+        data-test-domain-retry
+      >
+        Retry
+      </button>
+    {{/if}}
+    {{#if this.isInvalid}}
+      <button
+        type="button"
+        {{on "click" (fn this.startEdit "name")}}
+        class="teamwork-domain__action teamwork-domain__action--invalid"
+        data-test-domain-edit-invalid
+      >
+        Edit
+      </button>
+    {{/if}}
+    {{#if this.canRevert}}
+      <button
+        type="button"
+        {{on "click" this.revertEdit}}
+        class="teamwork-domain__action teamwork-domain__action--revert"
+        data-test-domain-edit-rollback
+      >
+        Revert
+      </button>
+    {{/if}}
+    {{#if this.canDelete}}
+      <button
+        type="button"
+        {{on "click" this.markForDelete}}
+        class="teamwork-domain__action teamwork-domain__action--delete"
+        data-test-domain-delete
+      >
+        Delete
+      </button>
+    {{/if}}
+  </div>
+
+  <div
+    {{on "click" (fn this.startEdit "name")}}
+    class="teamwork-domain__attr teamwork-domain__attr--name"
+    data-test-domain-name-container
+  >
+    <div class="teamwork-domain__label">Name</div>
+    {{#if this.isEditing}}
+      <input
+        {{on "change" this.changeName}}
+        {{on "keyup" this.closeEditOnEnter}}
+        value={{this.domain.name}}
+        {{select-on-focus}}
+        {{focus-if (eq this.fieldNameToFocusOnEdit "name")}}
+        data-test-domain-edit-name
+      />
+    {{else}}
+      <div class="teamwork-domain__value" data-test-domain-name>
+        {{this.domain.name}}
+      </div>
+    {{/if}}
+  </div>
+  <div
+    {{on "click" (fn this.startEdit "alias")}}
+    class="teamwork-domain__attr teamwork-domain__attr--alias"
+    data-test-domain-alias-container
+  >
+    <div class="teamwork-domain__label">Alias</div>
+    {{#if this.isEditing}}
+      <input
+        {{on "change" this.changeAlias}}
+        {{on "keyup" this.closeEditOnEnter}}
+        value={{this.domain.alias}}
+        {{select-on-focus}}
+        {{focus-if (eq this.fieldNameToFocusOnEdit "alias")}}
+        data-test-domain-edit-alias
+      />
+    {{else}}
+      <div class="teamwork-domain__value" data-test-domain-alias>
+        {{this.domain.alias}}
+      </div>
+    {{/if}}
+  </div>
+  <div
+    {{on "click" (fn this.startEdit "token")}}
+    class="teamwork-domain__attr teamwork-domain__attr--token"
+    data-test-domain-token-container
+  >
+    <div class="teamwork-domain__label">API Token</div>
+    {{#if this.isEditing}}
+      <input
+        {{on "change" this.changeToken}}
+        {{on "keyup" this.closeEditOnEnter}}
+        value={{this.domain.token}}
+        {{select-on-focus}}
+        {{focus-if (eq this.fieldNameToFocusOnEdit "token")}}
+        data-test-domain-edit-token
+      />
+    {{else}}
+      <div class="teamwork-domain__value" data-test-domain-token>
+        {{this.domain.token}}
+      </div>
+    {{/if}}
+  </div>
+</li>

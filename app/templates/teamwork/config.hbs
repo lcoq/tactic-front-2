@@ -7,29 +7,7 @@
 
   <ul class="teamwork-domain-list">
     {{#each this.model as |domain|}}
-      <li class="teamwork-domain" data-test-domain={{domain.id}}>
-        <div class="teamwork-domain__attr teamwork-domain__attr--name">
-          <div class="teamwork-domain__label">Name</div>
-          <div
-            class="teamwork-domain__value"
-            data-test-domain-name
-          >{{domain.name}}</div>
-        </div>
-        <div class="teamwork-domain__attr teamwork-domain__attr--alias">
-          <div class="teamwork-domain__label">Alias</div>
-          <div
-            class="teamwork-domain__value"
-            data-test-domain-alias
-          >{{domain.alias}}</div>
-        </div>
-        <div class="teamwork-domain__attr teamwork-domain__attr--token">
-          <div class="teamwork-domain__label">API Token</div>
-          <div
-            class="teamwork-domain__value"
-            data-test-domain-token
-          >{{domain.token}}</div>
-        </div>
-      </li>
+      <Teamwork::ShowDomain @domain={{domain}} />
     {{/each}}
   </ul>
 </div>

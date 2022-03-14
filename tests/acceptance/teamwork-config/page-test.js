@@ -5,19 +5,6 @@ import { setupMirage } from 'ember-cli-mirage/test-support';
 
 import { setupUtils } from '../../utils/setup';
 
-function createUserWithTeamwork() {
-  const user = this.server.create('user');
-  this.server.create('user-config', {
-    user,
-    id: 'teamwork',
-    name: 'teamwork',
-    type: 'boolean',
-    description: 'Teamwork integration',
-    value: true,
-  });
-  return user;
-}
-
 module('Acceptance | Teamwork > Page', function (hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
@@ -41,7 +28,7 @@ module('Acceptance | Teamwork > Page', function (hooks) {
   });
 
   test('remains on teamwork config when authenticated with user having teamwork config enabled', async function (assert) {
-    const user = createUserWithTeamwork.call(this);
+    const user = this.server.create('user', 'withTeamwork');
     await this.utils.authentication.authenticate(user);
     await visit('/teamwork/config');
     assert.strictEqual(
@@ -52,7 +39,7 @@ module('Acceptance | Teamwork > Page', function (hooks) {
   });
 
   test('shows teamwork domains', async function (assert) {
-    const user = createUserWithTeamwork.call(this);
+    const user = this.server.create('user', 'withTeamwork');
     const domains = [
       this.server.create('teamwork/domain', { user }),
       this.server.create('teamwork/domain', { user }),

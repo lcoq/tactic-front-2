@@ -84,38 +84,25 @@
   <section>
     <ul>
       {{#each this.user.configs as |config|}}
-        <li
-          class="config {{if config.isSaving 'config--disabled'}}"
-          data-test-config={{config.id}}
-        >
-          <div class="config__value">
-            <input
-              {{on "change" (fn this.updateConfig config)}}
-              type="checkbox"
-              checked={{config.value}}
-              disabled={{config.isSaving}}
-              class="config__checkbox"
-              data-test-config-input
-            />
-          </div>
-          <div class="config__info">
-            <div class="config__name" data-test-config-name>
-              {{config.name}}
-            </div>
-            <div class="config__description" data-test-config-description>
-              {{config.description}}
-            </div>
-            {{#if (and config.value (eq config.id "teamwork"))}}
-              <LinkTo
-                @route="teamwork/config"
-                class="config__link"
-                data-test-config-link
-              >
-                Click here to configure
-              </LinkTo>
-            {{/if}}
-          </div>
-        </li>
+        {{#if (and config.value (eq config.id "teamwork"))}}
+          <ShowUserConfig
+            @config={{config}}
+            @updateConfig={{this.updateConfig}}
+          >
+            <LinkTo
+              @route="teamwork/config"
+              class="config__link"
+              data-test-config-link
+            >
+              Click here to configure
+            </LinkTo>
+          </ShowUserConfig>
+        {{else}}
+          <ShowUserConfig
+            @config={{config}}
+            @updateConfig={{this.updateConfig}}
+          />
+        {{/if}}
       {{/each}}
     </ul>
   </section>

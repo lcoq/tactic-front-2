@@ -87,6 +87,9 @@ function routes() {
   this.post('/teamwork/domains', 'teamwork/domains');
   this.patch('/teamwork/domains/:id', 'teamwork/domains');
   this.delete('/teamwork/domains/:id', 'teamwork/domains');
+
+  this.get('/teamwork/configs', 'teamwork/user-configs');
+  this.patch('/teamwork/configs/:id', 'teamwork/user-configs');
 }
 
 function sortByName(a, b) {

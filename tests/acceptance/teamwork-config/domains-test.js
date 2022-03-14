@@ -11,6 +11,45 @@ module('Acceptance | Teamwork > Domains', function (hooks) {
   setupMirage(hooks);
   setupUtils(hooks);
 
+  test('shows teamwork domains', async function (assert) {
+    const user = this.server.create('user', 'withTeamwork');
+    const domains = [
+      this.server.create('teamwork/domain', { user }),
+      this.server.create('teamwork/domain', { user }),
+      this.server.create('teamwork/domain', { user }),
+    ];
+
+    await this.utils.authentication.authenticate(user);
+    await visit('/teamwork/config');
+
+    assert
+      .dom('[data-test-domain]')
+      .exists({ count: 3 }, 'should show all domains');
+
+    domains.forEach(function (domain) {
+      assert
+        .dom(`[data-test-domain="${domain.id}"] [data-test-domain-name]`)
+        .exists(`should show ${domain.name} domain name`);
+      assert
+        .dom(`[data-test-domain="${domain.id}"] [data-test-domain-name]`)
+        .hasText(domain.name, `should compute ${domain.name} domain name`);
+
+      assert
+        .dom(`[data-test-domain="${domain.id}"] [data-test-domain-alias]`)
+        .exists(`should show ${domain.alias} domain alias`);
+      assert
+        .dom(`[data-test-domain="${domain.id}"] [data-test-domain-alias]`)
+        .hasText(domain.alias, `should compute ${domain.alias} domain alias`);
+
+      assert
+        .dom(`[data-test-domain="${domain.id}"] [data-test-domain-token]`)
+        .exists(`should show ${domain.token} domain token`);
+      assert
+        .dom(`[data-test-domain="${domain.id}"] [data-test-domain-token]`)
+        .hasText(domain.token, `should compute ${domain.token} domain token`);
+    });
+  });
+
   test('updates domain name', async function (assert) {
     const user = this.server.create('user', 'withTeamwork');
     const domain = this.server.create('teamwork/domain', { user });

@@ -7,7 +7,11 @@ export default class TeamworkConfigController extends Controller {
   @service authentication;
 
   get domains() {
-    return this.model;
+    return this.model.domains;
+  }
+
+  get configs() {
+    return this.model.configs;
   }
 
   @action buildDomain() {
@@ -27,5 +31,10 @@ export default class TeamworkConfigController extends Controller {
 
   @action didDeleteDomain(domain) {
     this.domains.removeObject(domain);
+  }
+
+  @action updateConfig(config, value) {
+    config.value = value;
+    config.save();
   }
 }

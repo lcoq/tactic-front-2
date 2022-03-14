@@ -1,0 +1,24 @@
+<li
+  class="config {{if this.config.isSaving 'config--disabled'}}"
+  data-test-config={{this.config.id}}
+>
+  <div class="config__value">
+    <input
+      {{on "change" this.updateConfig}}
+      type="checkbox"
+      checked={{this.config.value}}
+      disabled={{this.config.isSaving}}
+      class="config__checkbox"
+      data-test-config-input
+    />
+  </div>
+  <div class="config__info">
+    <div class="config__name" data-test-config-name>
+      {{this.config.name}}
+    </div>
+    <div class="config__description" data-test-config-description>
+      {{this.config.description}}
+    </div>
+    {{yield}}
+  </div>
+</li>

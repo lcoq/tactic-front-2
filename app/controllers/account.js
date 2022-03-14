@@ -71,8 +71,8 @@ export default class AccountController extends Controller {
     this.router.transitionTo('login');
   }
 
-  @action updateConfig(config, event) {
-    config.value = event.target.checked;
+  @action updateConfig(config, value) {
+    config.value = value;
     config.save();
   }
 

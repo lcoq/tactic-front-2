@@ -1,5 +1,6 @@
 import Route from '@ember/routing/route';
 import { service } from '@ember/service';
+import { hash } from 'rsvp';
 
 import StateManagerListCommitter from '../../models/state-manager-list-committer';
 
@@ -29,9 +30,16 @@ export default class TeamworkConfigRoute extends Route {
   }
 
   model() {
-    return this.store
+    const domainsPromise = this.store
       .query('teamwork/domain', {})
       .then((domains) => domains.toArray());
+
+    const configsPromise = this.store.query('teamwork/user-config', {});
+
+    return hash({
+      domains: domainsPromise,
+      configs: configsPromise,
+    });
   }
 
   _willTransition(transition) {

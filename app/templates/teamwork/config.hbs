@@ -3,26 +3,41 @@
 <div class="page">
   <h1 class="page__title">Teamwork</h1>
 
-  <h2 class="page__subtitle">Domains</h2>
+  <section>
+    <h2 class="page__subtitle">Domains</h2>
 
-  <ul class="teamwork-domain-list">
-    {{#each this.domains as |domain|}}
-      <Teamwork::ShowDomain
-        @domain={{domain}}
-        @revert={{this.revertDomain}}
-        @didDelete={{this.didDeleteDomain}}
-      />
-    {{/each}}
-    <li
-      {{on "click" this.buildDomain}}
-      class="teamwork-domain-list__new"
-      data-test-domain-new
-    >
-      <div class="teamwork-domain-list__new-container">
-        <span class="teamwork-domain-list__new-symbol">+</span>
-        <span class="teamwork-domain-list__new-description">Create new domain</span>
-      </div>
-    </li>
-  </ul>
+    <ul class="teamwork-domain-list">
+      {{#each this.domains as |domain|}}
+        <Teamwork::ShowDomain
+          @domain={{domain}}
+          @revert={{this.revertDomain}}
+          @didDelete={{this.didDeleteDomain}}
+        />
+      {{/each}}
+      <li
+        {{on "click" this.buildDomain}}
+        class="teamwork-domain-list__new"
+        data-test-domain-new
+      >
+        <div class="teamwork-domain-list__new-container">
+          <span class="teamwork-domain-list__new-symbol">+</span>
+          <span class="teamwork-domain-list__new-description">Create new domain</span>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="page__subtitle">Settings</h2>
+
+    <ul>
+      {{#each this.configs as |config|}}
+        <ShowUserConfig
+          @config={{config}}
+          @updateConfig={{this.updateConfig}}
+        />
+      {{/each}}
+    </ul>
+  </section>
 
 </div>

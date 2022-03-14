@@ -112,7 +112,7 @@ module('Acceptance | Index > Transition', function (hooks) {
     );
   });
 
-  test('abord transition when new entry cannot be saved', async function (assert) {
+  test('abort transition when new entry cannot be saved', async function (assert) {
     assert.expect(3);
 
     this.utils.stubs.stubCreateEntryClock();

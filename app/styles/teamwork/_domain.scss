@@ -20,6 +20,9 @@
 
   &--pending {
     background-color: $clr11;
+    &:hover {
+      background-color: $clr11;
+    }
   }
 
   &--deleting {

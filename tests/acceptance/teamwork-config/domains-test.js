@@ -336,4 +336,97 @@ module('Acceptance | Teamwork > Domains', function (hooks) {
       'should update domain name'
     );
   });
+
+  test('creates new domain', async function (assert) {
+    const user = this.server.create('user', 'withTeamwork');
+    await this.utils.authentication.authenticate(user);
+
+    await visit('/teamwork/config');
+
+    assert
+      .dom(`[data-test-domain-new]`)
+      .exists('should show new domain action');
+    assert
+      .dom(`[data-test-domain-new]`)
+      .includesText('Create new domain', 'should compute new domain label');
+
+    await click(`[data-test-domain-new]`);
+
+    assert.dom(`[data-test-domain="-1"]`).exists('should show new domain row');
+
+    assert
+      .dom(`[data-test-domain="-1"] [data-test-domain-edit-name]`)
+      .exists('should edits new domain name');
+    assert
+      .dom(`[data-test-domain="-1"] [data-test-domain-edit-name]`)
+      .isFocused('should focus new domain name');
+
+    await fillIn(
+      `[data-test-domain="-1"] [data-test-domain-edit-name]`,
+      'new-domain-name'
+    );
+    await fillIn(
+      `[data-test-domain="-1"] [data-test-domain-edit-alias]`,
+      'new-domain-alias'
+    );
+    await fillIn(
+      `[data-test-domain="-1"] [data-test-domain-edit-token]`,
+      'new-domain-token'
+    );
+    await click('[data-test-header]');
+
+    assert.strictEqual(
+      this.server.db['teamwork/domains'].length,
+      1,
+      'should have created domain'
+    );
+    const domain = this.server.db['teamwork/domains'][0];
+    assert.strictEqual(domain.name, 'new-domain-name', 'should set name');
+    assert.strictEqual(domain.alias, 'new-domain-alias', 'should set alias');
+    assert.strictEqual(domain.token, 'new-domain-token', 'should set token');
+
+    assert
+      .dom(`[data-test-domain="${domain.id}"]`)
+      .exists('should show domain in domains list');
+  });
+
+  test('creates new domain and rollback', async function (assert) {
+    this.utils.stubs.stubForNativeTimeoutOn(
+      'mutable-record-state-manager:save'
+    );
+
+    const user = this.server.create('user', 'withTeamwork');
+    await this.utils.authentication.authenticate(user);
+
+    await visit('/teamwork/config');
+    await click(`[data-test-domain-new]`);
+    await fillIn(
+      `[data-test-domain="-1"] [data-test-domain-edit-name]`,
+      'new-domain-name'
+    );
+    await fillIn(
+      `[data-test-domain="-1"] [data-test-domain-edit-alias]`,
+      'new-domain-alias'
+    );
+    await fillIn(
+      `[data-test-domain="-1"] [data-test-domain-edit-token]`,
+      'new-domain-token'
+    );
+    await click('[data-test-header]');
+
+    assert
+      .dom(`[data-test-domain="-1"] [data-test-domain-edit-rollback]`)
+      .exists('should show rollback');
+    await click(`[data-test-domain="-1"] [data-test-domain-edit-rollback]`);
+
+    assert.strictEqual(
+      this.server.pretender.handledRequests.filterBy('method', 'POST').length,
+      0,
+      'should not send POST'
+    );
+
+    assert
+      .dom(`[data-test-domain="-1"]`)
+      .doesNotExist('should remove new domain from list after rollback');
+  });
 });

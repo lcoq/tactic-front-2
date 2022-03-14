@@ -6,7 +6,7 @@ import OnFocusOutClickModifier from '../../modifiers/on-focus-out-click';
 import NoopModifier from '../../modifiers/noop';
 
 export default class TeamworkDomainComponent extends Component {
-  @tracked fieldNameToFocusOnEdit = null;
+  @tracked fieldNameToFocusOnEdit = 'name';
 
   get domain() {
     return this.args.domain;
@@ -81,7 +81,7 @@ export default class TeamworkDomainComponent extends Component {
   }
 
   @action revertEdit() {
-    this.stateManager.send('clear');
+    this.args.revert(this.domain);
   }
 
   @action markForDelete() {
@@ -110,8 +110,17 @@ export default class TeamworkDomainComponent extends Component {
     }
   }
 
+  constructor() {
+    super(...arguments);
+    this.stateManager.once('didDelete', this._didDelete, this);
+  }
+
   _openEdit(field) {
     if (field) this.fieldNameToFocusOnEdit = field;
     this.stateManager.send('edit');
+  }
+
+  _didDelete() {
+    this.args.didDelete(this.domain);
   }
 }

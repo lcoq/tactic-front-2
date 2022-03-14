@@ -17,6 +17,8 @@ export default class TeamworkConfigRoute extends Route {
   }
 
   model() {
-    return this.store.query('teamwork/domain', {});
+    return this.store
+      .query('teamwork/domain', {})
+      .then((domains) => domains.toArray());
   }
 }

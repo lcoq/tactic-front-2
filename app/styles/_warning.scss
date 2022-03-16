@@ -1,0 +1,35 @@
+.warning {
+  display: flex;
+  gap: $sp;
+  padding: $sp;
+  margin: $sp $sp-sm;
+  background-color: $clr16;
+  border-radius: $sp-sm;
+
+  &:before {
+    content: ' ';
+    width: 28px;
+    display: flex;
+    padding: $sp;
+    background-image: url('/assets/images/warn.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 28px;
+  }
+
+  &__text {
+    line-height: $fs-lg;
+
+    strong {
+      font-weight: bold;
+    }
+  }
+
+  &__list {
+    list-style: disc inside;
+  }
+
+  &__list-item {
+    margin-left: $sp;
+  }
+}

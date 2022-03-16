@@ -6,6 +6,29 @@
   <section>
     <h2 class="page__subtitle">Domains</h2>
 
+    <div class="warning">
+      <div class="warning__text">
+        <p class="warning__description">
+          The
+          <strong>deletion of a domain</strong>
+          causes the loss of link between Tactic entries associated to this
+          domain and Teamwork time entries.
+          <br />
+          Thus :
+        </p>
+        <ul class="warning__list">
+          <li class="warning__list-item">
+            Teamwork time entries created by Tactic on this domain remains in
+            Teamwork.
+          </li>
+          <li class="warning__list-item">
+            Recreating a previously deleted domain in Tactic and update one of
+            its previous entries will create a new time entry in Teamwork.
+          </li>
+        </ul>
+      </div>
+    </div>
+
     <ul class="teamwork-domain-list">
       {{#each this.domains as |domain|}}
         <Teamwork::ShowDomain

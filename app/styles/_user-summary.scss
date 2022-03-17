@@ -1,0 +1,21 @@
+.user-summary {
+  display: flex;
+
+  &__section {
+    padding: 5px;
+    background-color: $clr4;
+
+    &:not(:last-of-type) {
+      margin-right: $sp-sm;
+    }
+  }
+
+  &__label {
+    font-size: $fs-xs;
+  }
+
+  &__value {
+    font-size: $fs-sm;
+    font-weight: bold
+  }
+}

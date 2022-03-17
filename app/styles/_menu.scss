@@ -1,0 +1,24 @@
+.menu {
+  display: flex;
+  align-items: center;
+
+  &__item {
+    z-index: 10;
+    display: inline-block;
+
+    cursor: pointer;
+    height: $btn-size;
+    line-height: $btn-size;
+    padding: 0 $sp;
+
+    &:hover {
+      color: $clr4;
+      background-color: $clr6;
+    }
+
+    &.active {
+      color: $clr4;
+      background-color: $clr6;
+    }
+  }
+}

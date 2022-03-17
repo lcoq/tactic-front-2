@@ -3,53 +3,37 @@
 <Favicon @isStarted={{this.hasRunningEntry}} />
 
 <header class="header" data-test-header>
-  <h1 class="header-brand">Tactic</h1>
+  <h1 class="header__brand">Tactic</h1>
 
   {{#if this.isAuthenticated}}
-    <nav class="header-nav no-print">
-      <section class="header-nav-section">
-        <LinkTo
-          @route="index"
-          data-test-index-link
-          class="header-nav-section-title touch"
-        >Timer</LinkTo>
-      </section>
-      <section class="header-nav-section">
-        <LinkTo
-          @route="reviews"
-          data-test-reviews-link
-          class="header-nav-section-title touch"
-        >Reviews</LinkTo>
-      </section>
-      <section class="header-nav-section">
-        <LinkTo
-          @route="stats"
-          data-test-stats-link
-          class="header-nav-section-title touch"
-        >Stats</LinkTo>
-      </section>
-      <section class="header-nav-section">
-        <LinkTo
-          @route="projects"
-          data-test-projects-link
-          class="header-nav-section-title touch"
-        >Projects</LinkTo>
-      </section>
-      <section class="header-nav-section right">
-        <UserSummary
-          @rounding={{this.summaryRounding}}
-          @weekEntries={{this.weekEntries}}
-          @monthEntries={{this.monthEntries}}
-        />
-      </section>
-      <section class="header-nav-section-account">
-        <LinkTo
-          @route="account"
-          data-test-account-link
-          class="header-nav-section-title touch"
-        >@ {{this.currentUserName}}</LinkTo>
-      </section>
+    <nav class="header__menu menu no-print">
+      <LinkTo @route="index" data-test-index-link class="menu__item">
+        Timer
+      </LinkTo>
+      <LinkTo @route="reviews" data-test-reviews-link class="menu__item">
+        Reviews
+      </LinkTo>
+      <LinkTo @route="stats" data-test-stats-link class="menu__item">
+        Stats
+      </LinkTo>
+      <LinkTo @route="projects" data-test-projects-link class="menu__item">
+        Projects
+      </LinkTo>
     </nav>
+
+    <div class="header__aside no-print">
+      <UserSummary
+        @rounding={{this.summaryRounding}}
+        @weekEntries={{this.weekEntries}}
+        @monthEntries={{this.monthEntries}}
+      />
+      <section class="header__aside-menu menu no-print">
+        <LinkTo @route="account" data-test-account-link class="menu__item">
+          @
+          {{this.currentUserName}}
+        </LinkTo>
+      </section>
+    </div>
   {{/if}}
 </header>
 

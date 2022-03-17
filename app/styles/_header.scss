@@ -5,73 +5,23 @@
   background-color: $clr2;
   color: $clr3;
   align-items: center;
-}
 
-.header-brand {
-  margin-right: $sp-lg;
-  padding: 0 $sp-sm 0 $sp-lg;
-  font-size: $fs-xxl;
-  font-weight: bold;
-  line-height: $fs-xxl;
-}
+  &__brand {
+    margin-right: $sp-lg;
+    padding: 0 $sp-sm 0 $sp-lg;
+    font-size: $fs-xxl;
+    font-weight: bold;
+    line-height: $fs-xxl;
+  }
 
-.header-nav {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 0 100px 0 0;
-}
-
-.header-nav-section {
-  z-index: 10;
-  display: inline-block;
-
-  &.right {
+  &__aside {
+    display: flex;
     margin-left: auto;
+    margin-right: 100px;
+    align-items: center;
   }
-}
 
-.header-nav-section-title {
-  display: inline-block;
-  height: $btn-size;
-  line-height: $btn-size;
-  padding: 0 $sp;
-
-  &:hover,
-  &.active {
-    color: $clr4;
-    background-color: $clr6;
+  &__aside-menu {
+    margin-left: $sp;
   }
-}
-
-.header-nav-section-week {
-  margin-left: auto;
-  background-color: $clr4;
-}
-
-.header-nav-section-account .header-nav-section-title {
-  text-align: center;
-  margin-left: $sp;
-}
-
-.header-user-summary-container {
-  display: flex;
-}
-
-.header-user-summary-section {
-  padding: 5px;
-  background-color: $clr4;
-
-  &:not(:last-of-type) {
-    margin-right: 5px;
-  }
-}
-
-.header-user-summary-label {
-  font-size: 0.8em;
-}
-
-.header-user-summary-duration {
-  font-size: 0.9em;
-  font-weight: bold;
 }

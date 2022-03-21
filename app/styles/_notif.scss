@@ -98,6 +98,18 @@
         background-size: 16px;
       }
     }
+
+    &--error {
+      &:before {
+        background-color: transparent;
+        mask: initial;
+        -webkit-mask: initial;
+        background-image: url('/assets/images/warn.svg');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 16px;
+      }
+    }
   }
 
   &__content {

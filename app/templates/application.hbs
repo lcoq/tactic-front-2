@@ -28,12 +28,29 @@
         @monthEntries={{this.monthEntries}}
       />
       <section class="header__aside-menu menu no-print">
+        <button
+          {{on "click" this.toggleNotifications}}
+          type="button"
+          class="menu__item menu__item--icon menu__item--notif {{if this.hasUnreadNotification 'menu__item--notif-present'}}"
+          data-test-notifications-toggle
+        >
+          Notifications
+        </button>
         <LinkTo @route="account" data-test-account-link class="menu__item">
           @
           {{this.currentUserName}}
         </LinkTo>
       </section>
     </div>
+
+    {{#if this.showNotifications}}
+      <NotificationList
+        @notifications={{this.notifications}}
+        @close={{this.toggleNotifications}}
+        @deleteNotification={{this.deleteNotification}}
+        @onResourceClick={{this.onNotificationResourceClick}}
+      />
+    {{/if}}
   {{/if}}
 </header>
 

@@ -17,11 +17,10 @@
   &__aside {
     display: flex;
     margin-left: auto;
-    margin-right: 100px;
     align-items: center;
   }
 
   &__aside-menu {
-    margin-left: $sp;
+    margin-left: 100px;
   }
 }

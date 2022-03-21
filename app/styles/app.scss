@@ -2,6 +2,7 @@
 
 @import 'variables';
 @import 'responsive';
+@import 'keyframes';
 
 @media screen {
   @import 'global';
@@ -9,6 +10,7 @@
   @import 'header';
   @import 'menu';
   @import 'user-summary';
+  @import 'notif';
   @import 'calendar';
 
   @import 'login';

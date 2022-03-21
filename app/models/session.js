@@ -1,6 +1,8 @@
-import Model, { attr, belongsTo } from '@ember-data/model';
+import { attr, belongsTo } from '@ember-data/model';
 
-export default class SessionModel extends Model {
+import BaseModel from './base-model';
+
+export default class SessionModel extends BaseModel {
   @attr token;
   @attr name;
   @attr password;

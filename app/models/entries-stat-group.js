@@ -1,8 +1,10 @@
-import Model, { attr, hasMany } from '@ember-data/model';
+import { attr, hasMany } from '@ember-data/model';
 import moment from 'moment';
 import formatDuration from '../utils/format-duration';
 
-export default class EntriesStatGroupModel extends Model {
+import BaseModel from './base-model';
+
+export default class EntriesStatGroupModel extends BaseModel {
   @attr('string') title;
   @attr('string') nature;
   @hasMany entriesStats;

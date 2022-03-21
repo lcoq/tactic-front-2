@@ -1,11 +1,13 @@
 import { set } from '@ember/object';
-import Model, { attr, belongsTo } from '@ember-data/model';
+import { attr, belongsTo } from '@ember-data/model';
 import moment from 'moment';
 import EntryStateManagerModel from './entry-state-manager';
 import { createCache, getValue } from '@glimmer/tracking/primitives/cache';
 import { tracked } from '@glimmer/tracking';
 
-export default class EntryModel extends Model {
+import BaseModel from './base-model';
+
+export default class EntryModel extends BaseModel {
   @attr('string') title;
   @attr('date') startedAt;
   @attr('date') stoppedAt;

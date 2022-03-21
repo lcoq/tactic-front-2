@@ -1,8 +1,10 @@
 import { set } from '@ember/object';
-import Model, { attr, hasMany } from '@ember-data/model';
+import { attr, hasMany } from '@ember-data/model';
 import ClientStateManagerModel from './client-state-manager';
 
-export default class ClientModel extends Model {
+import BaseModel from './base-model';
+
+export default class ClientModel extends BaseModel {
   @attr('string') name;
   @hasMany projects;
 

@@ -13,4 +13,5 @@ Router.map(function () {
   this.route('stats');
   this.route('account');
   this.route('teamwork/config');
+  this.route('entry', { path: '/entries/:id' });
 });

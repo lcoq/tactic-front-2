@@ -1,6 +1,6 @@
 import { tracked } from '@glimmer/tracking';
 
-export default class LoginUser {
+export default class LoginUserModel {
   @tracked user;
   @tracked id;
   @tracked hasError = false;

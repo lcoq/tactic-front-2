@@ -24,6 +24,7 @@ export default class NotificationComponent extends Component {
   }
 
   get formattedMessage() {
+    if (!this.notif.message) return;
     const formatted = this.notif.message
       .replace(/\r?\n/g, '<br>')
       .replace(

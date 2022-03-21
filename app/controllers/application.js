@@ -59,7 +59,8 @@ export default class ApplicationController extends Controller {
 
   @action onNotificationResourceClick(resource) {
     if (resource instanceof EntryModel) {
-      this.router.transitionTo('entry', resource)
+      this.router
+        .transitionTo('entry', resource)
         .then(() => this.toggleNotifications());
     }
   }

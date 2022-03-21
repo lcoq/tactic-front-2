@@ -4,7 +4,7 @@ import { service } from '@ember/service';
 export default class UserNotificationListAdapter extends ApplicationAdapter {
   @service authentication;
 
-  urlForQueryRecord(query, modelName) {
+  urlForQueryRecord(/* query, modelName */) {
     if (this.authentication.user) {
       const userId = this.authentication.user.id;
       return `${this.host}/users/${userId}/notification_lists/latest`;
@@ -13,7 +13,7 @@ export default class UserNotificationListAdapter extends ApplicationAdapter {
     }
   }
 
-  urlForUpdateRecord(id, modelName, snapshot) {
+  urlForUpdateRecord(id /* , modelName, snapshot */) {
     if (this.authentication.user) {
       const userId = this.authentication.user.id;
       return `${this.host}/users/${userId}/notification_lists/${id}`;

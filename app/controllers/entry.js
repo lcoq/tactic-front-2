@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { isEmpty } from '@ember/utils';
+import { resolve } from 'rsvp';
 
 export default class EntryController extends Controller {
   @service store;

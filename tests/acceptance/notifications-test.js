@@ -48,7 +48,9 @@ module('Acceptance | Notifications', function (hooks) {
     await this.utils.authentication.authenticate();
     await visit('/');
     await click('[data-test-notifications-toggle]');
-    assert.dom('[data-test-notifications-empty]').exists('should show empty notifications message');
+    assert
+      .dom('[data-test-notifications-empty]')
+      .exists('should show empty notifications message');
   });
 
   test('closes notifications on click out', async function (assert) {
@@ -72,29 +74,29 @@ module('Acceptance | Notifications', function (hooks) {
       createdAt: new Date(),
       nature: 'error',
       status: 'unread',
-      title: "My notification title",
-      message: "My notification message"
+      title: 'My notification title',
+      message: 'My notification message',
     });
     const notification2 = this.server.create('user-notification', {
       user,
       createdAt: new Date(),
       nature: 'warning',
       status: 'read',
-      title: "My other notification title",
-      message: "My other notification message"
+      title: 'My other notification title',
+      message: 'My other notification message',
     });
     const notification3 = this.server.create('user-notification', {
       user,
       createdAt: new Date(),
       nature: 'info',
       status: 'read',
-      title: "Another notification title",
-      message: "Another notification message",
-      resource: this.server.create('entry', { user, title: "My entry" })
+      title: 'Another notification title',
+      message: 'Another notification message',
+      resource: this.server.create('entry', { user, title: 'My entry' }),
     });
-    const notificationList = this.server.create('user-notification-list', {
+    this.server.create('user-notification-list', {
       user,
-      notifications: [ notification, notification2, notification3 ]
+      notifications: [notification, notification2, notification3],
     });
     await visit('/');
     await click('[data-test-notifications-toggle]');
@@ -118,29 +120,44 @@ module('Acceptance | Notifications', function (hooks) {
       .hasClass('notif__item--error', 'should mark error notification');
 
     assert
-      .dom(`[data-test-notification="${notification.id}"] [data-test-notification-title]`)
+      .dom(
+        `[data-test-notification="${notification.id}"] [data-test-notification-title]`
+      )
       .exists('should show notification title');
     assert
-      .dom(`[data-test-notification="${notification.id}"] [data-test-notification-title]`)
+      .dom(
+        `[data-test-notification="${notification.id}"] [data-test-notification-title]`
+      )
       .hasText(notification.title, 'should compute notification title');
 
     assert
-      .dom(`[data-test-notification="${notification.id}"] [data-test-notification-message]`)
+      .dom(
+        `[data-test-notification="${notification.id}"] [data-test-notification-message]`
+      )
       .exists('should show notification message');
     assert
-      .dom(`[data-test-notification="${notification.id}"] [data-test-notification-message]`)
+      .dom(
+        `[data-test-notification="${notification.id}"] [data-test-notification-message]`
+      )
       .hasText(notification.message, 'should compute notification message');
 
     assert
-      .dom(`[data-test-notification="${notification.id}"] [data-test-notification-date]`)
+      .dom(
+        `[data-test-notification="${notification.id}"] [data-test-notification-date]`
+      )
       .exists('should show notification date');
     assert
-      .dom(`[data-test-notification="${notification.id}"] [data-test-notification-date]`)
+      .dom(
+        `[data-test-notification="${notification.id}"] [data-test-notification-date]`
+      )
       .hasText('a few seconds ago', 'should compute notification date');
 
     assert
       .dom(`[data-test-notification="${notification2.id}"]`)
-      .doesNotHaveClass('notif__item--new', 'should not mark unread notification when read');
+      .doesNotHaveClass(
+        'notif__item--new',
+        'should not mark unread notification when read'
+      );
     assert
       .dom(`[data-test-notification="${notification2.id}"]`)
       .hasClass('notif__item--warning', 'should mark warning notification');
@@ -150,29 +167,39 @@ module('Acceptance | Notifications', function (hooks) {
       .hasClass('notif__item--info', 'should mark info notification');
 
     assert
-      .dom(`[data-test-notification="${notification3.id}"] [data-test-notification-resource]`)
+      .dom(
+        `[data-test-notification="${notification3.id}"] [data-test-notification-resource]`
+      )
       .exists('should show notification resource');
     assert
-      .dom(`[data-test-notification="${notification3.id}"] [data-test-notification-resource]`)
+      .dom(
+        `[data-test-notification="${notification3.id}"] [data-test-notification-resource]`
+      )
       .hasText('My entry', 'should compute notification resource title');
   });
 
   test('shows entry on notification entry resource click', async function (assert) {
     const user = await this.utils.authentication.authenticate();
-    const entry = this.server.create('entry', { user, title: "My entry" });
+    const entry = this.server.create('entry', { user, title: 'My entry' });
     const notification = this.server.create('user-notification', {
       user,
-      resource: entry
+      resource: entry,
     });
-    const notificationList = this.server.create('user-notification-list', {
+    this.server.create('user-notification-list', {
       user,
-      notifications: [ notification ]
+      notifications: [notification],
     });
     await visit('/');
     await click('[data-test-notifications-toggle]');
 
-    await click(`[data-test-notification="${notification.id}"] [data-test-notification-resource]`);
-    assert.strictEqual(currentURL(), `/entries/${entry.id}`, 'should redirect to entry page');
+    await click(
+      `[data-test-notification="${notification.id}"] [data-test-notification-resource]`
+    );
+    assert.strictEqual(
+      currentURL(),
+      `/entries/${entry.id}`,
+      'should redirect to entry page'
+    );
 
     assert
       .dom('[data-test-notifications-list]')
@@ -181,18 +208,20 @@ module('Acceptance | Notifications', function (hooks) {
 
   test('mark notifications read on notification list close', async function (assert) {
     const user = await this.utils.authentication.authenticate();
-    const entry = this.server.create('entry', { user, title: "My entry" });
     const notification = this.server.create('user-notification', { user });
     const notificationList = this.server.create('user-notification-list', {
       user,
-      notifications: [ notification ]
+      notifications: [notification],
     });
     await visit('/');
 
     await click('[data-test-notifications-toggle]');
     await click('[data-test-notifications-toggle]');
 
-    const patchRequests = this.server.pretender.handledRequests.filterBy('method', 'PATCH');
+    const patchRequests = this.server.pretender.handledRequests.filterBy(
+      'method',
+      'PATCH'
+    );
     assert.strictEqual(patchRequests.length, 1, 'should send PATCH request');
 
     const request = patchRequests[0];
@@ -210,26 +239,32 @@ module('Acceptance | Notifications', function (hooks) {
 
   test('deletes notification', async function (assert) {
     const user = await this.utils.authentication.authenticate();
-    const entry = this.server.create('entry', { user, title: "My entry" });
     const notification = this.server.create('user-notification', { user });
-    const notificationList = this.server.create('user-notification-list', {
+    this.server.create('user-notification-list', {
       user,
-      notifications: [ notification ]
+      notifications: [notification],
     });
     await visit('/');
 
     await click('[data-test-notifications-toggle]');
 
     assert
-      .dom(`[data-test-notification="${notification.id}"] [data-test-notification-delete]`)
+      .dom(
+        `[data-test-notification="${notification.id}"] [data-test-notification-delete]`
+      )
       .exists('should show notification delete');
 
-    await click(`[data-test-notification="${notification.id}"] [data-test-notification-delete]`);
+    await click(
+      `[data-test-notification="${notification.id}"] [data-test-notification-delete]`
+    );
 
     assert
       .dom(`[data-test-notification="${notification.id}"]`)
       .doesNotExist('should remove notification from list');
 
-    assert.notOk(this.server.db.userNotifications.find(notification.id), 'should destroy notification');
+    assert.notOk(
+      this.server.db.userNotifications.find(notification.id),
+      'should destroy notification'
+    );
   });
 });

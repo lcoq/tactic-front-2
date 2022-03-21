@@ -15,7 +15,7 @@ export default class UserNotificationsService extends Service {
 
   @action async reload() {
     this.list = await this.store.queryRecord('user-notification-list', {
-      include: 'notifications,notifications.resource'
+      include: 'notifications,notifications.resource',
     });
     this.notifications = await this.list.notifications;
   }

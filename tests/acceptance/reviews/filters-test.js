@@ -686,10 +686,10 @@ module('Acceptance | Reviews > Filters', function (hooks) {
   });
 
   test('filters are updated after client or project creation', async function (assert) {
-    const user = await this.utils.authentication.authenticate();
+    await this.utils.authentication.authenticate();
 
     const client1 = this.server.create('client');
-    const client1Project1 = this.server.create('project', { client: client1 });
+    this.server.create('project', { client: client1 });
 
     await visit('/reviews');
 
@@ -715,7 +715,10 @@ module('Acceptance | Reviews > Filters', function (hooks) {
       .isNotChecked('should keep previous client filters values');
 
     await click(`[data-test-filter-client="${newClient.id}"]`);
-    await triggerEvent(find('[data-test-filter-client-container]'), 'mouseleave');
+    await triggerEvent(
+      find('[data-test-filter-client-container]'),
+      'mouseleave'
+    );
 
     assert
       .dom(`[data-test-filter-project="${newProject.id}"]`)

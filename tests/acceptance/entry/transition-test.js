@@ -1,8 +1,7 @@
 import { module, test } from 'qunit';
-import { visit, currentURL, click, fillIn, typeIn, settled } from '@ember/test-helpers';
+import { visit, currentURL, click, fillIn, settled } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
-import moment from 'moment';
 
 import { setupUtils } from '../../utils/setup';
 

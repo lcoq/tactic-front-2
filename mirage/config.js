@@ -98,12 +98,14 @@ function routes() {
       return schema.userNotificationLists.find(list.id);
     } else {
       return schema.userNotificationLists.create({
-        notifications: schema.userNotifications.all()
+        notifications: schema.userNotifications.all(),
       });
     }
-    return { data: null }
   });
-  this.patch('/users/:user_id/notification_lists/:id', 'user-notification-lists');
+  this.patch(
+    '/users/:user_id/notification_lists/:id',
+    'user-notification-lists'
+  );
 
   this.delete('/users/:user_id/notifications/:id', 'user-notifications');
 }

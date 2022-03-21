@@ -28,7 +28,11 @@ module('Acceptance | Entry > Page', function (hooks) {
     const user = await this.utils.authentication.authenticate();
     const entry = this.server.create('entry', { user });
     await visit(`/entries/${entry.id}`);
-    assert.strictEqual(currentURL(), `/entries/${entry.id}`, 'should remains on show entry');
+    assert.strictEqual(
+      currentURL(),
+      `/entries/${entry.id}`,
+      'should remains on show entry'
+    );
   });
 
   test('updates entry title', async function (assert) {
@@ -147,5 +151,4 @@ module('Acceptance | Entry > Page', function (hooks) {
     assert.strictEqual(currentURL(), '/', 'should redirect to index');
     assert.notOk(this.server.db.entries.find(entry.id), 'should destroy entry');
   });
-
 });

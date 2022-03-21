@@ -16,10 +16,7 @@ export default class NotificationComponent extends Component {
   }
 
   get classes() {
-    const classes = [
-      `notif__item`,
-      `notif__item--${this.nature}`
-    ];
+    const classes = [`notif__item`, `notif__item--${this.nature}`];
     if (this.isUnread) {
       classes.push(`notif__item--new`);
     }
@@ -28,8 +25,11 @@ export default class NotificationComponent extends Component {
 
   get formattedMessage() {
     const formatted = this.notif.message
-          .replace(/\r?\n/g, '<br>')
-          .replace(this._urlRegexp, '<a class="notif__description-link" href="$1" target="_blank">$1</a>');
+      .replace(/\r?\n/g, '<br>')
+      .replace(
+        this._urlRegexp,
+        '<a class="notif__description-link" href="$1" target="_blank">$1</a>'
+      );
     return htmlSafe(formatted);
   }
 
@@ -39,6 +39,7 @@ export default class NotificationComponent extends Component {
   }
 
   get _urlRegexp() {
+    /* eslint-disable no-useless-escape */
     return /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/g;
   }
 }

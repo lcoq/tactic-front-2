@@ -31,7 +31,8 @@
         <button
           {{on "click" this.toggleNotifications}}
           type="button"
-          class="menu__item menu__item--icon menu__item--notif {{if this.hasUnreadNotification 'menu__item--notif-present'}}"
+          class="menu__item menu__item--icon menu__item--notif
+            {{if this.hasUnreadNotification 'menu__item--notif-present'}}"
           data-test-notifications-toggle
         >
           Notifications

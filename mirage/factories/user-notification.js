@@ -16,5 +16,5 @@ export default Factory.extend({
   },
   createdAt() {
     return new Date();
-  }
+  },
 });

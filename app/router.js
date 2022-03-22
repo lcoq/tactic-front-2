@@ -14,4 +14,5 @@ Router.map(function () {
   this.route('account');
   this.route('teamwork/config');
   this.route('entry', { path: '/entries/:id' });
+  this.route('not-found', { path: '/*path' });
 });

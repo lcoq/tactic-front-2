@@ -1,13 +1,44 @@
 .page {
+  &--error {
+    text-align: center;
+  }
+
   &__title {
     font-size: $fs-xxl;
     font-weight: bold;
     padding: $sp 0 $sp-sm;
+
+    .page--error & {
+      display: flex;
+      gap: $sp-xs;
+      align-items: center;
+      justify-content: center;
+      font-size: 6em;
+      padding: 100px 100px 50px 100px;
+    }
+  }
+
+  &__title-icon {
+    .page--error & {
+      width: 64px;
+    }
   }
 
   &__subtitle {
     font-size: $fs-xl;
     font-weight: bold;
     padding: $sp 0 $sp-sm;
+
+    .page--error & {
+      font-size: $fs-xxl;
+      padding: $sp $sp 75px $sp;
+    }
+  }
+
+  &__description {
+    .page--error & {
+      color: $clr5;
+      line-height: $fs-xl;
+    }
   }
 }

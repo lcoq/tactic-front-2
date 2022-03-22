@@ -1,0 +1,33 @@
+.teamwork-domain-list {
+  display: flex;
+  flex-direction: column;
+
+  &__new {
+    display: flex;
+    align-items: center;
+    padding: $sp;
+
+    cursor: pointer;
+    min-width: $btn-size;
+    min-height: $btn-size;
+
+    &:hover {
+      background-color: $clr7;
+    }
+  }
+
+  &__new-container {
+    display: flex;
+    align-items: baseline;
+  }
+
+  &__new-symbol {
+    font-weight: bold;
+    font-size: $fs-xl;
+    margin-right: $sp-xs;
+  }
+
+  &__new-description {
+    font-style: italic;
+  }
+}

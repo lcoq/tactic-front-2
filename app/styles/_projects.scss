@@ -66,13 +66,14 @@
 }
 
 .project-action-retry {
-  background-image: url('/assets/images/offline.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 16px;
+  background-color: #c62828;
+  mask: url(/assets/images/offline.svg) center / 16px no-repeat;
+  -webkit-mask: url(/assets/images/offline.svg) center / 16px no-repeat;
 
   &:hover {
-    background-image: url('/assets/images/refresh.svg');
+    background-color: black;
+    mask: url(/assets/images/refresh.svg) center / 16px no-repeat;
+    -webkit-mask: url(/assets/images/refresh.svg) center / 16px no-repeat;
   }
 }
 
@@ -83,18 +84,23 @@
   background-size: 16px;
 }
 
+.project-action-revert,
+.project-action-delete {
+  background-color: black;
+
+  &:hover {
+    background-color: $clr20;
+  }
+}
+
 .project-action-revert {
-  background-image: url('/assets/images/revert.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 16px;
+  mask: url(/assets/images/revert.svg) center / 16px no-repeat;
+  -webkit-mask: url(/assets/images/revert.svg) center / 16px no-repeat;
 }
 
 .project-action-delete {
-  background-image: url('/assets/images/trash.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 16px;
+  mask: url(/assets/images/trash.svg) center / 16px no-repeat;
+  -webkit-mask: url(/assets/images/trash.svg) center / 16px no-repeat;
 }
 
 .project-edit-name {

@@ -1,5 +1,12 @@
 import { module, test } from 'qunit';
-import { visit, currentURL, click, typeIn, fillIn } from '@ember/test-helpers';
+import {
+  visit,
+  currentURL,
+  click,
+  typeIn,
+  fillIn,
+  settled,
+} from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 
@@ -26,7 +33,7 @@ module('Acceptance | Index > Transition', function (hooks) {
       'cannot perform test correctly as it expects the new entry to be pending save at this stage'
     );
 
-    click('[data-test-login-link]'); // do not `await` here
+    click('[data-test-reviews-link]'); // do not `await` here
     await this.utils.sleep(50);
 
     assert.strictEqual(
@@ -35,10 +42,10 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until new entry save'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
-    assert.strictEqual(
+    await settled();
+    assert.notStrictEqual(
       currentURL(),
-      '/login',
+      '/',
       'should transition after new entry save'
     );
   });
@@ -60,7 +67,7 @@ module('Acceptance | Index > Transition', function (hooks) {
       'cannot perform test correctly as it expects the new entry to be pending save at this stage'
     );
 
-    click('[data-test-login-link]'); // do not `await` here
+    click('[data-test-reviews-link]'); // do not `await` here
     await this.utils.sleep(20);
 
     assert.strictEqual(
@@ -69,10 +76,10 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until new entry update'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
-    assert.strictEqual(
+    await settled();
+    assert.notStrictEqual(
       currentURL(),
-      '/login',
+      '/',
       'should transition after new entry update'
     );
   });
@@ -95,7 +102,7 @@ module('Acceptance | Index > Transition', function (hooks) {
 
     this.server.post('/entries', { timing: 100 });
 
-    click('[data-test-login-link]'); // do not `await` here
+    click('[data-test-reviews-link]'); // do not `await` here
     await this.utils.sleep(20);
 
     assert.strictEqual(
@@ -104,15 +111,15 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until new entry update'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
-    assert.strictEqual(
+    await settled();
+    assert.notStrictEqual(
       currentURL(),
-      '/login',
+      '/',
       'should transition after new entry update'
     );
   });
 
-  test('abord transition when new entry cannot be saved', async function (assert) {
+  test('abort transition when new entry cannot be saved', async function (assert) {
     assert.expect(3);
 
     this.utils.stubs.stubCreateEntryClock();
@@ -134,7 +141,7 @@ module('Acceptance | Index > Transition', function (hooks) {
 
     this.utils.stubs.stub(window, 'alert', () => assert.ok(true));
 
-    await click('[data-test-login-link]');
+    await click('[data-test-reviews-link]');
     await this.utils.sleep(20);
 
     assert.strictEqual(
@@ -161,7 +168,7 @@ module('Acceptance | Index > Transition', function (hooks) {
     click('[data-test-header]'); // do not await here
     await this.utils.sleep(20);
 
-    click('[data-test-login-link]'); // do not `await` here
+    click('[data-test-reviews-link]'); // do not `await` here
     await this.utils.sleep(50);
 
     assert.strictEqual(
@@ -170,10 +177,10 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until entry save'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
-    assert.strictEqual(
+    await settled();
+    assert.notStrictEqual(
       currentURL(),
-      '/login',
+      '/',
       'should transition after entry save'
     );
   });
@@ -193,7 +200,7 @@ module('Acceptance | Index > Transition', function (hooks) {
     await click(`[data-test-entry-title]`);
     await fillIn(`[data-test-entry-edit-title]`, 'My new title');
 
-    click('[data-test-login-link]'); // do not `await` here
+    click('[data-test-reviews-link]'); // do not `await` here
     await this.utils.sleep(50);
 
     assert.strictEqual(
@@ -202,10 +209,10 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until entry save'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
-    assert.strictEqual(
+    await settled();
+    assert.notStrictEqual(
       currentURL(),
-      '/login',
+      '/',
       'should transition after entry save'
     );
   });
@@ -224,7 +231,7 @@ module('Acceptance | Index > Transition', function (hooks) {
 
     click(`[data-test-entry-delete]`); // do not await here
 
-    click('[data-test-login-link]'); // do not `await` here
+    click('[data-test-reviews-link]'); // do not `await` here
     await this.utils.sleep(50);
 
     assert.strictEqual(
@@ -233,10 +240,10 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until entry save'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
-    assert.strictEqual(
+    await settled();
+    assert.notStrictEqual(
       currentURL(),
-      '/login',
+      '/',
       'should transition after entry save'
     );
   });
@@ -260,7 +267,7 @@ module('Acceptance | Index > Transition', function (hooks) {
 
     this.server.patch('/entries/:id', { timing: 100 });
 
-    click('[data-test-login-link]'); // do not `await` here
+    click('[data-test-reviews-link]'); // do not `await` here
     await this.utils.sleep(50);
 
     assert.strictEqual(
@@ -269,10 +276,10 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until entry save'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
-    assert.strictEqual(
+    await settled();
+    assert.notStrictEqual(
       currentURL(),
-      '/login',
+      '/',
       'should transition after entry save'
     );
   });
@@ -297,7 +304,7 @@ module('Acceptance | Index > Transition', function (hooks) {
 
     this.utils.stubs.stub(window, 'alert', () => assert.ok(true));
 
-    click('[data-test-login-link]'); // do not `await` here
+    click('[data-test-reviews-link]'); // do not `await` here
     await this.utils.sleep(50);
 
     assert.strictEqual(
@@ -306,7 +313,7 @@ module('Acceptance | Index > Transition', function (hooks) {
       'should stay on index page until entry save'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
+    await settled();
     assert.strictEqual(
       currentURL(),
       '/',

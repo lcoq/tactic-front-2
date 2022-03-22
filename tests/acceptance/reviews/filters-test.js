@@ -684,4 +684,44 @@ module('Acceptance | Reviews > Filters', function (hooks) {
       .dom(`[data-test-entry="${otherEntry.id}"]`)
       .exists('should still show other entry');
   });
+
+  test('filters are updated after client or project creation', async function (assert) {
+    await this.utils.authentication.authenticate();
+
+    const client1 = this.server.create('client');
+    this.server.create('project', { client: client1 });
+
+    await visit('/reviews');
+
+    assert
+      .dom(`[data-test-filter-client]`)
+      .exists({ count: 2 }, 'should show client 1 and no client filter');
+    assert
+      .dom(`[data-test-filter-project]`)
+      .exists({ count: 2 }, 'should show project 1 and no project filter');
+
+    await visit('/');
+
+    const newClient = this.server.create('client');
+    const newProject = this.server.create('project', { client: newClient });
+
+    await visit('/reviews');
+
+    assert
+      .dom(`[data-test-filter-client="${newClient.id}"]`)
+      .exists('should show new client filter');
+    assert
+      .dom(`[data-test-filter-client="${newClient.id}"]`)
+      .isNotChecked('should keep previous client filters values');
+
+    await click(`[data-test-filter-client="${newClient.id}"]`);
+    await triggerEvent(
+      find('[data-test-filter-client-container]'),
+      'mouseleave'
+    );
+
+    assert
+      .dom(`[data-test-filter-project="${newProject.id}"]`)
+      .exists('should show new project filter');
+  });
 });

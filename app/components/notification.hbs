@@ -1,0 +1,33 @@
+<li class="{{this.classes}}" data-test-notification="{{this.notif.id}}">
+  <div class="notif__content">
+    <div
+      class="notif__title"
+      data-test-notification-title
+    >{{this.notif.title}}</div>
+    <p
+      class="notif__description"
+      data-test-notification-message
+    >{{this.formattedMessage}}</p>
+    {{#if this.notif.resource}}
+      <button
+        type="button"
+        {{on "click" this.onResourceClick}}
+        class="notif__link"
+        data-test-notification-resource
+      >
+        {{this.notif.resource.title}}
+      </button>
+    {{/if}}
+    <div class="notif__date" data-test-notification-date>{{moment-from
+        this.notif.createdAt
+      }}</div>
+  </div>
+  <button
+    type="button"
+    {{on "click" (fn @deleteNotification this.notif)}}
+    class="notif__delete"
+    data-test-notification-delete
+  >
+    Delete
+  </button>
+</li>

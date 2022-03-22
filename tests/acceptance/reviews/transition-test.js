@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { visit, currentURL, click, fillIn } from '@ember/test-helpers';
+import { visit, currentURL, click, fillIn, settled } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 
@@ -27,7 +27,7 @@ module('Acceptance | Reviews > Transition', function (hooks) {
     click('[data-test-header]'); // do not await here
     await this.utils.sleep(20);
 
-    click('[data-test-login-link]'); // do not `await` here
+    click('[data-test-index-link]'); // do not `await` here
     await this.utils.sleep(50);
 
     assert.strictEqual(
@@ -36,10 +36,10 @@ module('Acceptance | Reviews > Transition', function (hooks) {
       'should stay on reviews page until entry save'
     );
 
-    await click('[data-test-header]'); // `await` anything to wait end of run loops
-    assert.strictEqual(
+    await settled();
+    assert.notStrictEqual(
       currentURL(),
-      '/login',
+      '/reviews',
       'should transition after entry save'
     );
   });

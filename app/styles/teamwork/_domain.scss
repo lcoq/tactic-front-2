@@ -1,0 +1,140 @@
+.teamwork-domain {
+  $self: &;
+
+  display: flex;
+  gap: $sp;
+  position: relative;
+  border-bottom: 1px solid $clr6;
+  padding: $sp;
+
+  &:hover {
+    background-color: $clr7;
+  }
+
+  &--editing {
+    background-color: $clr10;
+    &:hover {
+      background-color: $clr10;
+    }
+  }
+
+  &--pending {
+    background-color: $clr11;
+    &:hover {
+      background-color: $clr11;
+    }
+  }
+
+  &--deleting {
+    background-color: $clr9;
+    &:hover {
+      background-color: $clr9;
+    }
+  }
+
+  &--invalid {
+    background-color: $clr9;
+    &:hover {
+      background-color: $clr9;
+    }
+  }
+
+  &--errored {
+    background-color: $clr9;
+    &:hover {
+      background-color: $clr9;
+    }
+  }
+
+  &__attr {
+    display: flex;
+    flex-direction: column;
+    gap: $sp-xs;
+
+    &--name {
+      width: 30%;
+    }
+    &--alias {
+      width: 30%;
+    }
+    &--token {
+      width: 30%;
+    }
+  }
+
+  &__label {
+    text-transform: lowercase;
+    font-variant: small-caps;
+    color: $clr8;
+  }
+
+  &__actions {
+    display: flex;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(-100%, -50%);
+  }
+
+  &__action {
+    visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: content-box;
+    text-indent: -9999px;
+    white-space: nowrap;
+    background-color: black;
+
+    cursor: pointer;
+    min-width: $btn-size;
+    min-height: $btn-size;
+
+    #{$self}:hover &,
+    #{$self}--editing &,
+    #{$self}--pending &,
+    #{$self}--deleting &,
+    #{$self}--invalid &,
+    #{$self}--errored & {
+      visibility: visible;
+    }
+
+    &:hover {
+      background-color: $clr20;
+    }
+
+    &--revert {
+      mask: url(/assets/images/revert.svg) center / 16px no-repeat;
+      -webkit-mask: url(/assets/images/revert.svg) center / 16px no-repeat;
+    }
+
+    &--delete {
+      mask: url(/assets/images/trash.svg) center / 16px no-repeat;
+      -webkit-mask: url(/assets/images/trash.svg) center / 16px no-repeat;
+    }
+
+    &--retry {
+      background-color: #c62828;
+      mask: url(/assets/images/offline.svg) center / 16px no-repeat;
+      -webkit-mask: url(/assets/images/offline.svg) center / 16px no-repeat;
+
+      &:hover {
+        background-color: black;
+        mask: url(/assets/images/refresh.svg) center / 16px no-repeat;
+        -webkit-mask: url(/assets/images/refresh.svg) center / 16px no-repeat;
+      }
+    }
+
+    &--invalid {
+      background-color: transparent;
+      background-image: url('/assets/images/warn.svg');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 16px;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+.config {
+  display: flex;
+  gap: $sp-lg;
+  align-items: center;
+  width: 80%;
+  padding: $sp-lg;
+  border-bottom: 1px solid $clr6;
+  transition: opacity 0.5s;
+
+  &:hover {
+    background-color: $clr7;
+  }
+
+  &--disabled {
+    opacity: 0.4;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: $sp-sm;
+  }
+
+  &__name {
+    font-variant: small-caps;
+    font-size: $fs-xl;
+    font-weight: bold;
+  }
+
+  &__description {
+    font-style: italic;
+  }
+
+  &__link {
+    font-style: italic;
+  }
+}

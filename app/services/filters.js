@@ -28,12 +28,7 @@ export default class FiltersService extends Service {
   }
 
   initializeWith(attributes) {
-    const defaultAttributes = {
-      since: moment().startOf('month').toDate(),
-      before: moment().endOf('month').toDate(),
-      query: null,
-    };
-    Object.assign(this, defaultAttributes, attributes);
+    Object.assign(this, attributes);
     this.initialized = true;
   }
 

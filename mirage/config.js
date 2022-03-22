@@ -56,8 +56,17 @@ function routes() {
   });
 
   this.get('/users');
+  this.get('/users/:id');
+  this.patch('/users/:id');
+
+  this.patch('/users/:userId/configs/:configId', function (schema, request) {
+    const configId = request.params.configId;
+    const attributes = this.normalizedRequestAttrs('user-config');
+    return schema.userConfigs.find(configId).update(attributes);
+  });
 
   this.get('/entries', getEntries.default());
+  this.get('/entries/:id');
   this.post('/entries');
   this.patch('/entries/:id');
   this.delete('/entries/:id');
@@ -74,6 +83,31 @@ function routes() {
 
   this.get('/stats/daily', getStats.daily());
   this.get('/stats/monthly', getStats.monthly());
+
+  this.get('/teamwork/domains', 'teamwork/domains');
+  this.post('/teamwork/domains', 'teamwork/domains');
+  this.patch('/teamwork/domains/:id', 'teamwork/domains');
+  this.delete('/teamwork/domains/:id', 'teamwork/domains');
+
+  this.get('/teamwork/configs', 'teamwork/user-configs');
+  this.patch('/teamwork/configs/:id', 'teamwork/user-configs');
+
+  this.get('/users/:user_id/notification_lists/latest', (schema) => {
+    const list = schema.userNotificationLists.all().models[0];
+    if (list) {
+      return schema.userNotificationLists.find(list.id);
+    } else {
+      return schema.userNotificationLists.create({
+        notifications: schema.userNotifications.all(),
+      });
+    }
+  });
+  this.patch(
+    '/users/:user_id/notification_lists/:id',
+    'user-notification-lists'
+  );
+
+  this.delete('/users/:user_id/notifications/:id', 'user-notifications');
 }
 
 function sortByName(a, b) {

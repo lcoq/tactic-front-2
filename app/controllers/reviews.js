@@ -138,16 +138,25 @@ export default class ReviewsController extends Controller {
   }
 
   initializeFilters() {
+    this.filters.allClients = this.allClients;
+    this.filters.allProjects = this.allProjects;
     if (!this.filters.initialized) {
       this.filters.initializeWith({
-        allClients: this.allClients,
-        allProjects: this.allProjects,
+        since: moment().startOf('month').toDate(),
+        before: moment().endOf('month').toDate(),
+        query: null,
         selectedUserIds: [this.authentication.userId],
         selectedClientIds: this.allClients.mapBy('id'),
         selectedProjectIds: this.allProjects.mapBy('id'),
       });
     }
-    this.rounding = false;
+    if (this.rounding === null) {
+      const roundingConfig = this.authentication.configs.findBy(
+        'id',
+        'reviews-rounding'
+      );
+      this.rounding = (roundingConfig && roundingConfig.value) || false;
+    }
   }
 
   _downloadFile(url) {

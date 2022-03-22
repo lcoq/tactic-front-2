@@ -1,5 +1,4 @@
-function authenticate() {
-  const user = this._context.server.create('user');
+function authenticate(user = this._context.server.create('user')) {
   const session = this._context.server.create('session', { user: user });
   document.cookie = `token=${session.token}; path=/`;
   return user;

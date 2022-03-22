@@ -3,52 +3,55 @@
 <Favicon @isStarted={{this.hasRunningEntry}} />
 
 <header class="header" data-test-header>
-  <div class="header-brand-container">
-    <h1 class="header-brand">Tactic</h1>
-    {{#if this.isAuthenticated}}
-      <LinkTo
-        @route="login"
-        class="header-brand-user no-print"
-        data-test-login-link
-      >@ {{this.currentUserName}}</LinkTo>
-    {{/if}}
-  </div>
+  <h1 class="header__brand">Tactic</h1>
 
   {{#if this.isAuthenticated}}
-    <nav class="header-nav no-print">
-      <section class="header-nav-section">
-        <LinkTo
-          @route="index"
-          data-test-index-link
-          class="header-nav-section-title touch"
-        >Timer</LinkTo>
-      </section>
-      <section class="header-nav-section">
-        <LinkTo
-          @route="reviews"
-          data-test-reviews-link
-          class="header-nav-section-title touch"
-        >Reviews</LinkTo>
-      </section>
-      <section class="header-nav-section">
-        <LinkTo
-          @route="stats"
-          data-test-stats-link
-          class="header-nav-section-title touch"
-        >Stats</LinkTo>
-      </section>
-      <section class="header-nav-section">
-        <LinkTo
-          @route="projects"
-          data-test-projects-link
-          class="header-nav-section-title touch"
-        >Projects</LinkTo>
-      </section>
+    <nav class="header__menu menu no-print">
+      <LinkTo @route="index" data-test-index-link class="menu__item">
+        Timer
+      </LinkTo>
+      <LinkTo @route="reviews" data-test-reviews-link class="menu__item">
+        Reviews
+      </LinkTo>
+      <LinkTo @route="stats" data-test-stats-link class="menu__item">
+        Stats
+      </LinkTo>
+      <LinkTo @route="projects" data-test-projects-link class="menu__item">
+        Projects
+      </LinkTo>
+    </nav>
+
+    <div class="header__aside no-print">
       <UserSummary
+        @rounding={{this.summaryRounding}}
         @weekEntries={{this.weekEntries}}
         @monthEntries={{this.monthEntries}}
       />
-    </nav>
+      <section class="header__aside-menu menu no-print">
+        <button
+          {{on "click" this.toggleNotifications}}
+          type="button"
+          class="menu__item menu__item--icon menu__item--notif
+            {{if this.hasUnreadNotification 'menu__item--notif-present'}}"
+          data-test-notifications-toggle
+        >
+          Notifications
+        </button>
+        <LinkTo @route="account" data-test-account-link class="menu__item">
+          @
+          {{this.currentUserName}}
+        </LinkTo>
+      </section>
+    </div>
+
+    {{#if this.showNotifications}}
+      <NotificationList
+        @notifications={{this.notifications}}
+        @close={{this.toggleNotifications}}
+        @deleteNotification={{this.deleteNotification}}
+        @onResourceClick={{this.onNotificationResourceClick}}
+      />
+    {{/if}}
   {{/if}}
 </header>
 

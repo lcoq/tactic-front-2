@@ -106,6 +106,12 @@ export default class IndexController extends Controller {
     );
   }
 
+  @action forceSaveNewEntry() {
+    this._saveEntryStoppedOnlyLocally().then(() =>
+      this.newEntryStateManager.send('forceSave')
+    );
+  }
+
   @action retrySaveNewEntry() {
     this._saveEntryStoppedOnlyLocally().then(() =>
       this.newEntryStateManager.send('retry')

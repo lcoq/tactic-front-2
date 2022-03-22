@@ -1,0 +1,122 @@
+<li
+  class="teamwork-domain {{this.classNames}}"
+  data-test-domain={{or this.domain.id "-1"}}
+  {{this.onFocusOutClickModifier this.closeEdit}}
+>
+
+  <div class="teamwork-domain__actions">
+    {{#if this.isErrored}}
+      <button
+        type="button"
+        {{on "click" this.retrySaveOrDelete}}
+        class="teamwork-domain__action teamwork-domain__action--retry"
+        data-test-domain-retry
+      >
+        Retry
+      </button>
+    {{/if}}
+    {{#if this.isInvalid}}
+      <button
+        type="button"
+        {{on "click" (fn this.startEdit "name")}}
+        class="teamwork-domain__action teamwork-domain__action--invalid"
+        data-test-domain-edit-invalid
+      >
+        Edit
+      </button>
+    {{/if}}
+    {{#if this.canRevert}}
+      <button
+        type="button"
+        {{on "click" this.revertEdit}}
+        class="teamwork-domain__action teamwork-domain__action--revert"
+        data-test-domain-edit-rollback
+      >
+        Revert
+      </button>
+    {{/if}}
+    {{#if this.canDelete}}
+      <button
+        type="button"
+        {{on "click" this.markForDelete}}
+        class="teamwork-domain__action teamwork-domain__action--delete"
+        data-test-domain-delete
+      >
+        Delete
+      </button>
+    {{/if}}
+  </div>
+
+  <div
+    {{on "click" (fn this.startEdit "name")}}
+    class="teamwork-domain__attr teamwork-domain__attr--name"
+    data-test-domain-name-container
+  >
+    <label for={{this.nameInputId}} class="teamwork-domain__label">
+      Name
+    </label>
+    {{#if this.isEditing}}
+      <input
+        id={{this.nameInputId}}
+        value={{this.domain.name}}
+        {{on "change" this.changeName}}
+        {{on "keyup" this.closeEditOnEnter}}
+        {{select-on-focus}}
+        {{focus-if (eq this.fieldNameToFocusOnEdit "name")}}
+        data-test-domain-edit-name
+      />
+    {{else}}
+      <div class="teamwork-domain__value" data-test-domain-name>
+        {{this.domain.name}}
+      </div>
+    {{/if}}
+  </div>
+  <div
+    {{on "click" (fn this.startEdit "alias")}}
+    class="teamwork-domain__attr teamwork-domain__attr--alias"
+    data-test-domain-alias-container
+  >
+    <label for={{this.aliasInputId}} class="teamwork-domain__label">
+      Alias
+    </label>
+    {{#if this.isEditing}}
+      <input
+        id={{this.aliasInputId}}
+        value={{this.domain.alias}}
+        {{on "change" this.changeAlias}}
+        {{on "keyup" this.closeEditOnEnter}}
+        {{select-on-focus}}
+        {{focus-if (eq this.fieldNameToFocusOnEdit "alias")}}
+        data-test-domain-edit-alias
+      />
+    {{else}}
+      <div class="teamwork-domain__value" data-test-domain-alias>
+        {{this.domain.alias}}
+      </div>
+    {{/if}}
+  </div>
+  <div
+    {{on "click" (fn this.startEdit "token")}}
+    class="teamwork-domain__attr teamwork-domain__attr--token"
+    data-test-domain-token-container
+  >
+    <label for={{this.tokenInputId}} class="teamwork-domain__label">
+      API Token
+    </label>
+    {{#if this.isEditing}}
+      <input
+        id={{this.tokenInputId}}
+        value={{this.domain.token}}
+        {{on "change" this.changeToken}}
+        {{on "keyup" this.closeEditOnEnter}}
+        {{select-on-focus}}
+        {{focus-if (eq this.fieldNameToFocusOnEdit "token")}}
+        data-test-domain-edit-token
+      />
+    {{else}}
+      <div class="teamwork-domain__value" data-test-domain-token>
+        {{this.domain.token}}
+      </div>
+    {{/if}}
+  </div>
+</li>

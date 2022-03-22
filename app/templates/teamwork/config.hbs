@@ -1,0 +1,66 @@
+{{page-title "Teamwork"}}
+
+<div class="page">
+  <h1 class="page__title">Teamwork</h1>
+
+  <section>
+    <h2 class="page__subtitle">Domains</h2>
+
+    <div class="warning">
+      <div class="warning__text">
+        <p class="warning__description">
+          The
+          <strong>deletion of a domain</strong>
+          causes the loss of link between Tactic entries associated to this
+          domain and Teamwork time entries.
+          <br />
+          Thus :
+        </p>
+        <ul class="warning__list">
+          <li class="warning__list-item">
+            Teamwork time entries created by Tactic on this domain remains in
+            Teamwork.
+          </li>
+          <li class="warning__list-item">
+            Recreating a previously deleted domain in Tactic and update one of
+            its previous entries will create a new time entry in Teamwork.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <ul class="teamwork-domain-list">
+      {{#each this.domains as |domain|}}
+        <Teamwork::ShowDomain
+          @domain={{domain}}
+          @revert={{this.revertDomain}}
+          @didDelete={{this.didDeleteDomain}}
+        />
+      {{/each}}
+      <li
+        {{on "click" this.buildDomain}}
+        class="teamwork-domain-list__new"
+        data-test-domain-new
+      >
+        <div class="teamwork-domain-list__new-container">
+          <span class="teamwork-domain-list__new-symbol">+</span>
+          <span class="teamwork-domain-list__new-description">Create new domain</span>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="page__subtitle">Settings</h2>
+
+    <ul>
+      {{#each this.configs as |config|}}
+        <ShowUserConfig
+          @config={{config}}
+          @updateConfig={{this.updateConfig}}
+        />
+      {{/each}}
+    </ul>
+  </section>
+
+</div>

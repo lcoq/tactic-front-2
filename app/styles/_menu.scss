@@ -1,0 +1,49 @@
+.menu {
+  display: flex;
+  align-items: center;
+
+  &__item {
+    z-index: 10;
+    display: inline-block;
+
+    cursor: pointer;
+    height: $btn-size;
+    line-height: $btn-size;
+    padding: 0 $sp;
+
+    &:hover {
+      color: $clr4;
+      background-color: $clr6;
+    }
+
+    &.active {
+      color: $clr4;
+      background-color: $clr6;
+    }
+
+    &--icon {
+      text-indent: -9999px;
+      white-space: nowrap;
+      background-color: $clr3;
+
+      &:hover {
+        background-color: $clr10;
+      }
+    }
+
+    &--notif {
+      mask: url(/assets/images/bell.svg) center / 16px no-repeat;
+      -webkit-mask: url(/assets/images/bell.svg) center / 16px no-repeat;
+    }
+
+    &--notif-present {
+      animation: ring 10s 0.5s ease-in-out infinite;
+      transform-origin: 50% 4px;
+      background-color: $clr19;
+
+      &:hover {
+        background-color: $clr16;
+      }
+    }
+  }
+}

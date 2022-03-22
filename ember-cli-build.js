@@ -6,8 +6,8 @@ module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
     fingerprint: {
       extensions: ['js', 'css', 'png', 'jpg', 'gif', 'svg'],
-      prepend: (process.env.DEPLOY_TARGET === 'staging' ? '/staging/' : null)
-    }
+      prepend: process.env.DEPLOY_TARGET === 'staging' ? '/staging/' : null,
+    },
   });
 
   // Use `app.import` to add additional libraries to the generated

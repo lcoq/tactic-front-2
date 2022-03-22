@@ -47,6 +47,8 @@ module.exports = function (environment) {
 
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;
+
+    ENV.APP.host = 'http://localhost:3000';
   }
 
   if (process.env.DEPLOY_TARGET === 'staging') {

@@ -32,6 +32,10 @@ class ClearStateModel extends StateModel {
       update() {
         this.transitionTo('pendingSave');
       },
+      forceSave() {
+        this.transitionTo('pendingSave');
+        return this.sendToCurrentState('forceSave');
+      },
     };
   }
 }
@@ -117,6 +121,9 @@ class SaveErrorStateModel extends StateModel {
       },
       update() {
         this.transitionTo('pendingSave');
+      },
+      forceSave() {
+        return this.retry();
       },
       stop() {
         this.entry.stop();

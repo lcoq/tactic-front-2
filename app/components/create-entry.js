@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import formatDuration from '../utils/format-duration';
+import { next } from '@ember/runloop';
 
 export default class CreateEntryComponent extends Component {
   @service deferer;
@@ -27,6 +28,10 @@ export default class CreateEntryComponent extends Component {
     return this.args.didUpdateEntry;
   }
 
+  get forceSaveEntry() {
+    return this.args.forceSaveEntry;
+  }
+
   get retrySaveEntry() {
     return this.args.retrySaveEntry;
   }
@@ -39,7 +44,8 @@ export default class CreateEntryComponent extends Component {
     return formatDuration(this.entry.startedAt, this.clock);
   }
 
-  @action startTimerOrTriggerUpdate() {
+  @action onTitleKeyUp(event) {
+    this.entry.title = event.target.value;
     if (!this.isStarted) {
       this.startTimer();
     } else {
@@ -58,5 +64,16 @@ export default class CreateEntryComponent extends Component {
 
   @action selectProject(project) {
     this.args.setProject(project);
+  }
+
+  @action onTitlePaste(event) {
+    next(() => {
+      this.entry.title = event.target.value;
+      if (!this.isStarted) {
+        this.startTimer();
+      } else {
+        this.args.forceSaveEntry();
+      }
+    });
   }
 }

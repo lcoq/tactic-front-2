@@ -13,11 +13,12 @@
       </button>
     {{/if}}
   </div>
-  <Input
-    @value={{this.entry.title}}
+  <input
+    value="{{this.entry.title}}"
     class="entry-create-title text-input"
     placeholder="What are you working on ?"
-    {{on "keyup" this.startTimerOrTriggerUpdate}}
+    {{on "keyup" this.onTitleKeyUp}}
+    {{on "paste" this.onTitlePaste}}
     data-test-running-entry-title
   />
   <div class="entry-create-project-container">

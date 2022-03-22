@@ -1,6 +1,12 @@
 /* global $ */
 import { module, test } from 'qunit';
-import { visit, click, typeIn } from '@ember/test-helpers';
+import {
+  visit,
+  click,
+  typeIn,
+  fillIn,
+  triggerEvent,
+} from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 import { setupUtils } from '../../utils/setup';
@@ -226,6 +232,42 @@ module('Acceptance | Index > Running entry', function (hooks) {
     assert
       .dom(`[data-test-running-entry] [data-test-running-entry-duration]`)
       .includesText('02:', 'should compute running entry duration');
+  });
+
+  test('updates entry on title paste', async function (assert) {
+    this.utils.stubs.stubCreateEntryClock();
+
+    const user = await this.utils.authentication.authenticate();
+    const runningEntry = this.server.create('entry', { user }, 'running');
+
+    this.server.get(
+      '/entries',
+      mirageGetEntriesRoute.runningEntry(runningEntry)
+    );
+
+    await visit('/');
+
+    await fillIn(
+      `[data-test-running-entry-title]`,
+      'New title'
+    ); /* `fillIn` doesn't trigger keyUp */
+    await triggerEvent(
+      `[data-test-running-entry] [data-test-running-entry-title]`,
+      'paste'
+    );
+
+    assert.strictEqual(
+      this.server.pretender.handledRequests.filterBy('method', 'PATCH').length,
+      1,
+      'should udpate entry on title paste'
+    );
+
+    runningEntry.reload();
+    assert.strictEqual(
+      runningEntry.title,
+      'New title',
+      'should update running entry title'
+    );
   });
 
   test('stops the running entry', async function (assert) {

@@ -1,6 +1,11 @@
 version: '2'
 volumes:
   node_modules:
+secrets:
+  user_ssh_key:
+    file: ~/.ssh/id_rsa
+  user_ssh_known_hosts:
+    file: ~/.ssh/known_hosts
 services:
   ember:
     image: danlynn/ember-cli:4.1.1
@@ -11,6 +16,9 @@ services:
       - /myapp/tmp
     ports:
       - '4200:4200'
+    secrets:
+      - user_ssh_key
+      - user_ssh_known_hosts
   test:
     image: danlynn/ember-cli:4.1.1
     command: ember test --server

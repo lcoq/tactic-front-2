@@ -1,6 +1,8 @@
 import JSONAPIAdapter from '@ember-data/adapter/json-api';
 import { service } from '@ember/service';
 
+import ENV from '../config/environment';
+
 export default class ApplicationAdapter extends JSONAPIAdapter {
   @service authentication;
 
@@ -11,5 +13,5 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
     return headers;
   }
 
-  host = 'http://localhost:3000';
+  host = ENV.APP.host;
 }

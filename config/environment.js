@@ -30,6 +30,8 @@ module.exports = function (environment) {
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
 
+    ENV.APP.host = 'http://localhost:3000';
+
     ENV['ember-cli-mirage'] = {
       excludeFilesFromBuild: true,
     };
@@ -45,6 +47,15 @@ module.exports = function (environment) {
 
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;
+  }
+
+  if (process.env.DEPLOY_TARGET === 'staging') {
+    ENV.rootURL = '/staging/';
+    ENV.APP.host = 'https://tactic-staging.herokuapp.com';
+
+    ENV['ember-cli-mirage'] = {
+      excludeFilesFromBuild: true,
+    };
   }
 
   if (environment === 'production') {

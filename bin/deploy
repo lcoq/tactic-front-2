@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker-compose run --rm ember bash -c "mkdir /root/.ssh && ln -s /run/secrets/user_ssh_key /root/.ssh/id_rsa && ln -s /run/secrets/user_ssh_known_hosts /root/.ssh/known_hosts && ember deploy $@"

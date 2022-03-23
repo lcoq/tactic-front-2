@@ -62,12 +62,12 @@ export default class ShowProjectComponent extends Component {
 
   get classNames() {
     const names = [];
-    if (this.isEditing) names.push('editing');
-    if (this.isPendingDelete) names.push('deleting');
-    if (this.isPendingSave) names.push('pending');
-    if (this.isInvalid) names.push('invalid');
-    if (this.isSaveErrored) names.push('errored');
-    if (this.isDeleteErrored) names.push('errored');
+    if (this.isEditing) names.push('project--editing');
+    if (this.isPendingDelete) names.push('project--deleting');
+    if (this.isPendingSave) names.push('project--pending');
+    if (this.isInvalid) names.push('project--invalid');
+    if (this.isSaveErrored) names.push('project--save-errored');
+    if (this.isDeleteErrored) names.push('project--delete-errored');
     return names.join(' ');
   }
 

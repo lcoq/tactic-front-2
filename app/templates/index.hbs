@@ -1,25 +1,29 @@
-<section class="entry-create-container no-print">
-  {{#if this.newEntry}}
-    <CreateEntry
-      @entry={{this.newEntry}}
-      @isSaveErrored={{this.newEntryIsSaveErrored}}
-      @startTimer={{this.startTimer}}
-      @stopTimer={{this.stopTimer}}
+<div class="page page--index">
+  <section class="page__running-entry no-print">
+    {{#if this.newEntry}}
+      <CreateEntry
+        @entry={{this.newEntry}}
+        @isSaveErrored={{this.newEntryIsSaveErrored}}
+        @startTimer={{this.startTimer}}
+        @stopTimer={{this.stopTimer}}
+        @searchProjects={{this.searchProjects}}
+        @didUpdateEntry={{this.didUpdateNewEntry}}
+        @forceSaveEntry={{this.forceSaveNewEntry}}
+        @retrySaveEntry={{this.retrySaveNewEntry}}
+        @setProject={{this.setProjectOnNewEntry}}
+      />
+    {{/if}}
+  </section>
+  <div class="page__entries-list">
+    <EntriesByDay
+      @list={{this.entryList}}
+      @willUpdateEntry={{this.willUpdateEntry}}
+      @didUpdateEntry={{this.didUpdateEntry}}
+      @willDeleteEntry={{this.willDeleteEntry}}
+      @didDeleteEntry={{this.didDeleteEntry}}
+      @didRevertEntry={{this.didRevertEntry}}
+      @restartEntry={{this.restartEntry}}
       @searchProjects={{this.searchProjects}}
-      @didUpdateEntry={{this.didUpdateNewEntry}}
-      @forceSaveEntry={{this.forceSaveNewEntry}}
-      @retrySaveEntry={{this.retrySaveNewEntry}}
-      @setProject={{this.setProjectOnNewEntry}}
     />
-  {{/if}}
-</section>
-<EntriesByDay
-  @list={{this.entryList}}
-  @willUpdateEntry={{this.willUpdateEntry}}
-  @didUpdateEntry={{this.didUpdateEntry}}
-  @willDeleteEntry={{this.willDeleteEntry}}
-  @didDeleteEntry={{this.didDeleteEntry}}
-  @didRevertEntry={{this.didRevertEntry}}
-  @restartEntry={{this.restartEntry}}
-  @searchProjects={{this.searchProjects}}
-/>
+  </div>
+</div>

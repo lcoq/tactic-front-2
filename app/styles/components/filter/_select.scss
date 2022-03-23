@@ -1,0 +1,13 @@
+.filter {
+  $self: &;
+
+  &--select {
+    display: flex;
+    gap: $sp-sm;
+    align-items: baseline;
+
+    #{$self}__select {
+      padding: $sp-xs $sp-sm;
+    }
+  }
+}

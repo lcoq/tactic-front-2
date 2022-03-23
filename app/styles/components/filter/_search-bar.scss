@@ -1,0 +1,14 @@
+.filter {
+  $self: &;
+
+  &--search-bar {
+
+    #{$self}__input {
+      width: 100%;
+
+      &:hover::placeholder {
+        color: $clr2;
+      }
+    }
+  }
+}

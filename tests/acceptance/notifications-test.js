@@ -114,10 +114,10 @@ module('Acceptance | Notifications', function (hooks) {
       .exists('should show notification');
     assert
       .dom(`[data-test-notification="${notification.id}"]`)
-      .hasClass('notif__item--new', 'should mark unread notification');
+      .hasClass('notif--new', 'should mark unread notification');
     assert
       .dom(`[data-test-notification="${notification.id}"]`)
-      .hasClass('notif__item--error', 'should mark error notification');
+      .hasClass('notif--error', 'should mark error notification');
 
     assert
       .dom(
@@ -155,16 +155,16 @@ module('Acceptance | Notifications', function (hooks) {
     assert
       .dom(`[data-test-notification="${notification2.id}"]`)
       .doesNotHaveClass(
-        'notif__item--new',
+        'notif--new',
         'should not mark unread notification when read'
       );
     assert
       .dom(`[data-test-notification="${notification2.id}"]`)
-      .hasClass('notif__item--warning', 'should mark warning notification');
+      .hasClass('notif--warning', 'should mark warning notification');
 
     assert
       .dom(`[data-test-notification="${notification3.id}"]`)
-      .hasClass('notif__item--info', 'should mark info notification');
+      .hasClass('notif--info', 'should mark info notification');
 
     assert
       .dom(

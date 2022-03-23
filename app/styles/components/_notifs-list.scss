@@ -1,0 +1,67 @@
+.notifs-list {
+  /* TODO block should not set its position  */
+  position: absolute;
+  right: $sp;
+  top: 50px;
+
+  max-width: 35vw;
+  box-sizing: border-box;
+  padding: $sp-xs 0;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  border-radius: $sp-xs;
+  z-index: 10;
+  background-color: $clr10;
+  color: $clr5;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    padding: 0 $sp-sm;
+    border-bottom: 1px solid $clr6;
+    box-sizing: border-box;
+  }
+
+  &__header-title {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  &__header-close {
+    font-size: $fs-xxl;
+    cursor: pointer;
+    min-width: $btn-size;
+    min-height: $btn-size;
+  }
+
+  &__list {
+    max-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  &__empty {
+    display: flex;
+    gap: $sp;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: $sp-lg;
+
+    &:before {
+      width: 40px;
+      height: 40px;
+      content: ' ';
+      background: $clr5;
+      mask: url(/assets/images/bell.svg) center / 32px no-repeat;
+      -webkit-mask: url(/assets/images/bell.svg) center / 32px no-repeat;
+    }
+  }
+
+  &__empty-sub {
+    font-size: $fs-sm;
+    font-style: italic;
+  }
+}

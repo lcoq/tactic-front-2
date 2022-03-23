@@ -5,28 +5,45 @@
 @import 'keyframes';
 
 @media screen {
+  @import 'components/layout';
+
+  @import 'components/client';
+  @import 'components/client-projects-list';
+  @import 'components/config';
+  @import 'components/entries-header';
+  @import 'components/entry';
+  @import 'components/form';
+  @import 'components/header';
+  @import 'components/filter';
+  @import 'components/filter/calendar';
+  @import 'components/filter/checkbox';
+  @import 'components/filter/list';
+  @import 'components/filter/search-bar';
+  @import 'components/filter/select';
+  @import 'components/filters';
+  @import 'components/link';
+  @import 'components/menu';
+  @import 'components/notif';
+  @import 'components/notifs-list';
+  @import 'components/project';
+  @import 'components/project-choices-list';
+  @import 'components/running-entry';
+  @import 'components/title';
+  @import 'components/title-bar';
+  @import 'components/user-summary';
+  @import 'components/warning';
+
+  @import 'page/account';
+  @import 'page/index';
+  @import 'page/login';
+  @import 'page/not-found';
+  @import 'page/reviews';
+  @import 'page/stats';
+
+  @import 'teamwork';
+
   @import 'global';
-  @import 'layout';
-  @import 'header';
-  @import 'menu';
-  @import 'user-summary';
-  @import 'notif';
   @import 'calendar';
-  @import 'link';
-
-  @import 'login';
-  @import 'entry';
-  @import 'reviews';
-  @import 'projects';
-  @import 'client';
-  @import 'chart';
-  @import 'account';
-  @import 'config';
-  @import 'page';
-  @import 'warning';
-
-  @import 'teamwork/domain-list';
-  @import 'teamwork/domain';
 }
 
 @media print {

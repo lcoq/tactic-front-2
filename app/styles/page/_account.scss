@@ -1,0 +1,25 @@
+.page {
+  $self: &;
+
+  &--account {
+
+    #{$self}__logout {
+      padding: $sp-sm $sp-lg;
+      color: white;
+      background-color: $clr8;
+
+      cursor: pointer;
+      min-width: $btn-size;
+      min-height: $btn-size;
+
+      &:hover {
+        background-color: $clr15;
+      }
+    }
+
+    #{$self}__form {
+      margin: $sp-lg 0;
+      width: 60%;
+    }
+  }
+}

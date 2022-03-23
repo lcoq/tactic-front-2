@@ -10,10 +10,6 @@ export default class EntryChooseProjectComponent extends Component {
   @tracked projects = null;
   @tracked hoveredProject = null;
 
-  get classNamePrefix() {
-    return this.args.classNamePrefix;
-  }
-
   get focusOnInput() {
     return this.args.focusOnInput;
   }
@@ -23,15 +19,7 @@ export default class EntryChooseProjectComponent extends Component {
   }
 
   get inputClasses() {
-    return `text-input ${this.classNamePrefix}-project`;
-  }
-
-  get projectsListClasses() {
-    return `${this.classNamePrefix}-project-choices`;
-  }
-
-  get projectClasses() {
-    return `${this.classNamePrefix}-project-choice touch`;
+    return [ 'text-input', this.args.inputClasses || '' ].join(' ');
   }
 
   @action selectProject(project) {

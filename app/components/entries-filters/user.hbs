@@ -1,41 +1,40 @@
 <section
-  class="reviews-filter reviews-filter-users
+  class="filter filter--list
     {{if this.allAreInitiallySelected 'no-print'}}"
   {{on-mouse-leave this.triggerChanges}}
   data-test-filter-user-container
+  ...attributes
 >
-  <div class="reviews-filter-header">
-    <h2 class="reviews-filter-header-title">Users</h2>
+  <div class="filter__header">
+    <h2 class="filter__title">Users</h2>
     <div
-      class="reviews-filter-header-count no-print"
+      class="filter__count no-print"
     >({{this.selectedIds.length}}/{{this.all.length}})</div>
   </div>
-  <div class="reviews-filter-item-list-container">
-    <ul class="reviews-filter-item-list">
-      <li class="reviews-filter-item reviews-filter-item-toggle no-print">
-        <button type="button" class="touch" {{on "click" this.checkAll}}>
+  <div class="filter__list-container">
+    <ul class="filter__list">
+      <li class="filter__toggle-bar no-print">
+        <button type="button" class="filter__toggle-button touch" {{on "click" this.checkAll}}>
           Select all
         </button>
-        <button type="button" class="touch" {{on "click" this.uncheckAll}}>
+        <button type="button" class="filter__toggle-button touch" {{on "click" this.uncheckAll}}>
           Select none
         </button>
       </li>
       {{#each this.all as |user|}}
         <li
-          class="reviews-filter-item
+          class="filter__item
             {{if (not (includes user.id this.selectedIds)) 'no-print'}}"
         >
-          <label class="reviews-filter-item-checkbox-container">
+          <label class="filter__item-content">
             <input
               {{on "change" (fn this.changeSelection user.id)}}
               type="checkbox"
-              class="reviews-filter-item-checkbox no-print"
+              class="filter__item-checkbox no-print"
               checked={{includes user.id this.selectedIds}}
               data-test-filter-user="{{user.id}}"
             />
-            <span class="reviews-filter-item-checkbox-txt">
-              {{user.name}}
-            </span>
+            <span>{{user.name}}</span>
           </label>
         </li>
       {{/each}}

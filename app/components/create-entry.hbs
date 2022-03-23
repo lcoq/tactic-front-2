@@ -1,13 +1,13 @@
 <div
-  class="entry-create {{if this.isSaveErrored 'errored'}}"
+  class="running-entry {{if this.isSaveErrored 'running-entry--errored'}}"
   data-test-running-entry
 >
-  <div class="entry-actions no-print">
+  <div class="running-entry__actions no-print">
     {{#if this.isSaveErrored}}
       <button
         type="button"
         {{on "click" this.retrySaveEntry}}
-        class="entry-action entry-action-retry touch"
+        class="running-entry__action running-entry__action--retry touch"
         data-test-running-entry-retry
       >
       </button>
@@ -15,34 +15,34 @@
   </div>
   <input
     value="{{this.entry.title}}"
-    class="entry-create-title text-input"
+    class="running-entry__title text-input"
     placeholder="What are you working on ?"
     {{on "keyup" this.onTitleKeyUp}}
     {{on "paste" this.onTitlePaste}}
     data-test-running-entry-title
   />
-  <div class="entry-create-project-container">
+  <div class="running-entry__project">
     <EntryChooseProject
       @projectName={{this.entry.project.name}}
-      @classNamePrefix="entry-create"
+      @inputClasses="running-entry__project-input"
       @searchProjects={{this.searchProjects}}
       @selectProject={{this.selectProject}}
       @keyPressed={{this.startTimer}}
     />
   </div>
-  <div class="entry-create-duration touch" data-test-running-entry-duration>
+  <div class="running-entry__duration touch" data-test-running-entry-duration>
     {{if this.isStarted this.entryDuration "00:00:00"}}
   </div>
   {{#if this.isStarted}}
     <button
-      class="entry-create-stop touch"
+      class="running-entry__button running-entry__button--stop touch"
       data-test-stop-entry
       type="button"
       {{on "click" this.stopTimer}}
     >Stop</button>
   {{else}}
     <button
-      class="entry-create-start touch"
+      class="running-entry__button running-entry__button--start touch"
       data-test-start-entry
       type="button"
       {{on "click" this.startTimer}}

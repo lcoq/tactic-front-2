@@ -39,9 +39,9 @@ module('Acceptance | Login', function (hooks) {
     await fillIn('[data-test-password]', 'invalid');
     await triggerKeyEvent('[data-test-password]', 'keyup', 'Enter');
     assert.strictEqual(currentURL(), '/login', 'should remain in login');
-    assert.dom('[data-test-user-error]').hasClass('errored');
+    assert.dom('[data-test-user-error]').hasClass('page__user--errored');
 
     await typeIn('[data-test-password]', 'new password');
-    assert.dom('[data-test-user-error]').doesNotHaveClass('errored');
+    assert.dom('[data-test-user-error]').doesNotHaveClass('page__user--errored');
   });
 });

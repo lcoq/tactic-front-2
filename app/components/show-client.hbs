@@ -4,12 +4,12 @@
   {{this.onFocusOutClickModifier this.closeEdit}}
 >
 
-  <div class="client-actions">
+  <div class="client__actions">
     {{#if this.isErrored}}
       <button
         type="button"
         {{on "click" this.retrySaveOrDelete}}
-        class="client-action client-action-retry touch"
+        class="client__action client__action--retry touch"
         data-test-client-retry
       >
         Retry
@@ -19,7 +19,7 @@
       <button
         type="button"
         {{on "click" this.startEdit}}
-        class="client-action client-action-edit-invalid touch"
+        class="client__action client__action--edit-invalid touch"
         data-test-client-edit-invalid
       >
         Edit
@@ -29,7 +29,7 @@
       <button
         type="button"
         {{on "click" this.revertEdit}}
-        class="client-action client-action-revert touch"
+        class="client__action client__action--revert touch"
         data-test-client-edit-rollback
       >
         Revert
@@ -39,7 +39,7 @@
       <button
         type="button"
         {{on "click" this.markForDelete}}
-        class="client-action client-action-delete touch"
+        class="client__action client__action--delete touch"
         data-test-client-delete
       >
         Delete
@@ -48,10 +48,10 @@
   </div>
 
   {{#if this.isEditing}}
-    <h2 class="client-title touch">
+    <h2 class="client__title">
       <Input
         @value={{this.client.name}}
-        class="client-edit-name text-input"
+        class="client__title-input text-input"
         @enter={{this.closeEdit}}
         {{select-on-focus}}
         {{focus-if true}}
@@ -59,9 +59,9 @@
       />
     </h2>
   {{else}}
-    <h2 {{on "click" this.startEdit}} class="client-title touch">
+    <h2 {{on "click" this.startEdit}} class="client__title">
       <span
-        class="client-title-txt"
+        class="client__title-txt"
         data-test-client-name
       >{{this.client.name}}</span>
     </h2>

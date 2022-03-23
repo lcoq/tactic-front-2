@@ -5,12 +5,12 @@
 >
 
   {{#unless this.rounding}}
-    <div class="entry-actions no-print">
+    <div class="entry__actions no-print">
       {{#if this.isErrored}}
         <button
           type="button"
           {{on "click" this.retrySaveOrDeleteEntry}}
-          class="entry-action entry-action-retry touch"
+          class="entry__action entry__action--retry touch"
           data-test-entry-retry
         >
           Retry
@@ -20,7 +20,7 @@
         <button
           type="button"
           {{on "click" this.revertEditEntry}}
-          class="entry-action entry-action-revert touch"
+          class="entry__action entry__action--revert touch"
           data-test-entry-edit-rollback
         >
           Revert
@@ -30,7 +30,7 @@
         <button
           type="button"
           {{on "click" this.markEntryForDelete}}
-          class="entry-action entry-action-delete touch"
+          class="entry__action entry__action--delete touch"
           data-test-entry-delete
         >
           Delete
@@ -38,7 +38,7 @@
         <button
           type="button"
           {{on "click" this.editEntryDate}}
-          class="entry-action entry-action-change-date touch"
+          class="entry__action entry__action--change-date touch"
           data-test-entry-edit-date
         >
           Change date
@@ -48,7 +48,7 @@
         <button
           type="button"
           {{on "click" this.restartEntry}}
-          class="entry-action entry-action-restart touch"
+          class="entry__action entry__action--restart touch"
           data-test-entry-restart
         >
           Play
@@ -57,25 +57,25 @@
     </div>
   {{/unless}}
 
-  <div class="entry-content">
+  <div class="entry__content">
     {{#if this.isEditingDate}}
       <div
-        class="entry-edit-date"
+        class="entry__calendar"
         {{datepicker this.entry.startedAt this.updateEntryDate}}
       ></div>
     {{/if}}
 
     {{#if this.showDate}}
-      <div class="entry-date" data-test-entry-date>
+      <div class="entry__attr entry__attr--date" data-test-entry-date>
         {{moment-format this.entry.startedAt "DD/MM"}}
       </div>
     {{/if}}
 
     {{#if this.isEditing}}
-      <div class="entry-title">
+      <div class="entry__attr entry__attr--title">
         <Input
           @value={{this.entry.title}}
-          class="entry-edit-title text-input"
+          class="entry__title-input text-input"
           @enter={{this.closeEdit}}
           {{select-on-focus}}
           {{focus-if (eq this.fieldNameToFocusOnEdit "title")}}
@@ -85,22 +85,18 @@
     {{else}}
       <div
         {{on "click" (fn this.editEntry "title")}}
-        class="entry-title touch"
+        class="entry__attr entry__attr--title touch {{unless this.entry.title 'entry__attr--empty'}}"
         data-test-entry-title
       >
-        {{#if this.entry.title}}
-          {{this.entry.title}}
-        {{else}}
-          <span class="entry-title-no-title">No title</span>
-        {{/if}}
+        {{if this.entry.title this.entry.title "No title"}}
       </div>
     {{/if}}
 
     {{#if this.isEditing}}
-      <div class="entry-project touch">
+      <div class="entry__attr entry__attr--project touch">
         <EntryChooseProject
           @projectName={{this.entry.project.name}}
-          @classNamePrefix="entry-edit"
+          @inputClasses="entry__input"
           @searchProjects={{this.searchProjects}}
           @selectProject={{this.selectProject}}
           @focusOnInput={{eq this.fieldNameToFocusOnEdit "project"}}
@@ -109,23 +105,20 @@
     {{else}}
       <div
         {{on "click" (fn this.editEntry "project")}}
-        class="entry-project touch
-          {{unless this.showProjectOnPrint 'no-print'}}"
+        class="entry__attr entry__attr--project touch
+          {{unless this.showProjectOnPrint 'no-print'}}
+          {{unless this.entry.project 'entry__attr--empty'}}"
         data-test-entry-project
       >
-        {{#if this.entry.project}}
-          {{this.entry.project.name}}
-        {{else}}
-          <span class="entry-project-no-project">No project</span>
-        {{/if}}
+        {{if this.entry.project this.entry.project.name "No project"}}
       </div>
     {{/if}}
 
     {{#if this.isEditing}}
-      <div class="entry-duration touch">
+      <div class="entry__attr entry__attr--duration touch">
         <Input
           @value={{this.formattedDuration}}
-          class="entry-edit-duration text-input"
+          class="entry__input text-input"
           @enter={{this.closeEdit}}
           {{select-on-focus}}
           {{focus-if (eq this.fieldNameToFocusOnEdit "duration")}}
@@ -136,7 +129,7 @@
     {{else}}
       <div
         {{on "click" (fn this.editEntry "duration")}}
-        class="entry-duration touch"
+        class="entry__attr entry__attr--duration touch"
         data-test-entry-duration
       >
         {{format-duration
@@ -150,10 +143,10 @@
     {{/if}}
 
     {{#if this.isEditing}}
-      <div class="entry-started-at touch">
+      <div class="entry__attr entry__attr--time touch">
         <Input
           @value={{this.formattedStartedAt}}
-          class="entry-edit-started-at text-input"
+          class="entry__input text-input"
           @enter={{this.closeEdit}}
           {{select-on-focus}}
           {{focus-if (eq this.fieldNameToFocusOnEdit "startedAt")}}
@@ -163,7 +156,7 @@
     {{else}}
       <div
         {{on "click" (fn this.editEntry "startedAt")}}
-        class="entry-started-at touch no-print"
+        class="entry__attr entry__attr--time touch no-print"
         data-test-entry-started-at
       >
         {{#if this.entry.startedAt}}
@@ -173,10 +166,10 @@
     {{/if}}
 
     {{#if this.isEditing}}
-      <div class="entry-stopped-at touch">
+      <div class="entry__attr entry__attr--time touch">
         <Input
           @value={{this.formattedStoppedAt}}
-          class="entry-edit-stopped-at text-input"
+          class="entry__input text-input"
           @enter={{this.closeEdit}}
           {{select-on-focus}}
           {{focus-if (eq this.fieldNameToFocusOnEdit "stoppedAt")}}
@@ -186,7 +179,7 @@
     {{else}}
       <div
         {{on "click" (fn this.editEntry "stoppedAt")}}
-        class="entry-stopped-at touch no-print"
+        class="entry__attr entry__attr--time touch no-print"
         data-test-entry-stopped-at
       >
         {{#if this.entry.stoppedAt}}

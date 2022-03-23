@@ -1,0 +1,73 @@
+.filter {
+  $self: &;
+
+  &--list {
+
+    &:hover #{$self}__list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #{$self}__count {
+      display: inline-block;
+      color: $clr5;
+      font-style: italic;
+    }
+
+    #{$self}__list-container {
+      position: relative;
+      padding: 0 $sp-sm 0 0;
+    }
+
+    #{$self}__list {
+      min-width: 350px;
+      position: absolute;
+      z-index: 1;
+      display: none;
+      width: 100%;
+      padding: $sp-sm 0;
+      background-color: $clr3;
+      max-height: 60vh;
+      overflow-y: auto;
+
+    }
+
+    #{$self}__item {
+      padding: $sp-xxs $sp;
+      line-height: $sp-lg;
+
+      &--font--italic {
+        font-style: italic;
+      }
+    }
+
+    #{$self}__item-content {
+      display: flex;
+      align-items: baseline;
+    }
+
+    #{$self}__item-checkbox {
+      vertical-align: middle;
+      flex-shrink: 0;
+      margin-right: $sp-sm;
+    }
+
+    #{$self}__item-title {
+      vertical-align: middle;
+      color: $clr2;
+    }
+
+    #{$self}__toggle-bar {
+      padding: $sp-xxs $sp;
+      line-height: $sp-lg;
+      display: flex;
+      justify-content: space-around;
+      font-size: $fs-sm;
+      font-style: italic;
+    }
+
+    #{$self}__toggle-button {
+      font-style: italic;
+    }
+  }
+}

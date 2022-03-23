@@ -1,0 +1,104 @@
+.running-entry {
+  $self: &;
+
+  position: relative;
+  display: flex;
+
+  &--errored {
+    #{$self}__action {
+      visibility: visible;
+    }
+  }
+
+  &__title {
+    margin: 0 $sp 0 0;
+
+    border-bottom: 1px solid $clr3;
+    flex-grow: 1;
+
+    &:hover {
+      border-bottom: 1px solid $clr8;
+    }
+  }
+
+  &__project {
+    margin: 0 $sp;
+
+    position: relative;
+  }
+
+  &__project-input {
+    text-align: center;
+    border-bottom: 1px solid $clr3;
+
+    &:hover {
+      border-bottom: 1px solid $clr8;
+    }
+  }
+
+  &__duration {
+    margin: 0 $sp;
+
+    text-align: center;
+    line-height: $btn-size;
+    color: $clr5;
+  }
+
+  &__button {
+    padding: $sp-xs 60px;
+    color: $clr10;
+
+    &--start {
+      background-color: $clr14;
+
+      &:hover {
+        background-color: $clr18;
+      }
+    }
+
+    &--stop {
+      background-color: $clr15;
+
+      &:hover {
+        background-color: $clr19;
+      }
+    }
+  }
+
+  &__actions {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(-100%, -50%);
+
+    display: flex;
+  }
+
+  &__action {
+    visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: content-box;
+    text-indent: -9999px;
+    white-space: nowrap;
+
+    padding: $sp-sm 0;
+
+    #{$self}--errored & {
+      visibility: visible;
+    }
+
+    &--retry {
+      background-color: #c62828;
+      mask: url(/assets/images/offline.svg) center / 16px no-repeat;
+      -webkit-mask: url(/assets/images/offline.svg) center / 16px no-repeat;
+
+      &:hover {
+        background-color: black;
+        mask: url(/assets/images/refresh.svg) center / 16px no-repeat;
+        -webkit-mask: url(/assets/images/refresh.svg) center / 16px no-repeat;
+      }
+    }
+  }
+}

@@ -6,7 +6,7 @@
   <h1 class="header__brand">Tactic</h1>
 
   {{#if this.isAuthenticated}}
-    <nav class="header__menu menu no-print">
+    <nav class="menu no-print">
       <LinkTo @route="index" data-test-index-link class="menu__item">
         Timer
       </LinkTo>
@@ -55,6 +55,6 @@
   {{/if}}
 </header>
 
-<div class="app-content">
+<div class="layout__inner">
   {{outlet}}
 </div>

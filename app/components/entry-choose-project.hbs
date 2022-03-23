@@ -12,13 +12,13 @@
   />
 
   {{#if this.projects}}
-    <ul class="{{this.projectsListClasses}}">
+    <ul class="project-choices-list">
       {{#each this.projects as |project|}}
         <li
           {{on "click" (fn this.selectProject project)}}
           {{on "mouseenter" (fn this.changeHoveredProject project)}}
-          class="{{this.projectClasses}}
-            {{if (eq project this.hoveredProject) 'selected'}}"
+          class="project-choices-list__item touch
+            {{if (eq project this.hoveredProject) 'project-choices-list__item--selected'}}"
           data-test-entry-edit-project-choice
         >
           {{project.name}}

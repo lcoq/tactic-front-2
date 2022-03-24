@@ -10,6 +10,10 @@ export default class EntryChooseProjectComponent extends Component {
   @tracked projects = null;
   @tracked hoveredProject = null;
 
+  @tracked nameInputValue = null;
+
+  @tracked _searchQuery = null;
+
   get focusOnInput() {
     return this.args.focusOnInput;
   }
@@ -24,7 +28,7 @@ export default class EntryChooseProjectComponent extends Component {
 
   @action selectProject(project) {
     this.args.selectProject?.(project);
-    this.projects = null;
+    this._reset();
   }
 
   @action changeHoveredProject(project) {
@@ -34,12 +38,14 @@ export default class EntryChooseProjectComponent extends Component {
   @action clearProjects() {
     this.deferer.later('entry-choose-project:clear', this, () => {
       if (this.isDestroying || this.isDestroyed) return;
-      this.projects = null;
+      this._reset();
     });
   }
 
   @action keyPressed(event) {
     const inputValue = event.target.value;
+    this._searchQuery = inputValue;
+
     if (event.key === 'Enter') {
       this._selectOrClearIfEmpty(inputValue);
     } else if (event.key === 'ArrowDown') {
@@ -48,10 +54,12 @@ export default class EntryChooseProjectComponent extends Component {
       this._moveHoveredProject(-1);
     } else {
       this.args.keyPressed?.();
-      this.deferer.debounce('entry-choose-project:search', this, () =>
-        this._searchProjects(inputValue)
-      );
+      this.deferer.debounce('entry-choose-project:search', this, this._searchProjects);
     }
+  }
+
+  @action setNameInputValue() {
+    this.nameInputValue = this.projectName;
   }
 
   _moveHoveredProject(diff) {
@@ -71,7 +79,8 @@ export default class EntryChooseProjectComponent extends Component {
     this.selectProject(newProject);
   }
 
-  _searchProjects(query) {
+  _searchProjects() {
+    const query = this._searchQuery;
     this.args.searchProjects(query).then((projects) => {
       this._eventuallyUpdateProjects(projects);
     });
@@ -83,5 +92,12 @@ export default class EntryChooseProjectComponent extends Component {
     if (projects) {
       this.hoveredProject = this.projects.firstObject;
     }
+  }
+
+  _reset() {
+    document.activeElement?.blur();
+    this.nameInputValue = null;
+    this.projects = null;
+    this._searchQuery = null;
   }
 }

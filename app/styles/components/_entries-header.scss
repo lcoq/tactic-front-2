@@ -120,6 +120,8 @@
   }
 
   &__action {
+    @include touch;
+
     font-weight: bold;
   }
 }

@@ -162,7 +162,7 @@ export default class ReviewsController extends Controller {
   _downloadFile(url) {
     const link = document.createElement('a');
     link.setAttribute('download', '');
-    link.classList = ['hidden'];
+    link.style.display = 'none';
     link.href = url;
     document.body.appendChild(link);
     link.click();

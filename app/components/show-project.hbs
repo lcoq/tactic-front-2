@@ -9,7 +9,7 @@
       <button
         type="button"
         {{on "click" this.retrySaveOrDelete}}
-        class="project__action project__action--retry touch"
+        class="project__action project__action--retry"
         data-test-project-retry
       >
       </button>
@@ -18,7 +18,7 @@
       <button
         type="button"
         {{on "click" this.startEdit}}
-        class="project__action project__action--edit-invalid touch"
+        class="project__action project__action--edit-invalid"
         data-test-project-edit-invalid
       >
         Edit
@@ -28,7 +28,7 @@
       <button
         type="button"
         {{on "click" this.revertEdit}}
-        class="project__action project__action--revert touch"
+        class="project__action project__action--revert"
         data-test-project-edit-rollback
       >
         Revert
@@ -38,7 +38,7 @@
       <button
         type="button"
         {{on "click" this.markForDelete}}
-        class="project__action project__action--delete touch"
+        class="project__action project__action--delete"
         data-test-project-delete
       >
         Delete
@@ -47,10 +47,10 @@
   </div>
 
   {{#if this.isEditing}}
-    <div class="touch" data-test-project-name>
+    <div data-test-project-name>
       <Input
         @value={{this.project.name}}
-        class="project__title-input text-input"
+        class="project__title-input"
         @enter={{this.closeEdit}}
         {{select-on-focus}}
         {{focus-if true}}
@@ -60,7 +60,7 @@
   {{else}}
     <div
       {{on "click" this.startEdit}}
-      class="project-name touch"
+      class="project__title"
       data-test-project-name
     >
       {{this.project.name}}

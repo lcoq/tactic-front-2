@@ -7,6 +7,8 @@
   line-height: $btn-size;
 
   &__item {
+    @include touch;
+
     padding: 0 $sp;
     white-space: nowrap;
 

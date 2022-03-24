@@ -70,6 +70,8 @@
   }
 
   &__action {
+    @include touch;
+
     visibility: hidden;
     display: flex;
     justify-content: center;
@@ -147,6 +149,8 @@
   }
 
   &__attr {
+    @include touch;
+
     display: flex;
     align-items: center;
     min-height: $btn-size;
@@ -202,11 +206,15 @@
   }
 
   &__title-input {
+    @include text-input;
+
     width: 100%;
     padding-left: $sp-sm;
   }
 
   &__input {
+    @include text-input;
+
     text-align: center;
   }
 }

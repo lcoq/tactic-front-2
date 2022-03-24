@@ -9,10 +9,6 @@
     background-color: $clr7;
   }
 
-  &--italic {
-    font-style: italic;
-  }
-
   &--invalid {
     background-color: $clr9;
 
@@ -71,6 +67,8 @@
   }
 
   &__action {
+    @include touch;
+
     visibility: hidden;
     display: flex;
     justify-content: center;
@@ -137,6 +135,16 @@
   }
 
   &__title-input {
+    @include text-input;
+
     width: 100%;
+  }
+
+  &__title {
+    @include touch;
+
+    &--italic {
+      font-style: italic;
+    }
   }
 }

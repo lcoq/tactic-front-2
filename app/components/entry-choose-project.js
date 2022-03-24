@@ -23,7 +23,7 @@ export default class EntryChooseProjectComponent extends Component {
   }
 
   get inputClasses() {
-    return [ 'text-input', this.args.inputClasses || '' ].join(' ');
+    return this.args.inputClasses;
   }
 
   @action selectProject(project) {

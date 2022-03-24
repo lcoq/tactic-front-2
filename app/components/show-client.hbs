@@ -9,7 +9,7 @@
       <button
         type="button"
         {{on "click" this.retrySaveOrDelete}}
-        class="client__action client__action--retry touch"
+        class="client__action client__action--retry"
         data-test-client-retry
       >
         Retry
@@ -19,7 +19,7 @@
       <button
         type="button"
         {{on "click" this.startEdit}}
-        class="client__action client__action--edit-invalid touch"
+        class="client__action client__action--edit-invalid"
         data-test-client-edit-invalid
       >
         Edit
@@ -29,7 +29,7 @@
       <button
         type="button"
         {{on "click" this.revertEdit}}
-        class="client__action client__action--revert touch"
+        class="client__action client__action--revert"
         data-test-client-edit-rollback
       >
         Revert
@@ -39,7 +39,7 @@
       <button
         type="button"
         {{on "click" this.markForDelete}}
-        class="client__action client__action--delete touch"
+        class="client__action client__action--delete"
         data-test-client-delete
       >
         Delete
@@ -51,7 +51,7 @@
     <h2 class="client__title">
       <Input
         @value={{this.client.name}}
-        class="client__title-input text-input"
+        class="client__title-input"
         @enter={{this.closeEdit}}
         {{select-on-focus}}
         {{focus-if true}}

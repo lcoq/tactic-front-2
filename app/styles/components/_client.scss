@@ -6,8 +6,6 @@
   align-items: center;
   background-color: $clr3;
   padding: 0 $sp-sm;
-  min-width: $btn-size-sm;
-  min-height: $btn-size-sm;
 
   &:hover {
     background-color: $clr7;
@@ -65,14 +63,12 @@
   }
 
   &__title {
+    @include touch;
+
     display: flex;
     align-items: center;
     width: 100%;
     color: $clr4;
-
-    cursor: pointer;
-    min-width: $btn-size;
-    min-height: $btn-size;
 
     #{$self}--frozen & {
       cursor: default;
@@ -101,6 +97,8 @@
   }
 
   &__action {
+    @include touch;
+
     visibility: hidden;
     display: flex;
     justify-content: center;
@@ -167,6 +165,8 @@
   }
 
   &__title-input {
+    @include text-input;
+
     width: 100%;
   }
 }

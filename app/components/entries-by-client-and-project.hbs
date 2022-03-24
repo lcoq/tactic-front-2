@@ -18,7 +18,7 @@
       <div class="entries-header__actions">
         <button
           type="button"
-          class="entries-header__action no-print touch"
+          class="entries-header__action no-print"
           {{on "click" this.generateCSV}}
         >
           CSV
@@ -50,7 +50,7 @@
         <div class="entries-header__actions">
           <button
             type="button"
-            class="entries-header__action no-print touch"
+            class="entries-header__action no-print"
             {{on "click" (fn this.generateClientCSV group.client)}}
           >CSV</button>
         </div>

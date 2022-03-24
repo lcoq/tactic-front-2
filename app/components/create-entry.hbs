@@ -7,7 +7,7 @@
       <button
         type="button"
         {{on "click" this.retrySaveEntry}}
-        class="running-entry__action running-entry__action--retry touch"
+        class="running-entry__action running-entry__action--retry"
         data-test-running-entry-retry
       >
       </button>
@@ -15,7 +15,7 @@
   </div>
   <input
     value="{{this.entry.title}}"
-    class="running-entry__title text-input"
+    class="running-entry__title"
     placeholder="What are you working on ?"
     {{on "keyup" this.onTitleKeyUp}}
     {{on "paste" this.onTitlePaste}}
@@ -30,19 +30,19 @@
       @keyPressed={{this.startTimer}}
     />
   </div>
-  <div class="running-entry__duration touch" data-test-running-entry-duration>
+  <div class="running-entry__duration" data-test-running-entry-duration>
     {{if this.isStarted this.entryDuration "00:00:00"}}
   </div>
   {{#if this.isStarted}}
     <button
-      class="running-entry__button running-entry__button--stop touch"
+      class="running-entry__button running-entry__button--stop"
       data-test-stop-entry
       type="button"
       {{on "click" this.stopTimer}}
     >Stop</button>
   {{else}}
     <button
-      class="running-entry__button running-entry__button--start touch"
+      class="running-entry__button running-entry__button--start"
       data-test-start-entry
       type="button"
       {{on "click" this.startTimer}}

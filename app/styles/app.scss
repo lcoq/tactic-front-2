@@ -1,7 +1,8 @@
 @import 'reset';
 
-@import 'variables';
-@import 'keyframes';
+@import 'globals/variables';
+@import 'globals/mixins';
+@import 'globals/keyframes';
 
 @media screen {
   @import 'components/layout';

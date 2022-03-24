@@ -11,6 +11,8 @@
   }
 
   &__title {
+    @include text-input;
+
     margin: 0 $sp 0 0;
 
     border-bottom: 1px solid $clr3;
@@ -28,6 +30,8 @@
   }
 
   &__project-input {
+    @include text-input;
+
     text-align: center;
     border-bottom: 1px solid $clr3;
 
@@ -37,6 +41,8 @@
   }
 
   &__duration {
+    @include touch;
+
     margin: 0 $sp;
 
     text-align: center;
@@ -45,6 +51,8 @@
   }
 
   &__button {
+    @include touch;
+
     padding: $sp-xs 60px;
     color: $clr10;
 
@@ -75,6 +83,8 @@
   }
 
   &__action {
+    @include touch;
+
     visibility: hidden;
     display: flex;
     justify-content: center;

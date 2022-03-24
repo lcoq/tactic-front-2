@@ -67,6 +67,8 @@
     }
 
     #{$self}__toggle-button {
+      @include touch;
+
       font-style: italic;
     }
   }

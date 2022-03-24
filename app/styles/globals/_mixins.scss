@@ -1,0 +1,10 @@
+@mixin touch() {
+  cursor: pointer;
+  min-width: $btn-size;
+  min-height: $btn-size;
+}
+
+@mixin text-input() {
+  min-width: $btn-size;
+  min-height: $btn-size;
+}

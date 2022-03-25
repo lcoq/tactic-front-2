@@ -1,0 +1,37 @@
+.print\@entries-header {
+  $self: &;
+
+  display: flex;
+  padding: $sp-sm;
+  margin: $sp-sm 0;
+
+  &--theme--light {
+    margin: $sp 0;
+    padding: $sp-sm 0;
+    background-color: inherit;
+  }
+
+  &--theme--boxed {
+    margin: $sp 0;
+    border: 1px solid $clr2;
+
+    #{$self}__duration {
+      font-weight: bold;
+    }
+  }
+
+  &--theme--underline {
+    border-bottom: 1px solid $clr2;
+
+    #{$self}__duration {
+      color: $clr8;
+      font-weight: bold;
+    }
+  }
+
+  &__title {
+    display: inline;
+    margin-right: $sp-sm;
+    font-weight: bold;
+  }
+}

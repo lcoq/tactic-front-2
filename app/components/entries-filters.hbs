@@ -4,36 +4,36 @@
     @all={{this.allUsers}}
     @selectedIds={{this.selectedUserIds}}
     @onChange={{this.changeSelectedUserIds}}
-    class="filter filters__item filters__user"
+    class="filters__item filters__user"
   />
 
   <EntriesFilters::Client
     @all={{this.allClients}}
     @selectedIds={{this.selectedClientIds}}
     @onChange={{this.changeSelectedClientIds}}
-    class="filter filters__item filters__client"
+    class="filters__item filters__client"
   />
 
   <EntriesFilters::Project
     @all={{this.allProjects}}
     @selectedIds={{this.selectedProjectIds}}
     @onChange={{this.changeSelectedProjectIds}}
-    class="filter filters__item filters__project"
+    class="filters__item filters__project"
   />
 
-  <section class="filter filter--calendar filters__item filters__from">
-    <div class="filter__label no-print">from</div>
+  <section class="filter filter--calendar filters__item filters__from print@filter print@filter--date print@filter--from">
+    <div class="filter__label print@hidden">from</div>
     <div
-      class="filter__header"
+      class="filter__header print@filter__header"
       {{on "click" this.startEditSince}}
       data-test-filter-since
     >
-      <h2 class="filter__title">
+      <h2 class="filter__title print@filter__title">
         {{moment-format this.since "YYYY/MM/DD"}}
       </h2>
       {{#if this.isEditingSince}}
         <div
-          class="filter__calendar no-print"
+          class="filter__calendar print@hidden"
           {{datepicker this.since this.changeSince}}
           {{on-focus-out-click this.cancelEditSince}}
         ></div>
@@ -41,19 +41,19 @@
     </div>
   </section>
 
-  <section class="filter filter--calendar filters__item">
-    <div class="filter__label no-print">to</div>
+  <section class="filter filter--calendar filters__item print@filter print@filter--date print@filter--to">
+    <div class="filter__label print@hidden">to</div>
     <div
-      class="filter__header"
+      class="filter__header print@filter__header"
       {{on "click" this.startEditBefore}}
       data-test-filter-before
     >
-      <h2 class="filter__title">
+      <h2 class="filter__title print@filter__title">
         {{moment-format this.before "YYYY/MM/DD"}}
       </h2>
       {{#if this.isEditingBefore}}
         <div
-          class="filter__calendar no-print"
+          class="filter__calendar print@hidden"
           {{datepicker this.before this.changeBefore}}
           {{on-focus-out-click this.cancelEditBefore}}
         ></div>
@@ -62,7 +62,7 @@
   </section>
 
   {{#if this.canRound}}
-    <section class="filter filter--checkbox filters__item no-print">
+    <section class="filter filter--checkbox filters__item print@hidden">
       <label class="filter__inner">
         <input
           {{on "change" this.changeRounding}}
@@ -80,9 +80,9 @@
 </section>
 
 <section class="filters">
-  <section class="filter filter--search-bar filters__item filter__query">
+  <section class="filter filter--search-bar filters__item filter__query print@filter print@filter--query">
     {{#if this.query}}
-      <span class="only-print">
+      <span class="print@only print@filter__title">
         Search :
         {{this.query}}
       </span>
@@ -91,7 +91,7 @@
       value={{this.query}}
       {{on "change" this.changeQuery}}
       placeholder="Search tasks ..."
-      class="filter__input no-print"
+      class="filter__input print@hidden"
       data-test-filter-query
     />
   </section>

@@ -1,19 +1,19 @@
 <section
-  class="filter filter--list
-    {{if this.allAreInitiallySelected 'no-print'}}"
+  class="filter filter--list print@filter print@filter--list
+    {{if this.allAreInitiallySelected 'print@hidden'}}"
   {{on-mouse-leave this.triggerChanges}}
   data-test-filter-project-container
   ...attributes
 >
   <div class="filter__header">
-    <h2 class="filter__title">Projects</h2>
+    <h2 class="filter__title print@filter__title">Projects</h2>
     <div
-      class="filter__count no-print"
+      class="filter__count print@hidden"
     >({{this.selectedIds.length}}/{{this.all.length}})</div>
   </div>
   <div class="filter__list-container">
     <ul class="filter__list">
-      <li class="filter__toggle-bar no-print">
+      <li class="filter__toggle-bar print@hidden">
         <button type="button" class="filter__toggle-button" {{on "click" this.checkAll}}>
           Select all
         </button>
@@ -25,13 +25,13 @@
         <li
           class="filter__item
             {{if (eq project.id '0') 'filter__item--font--italic'}}
-            {{if (not (includes project.id this.selectedIds)) 'no-print'}}"
+            {{if (not (includes project.id this.selectedIds)) 'print@hidden'}}"
         >
           <label class="filter__item-content">
             <input
               {{on "change" (fn this.changeSelection project.id)}}
               type="checkbox"
-              class="filter__item-checkbox no-print"
+              class="filter__item-checkbox print@hidden"
               checked={{includes project.id this.selectedIds}}
               data-test-filter-project="{{project.id}}"
             />

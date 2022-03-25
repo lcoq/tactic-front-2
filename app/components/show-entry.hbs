@@ -1,11 +1,11 @@
 <li
-  class="entry {{this.classNames}}"
+  class="entry {{this.classNames}} print@entry"
   data-test-entry="{{this.entry.id}}"
   {{this.onFocusOutClickModifier this.closeEdit}}
 >
 
   {{#unless this.rounding}}
-    <div class="entry__actions no-print">
+    <div class="entry__actions print@hidden">
       {{#if this.isErrored}}
         <button
           type="button"
@@ -57,7 +57,7 @@
     </div>
   {{/unless}}
 
-  <div class="entry__content">
+  <div class="entry__content print@entry__content">
     {{#if this.isEditingDate}}
       <div
         class="entry__calendar"
@@ -66,7 +66,7 @@
     {{/if}}
 
     {{#if this.showDate}}
-      <div class="entry__attr entry__attr--date" data-test-entry-date>
+      <div class="entry__attr entry__attr--date print@entry__attr" data-test-entry-date>
         {{moment-format this.entry.startedAt "DD/MM"}}
       </div>
     {{/if}}
@@ -85,7 +85,8 @@
     {{else}}
       <div
         {{on "click" (fn this.editEntry "title")}}
-        class="entry__attr entry__attr--title {{unless this.entry.title 'entry__attr--empty'}}"
+        class="entry__attr entry__attr--title {{unless this.entry.title 'entry__attr--empty'}}
+               print@entry__attr {{if this.showProjectOnPrint 'print@entry__attr--title-small' 'print@entry__attr--title'}}"
         data-test-entry-title
       >
         {{if this.entry.title this.entry.title "No title"}}
@@ -105,8 +106,8 @@
     {{else}}
       <div
         {{on "click" (fn this.editEntry "project")}}
-        class="entry__attr entry__attr--project
-          {{unless this.showProjectOnPrint 'no-print'}}
+        class="entry__attr entry__attr--project print@entry__attr print@entry__attr--project
+          {{unless this.showProjectOnPrint 'print@hidden'}}
           {{unless this.entry.project 'entry__attr--empty'}}"
         data-test-entry-project
       >
@@ -129,7 +130,7 @@
     {{else}}
       <div
         {{on "click" (fn this.editEntry "duration")}}
-        class="entry__attr entry__attr--duration"
+        class="entry__attr entry__attr--duration print@entry__attr"
         data-test-entry-duration
       >
         {{format-duration
@@ -156,7 +157,7 @@
     {{else}}
       <div
         {{on "click" (fn this.editEntry "startedAt")}}
-        class="entry__attr entry__attr--time no-print"
+        class="entry__attr entry__attr--time print@hidden"
         data-test-entry-started-at
       >
         {{#if this.entry.startedAt}}
@@ -179,7 +180,7 @@
     {{else}}
       <div
         {{on "click" (fn this.editEntry "stoppedAt")}}
-        class="entry__attr entry__attr--time no-print"
+        class="entry__attr entry__attr--time print@hidden"
         data-test-entry-stopped-at
       >
         {{#if this.entry.stoppedAt}}

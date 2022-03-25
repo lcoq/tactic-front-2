@@ -1,10 +1,11 @@
 <section>
 
   {{#if this.multipleGroups}}
-    <div class="entries-header entries-header--with-actions entries-header--theme--color entries-header--font--xl">
-      <h2 class="entries-header__title">Total</h2>
+    <div class="entries-header entries-header--with-actions entries-header--theme--color entries-header--font--xl
+                print@entries-header print@entries-header--theme--light">
+      <h2 class="entries-header__title print@entries-header__title">Total</h2>
       <div
-        class="entries-header__duration"
+        class="entries-header__duration print@entries-header__duration"
         data-test-entries-total-duration
       >
         {{format-duration
@@ -15,10 +16,10 @@
           )
         }}
       </div>
-      <div class="entries-header__actions">
+      <div class="entries-header__actions print@hidden">
         <button
           type="button"
-          class="entries-header__action no-print"
+          class="entries-header__action"
           {{on "click" this.generateCSV}}
         >
           CSV
@@ -31,12 +32,13 @@
     <section
       data-test-client-group="{{or group.client.id '-1'}}"
     >
-      <div class="entries-header entries-header--with-actions entries-header--theme--dark entries-header--margin--vertical">
-        <h2 class="entries-header__title" data-test-client-group-name>
+      <div class="entries-header entries-header--with-actions entries-header--theme--dark entries-header--margin--vertical
+                  print@entries-header print@entries-header--theme--boxed">
+        <h2 class="entries-header__title print@entries-header__title" data-test-client-group-name>
           {{if group.client.name group.client.name "No client"}}
         </h2>
         <div
-          class="entries-header__duration"
+          class="entries-header__duration print@entries-header__duration"
           data-test-client-group-duration
         >
           {{format-duration
@@ -47,10 +49,10 @@
             )
           }}
         </div>
-        <div class="entries-header__actions">
+        <div class="entries-header__actions print@hidden">
           <button
             type="button"
-            class="entries-header__action no-print"
+            class="entries-header__action"
             {{on "click" (fn this.generateClientCSV group.client)}}
           >CSV</button>
         </div>

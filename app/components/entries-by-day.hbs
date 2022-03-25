@@ -1,22 +1,28 @@
 <section>
-  <h2 class="only-print">
-    Total:
-    {{format-duration this.list.durationInSeconds}}
-  </h2>
+
+  <div class="print@only print@entries-header print@entries-header--theme--light">
+    <h2 class="print@entries-header__title">Total</h2>
+    <div class="print@entries-header__duration">
+      {{format-duration this.list.durationInSeconds}}
+    </div>
+  </div>
+
   {{#each this.list.groups as |group|}}
     <section data-test-entry-group>
-      <header class="entries-header entries-header--theme--light">
+      <header class="entries-header entries-header--theme--light
+                     print@entries-header print@entries-header--theme--underline">
         <h2
           title="{{moment-format group.day 'YYYY-MM-DD'}}"
-          class="entries-header__title no-print"
+          class="entries-header__title print@hidden"
           data-test-entry-group-title
-        >{{entry-group-day group.day}}</h2>
-        <h2 class="entries-header__title only-print">{{moment-format
-            group.day
-            "YYYY-MM-DD"
-          }}</h2>
+        >
+          {{entry-group-day group.day}}
+        </h2>
+        <h2 class="print@only print@entries-header__title">
+          {{moment-format group.day "YYYY-MM-DD"}}
+        </h2>
         <div
-          class="entries-header__duration"
+          class="entries-header__duration print@entries-header__duration"
           data-test-entry-group-duration
         >{{format-duration group.durationInSeconds}}</div>
       </header>

@@ -1,0 +1,47 @@
+.print\@filter {
+  $self: &;
+
+  margin-bottom: $sp;
+
+  &--list {
+    #{$self}__title:after {
+      display: inline;
+      content: ': ';
+    }
+  }
+
+  &--date {
+    display: inline;
+    font-size: $fs-xl;
+
+    #{$self}__header {
+      display: inline
+    }
+  }
+
+  &--from {
+    &:after {
+      display: inline;
+      content: ' - ';
+    }
+  }
+
+  &--to {
+    &:after {
+      display: block;
+      content: ' ';
+      margin-bottom: $sp;
+    }
+  }
+
+  &--query {
+    #{$self}__title {
+      font-weight: normal;
+    }
+  }
+
+  &__title {
+    display: inline;
+    font-weight: bold;
+  }
+}

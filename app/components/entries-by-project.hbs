@@ -3,12 +3,13 @@
     <section
       data-test-project-group="{{or group.project.id '-1'}}"
     >
-      <header class="entries-header entries-header--with-actions entries-header--theme--light">
-        <h2 class="entries-header__title" data-test-project-group-name>
+      <header class="entries-header entries-header--with-actions entries-header--theme--light
+                     print@entries-header print@entries-header--theme--underline">
+        <h2 class="entries-header__title print@entries-header__title" data-test-project-group-name>
           {{if group.project.name group.project.name "No project"}}
         </h2>
         <div
-          class="entries-header__duration"
+          class="entries-header__duration print@entries-header__duration"
           data-test-project-group-duration
         >{{format-duration
             (if
@@ -17,10 +18,10 @@
               group.durationInSeconds
             )
           }}</div>
-        <div class="entries-header__actions">
+        <div class="entries-header__actions print@hidden">
           <button
             type="button"
-            class="entries-header__action no-print"
+            class="entries-header__action"
             {{on "click" (fn this.generateCSV group.project)}}
           >
             CSV

@@ -42,10 +42,17 @@
 
   @import 'teamwork';
 
-  @import 'global';
   @import 'calendar';
+
+  .print\@only { display: none; }
 }
 
 @media print {
-  @import 'print';
+  @import 'print/components/layout';
+
+  @import 'print/components/entry';
+  @import 'print/components/entries-header';
+  @import 'print/components/header';
+  @import 'print/components/hidden';
+  @import 'print/components/filter';
 }

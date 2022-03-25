@@ -3,13 +3,12 @@
   align-items: center;
 
   &__item {
+    height: $btn-size;
+    padding: 0 $sp;
     z-index: 10;
     display: inline-block;
-
     cursor: pointer;
-    height: $btn-size;
     line-height: $btn-size;
-    padding: 0 $sp;
 
     &:hover {
       color: $clr4;

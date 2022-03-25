@@ -1,0 +1,9 @@
+.title {
+  font-size: $fs-xxl;
+  font-weight: bold;
+  padding: $sp 0;
+
+  &--size--small {
+    font-size: $fs-xl;
+  }
+}

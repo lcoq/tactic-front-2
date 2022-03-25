@@ -1,13 +1,13 @@
 {{page-title "Projects"}}
 
-<section class="project-group-list-container">
-  <h1 class="project-group-list-title">Projects</h1>
+<div class="page page--projects">
+  <h1 class="title">Projects</h1>
   {{#each @model.groups as |group|}}
     <section
-      class="project-group
+      class="client-projects-list
         {{if
           group.client.stateManager.isPendingDeleteOrDeleteErrored
-          'deleting'
+          'clients-projects-list--deleting'
         }}"
       data-test-client-with-projects="{{or group.client.id '-1'}}"
     >
@@ -35,11 +35,13 @@
         {{/each}}
         <li
           {{on "click" (fn this.buildProject group.client)}}
-          class="project project-create touch"
+          class="project"
           data-test-project-new
         >
-          <span class="project-create-plus">+</span>
-          Create new project
+          <div class="project__title project__title--italic">
+            <span class="project__title-plus">+</span>
+            Create new project
+          </div>
         </li>
       </ul>
     </section>
@@ -50,12 +52,12 @@
       class="client"
       data-test-client-new
     >
-      <h2 class="client-title touch">
-        <span class="client-title-txt">
-          <span class="client-create-plus">+</span>
-          <span class="client-create-plus-txt">Create new client</span>
+      <h2 class="client__title">
+        <span class="client__title-txt">
+          <span class="client__title-plus">+</span>
+          <span class="client__title client__title--italic">Create new client</span>
         </span>
       </h2>
     </section>
   </section>
-</section>
+</div>

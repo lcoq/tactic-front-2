@@ -1,0 +1,11 @@
+.page {
+  $self: &;
+
+  &--stats {
+
+    #{$self}__chart {
+      margin: 0 auto;
+      max-width: 80vh;
+    }
+  }
+}

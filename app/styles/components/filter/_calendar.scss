@@ -1,0 +1,27 @@
+.filter {
+  $self: &;
+
+  &--calendar {
+    display: flex;
+    align-items: baseline;
+    cursor: pointer;
+
+    #{$self}__label {
+      margin-right: $sp;
+    }
+
+    #{$self}__title {
+      font-size: $fs-xxl;
+    }
+
+    #{$self}__calendar {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 2;
+      background-color: $clr3;
+      padding: $sp-sm;
+      font-size: $fs-xs;
+    }
+  }
+}

@@ -1,0 +1,15 @@
+.layout {
+  margin: 0; /* TODO block should not set its position  */
+
+  background-color: $clr1;
+  font-family: $font-family;
+
+  &__inner {
+    margin: auto;
+
+    width: 80%;
+    padding: 30px 100px;
+    display: flex;
+    flex-direction: column;
+  }
+}

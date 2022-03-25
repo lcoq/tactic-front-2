@@ -22,9 +22,10 @@
   }
 
   &__new-symbol {
+    margin-right: $sp-xs;
+
     font-weight: bold;
     font-size: $fs-xl;
-    margin-right: $sp-xs;
   }
 
   &__new-description {

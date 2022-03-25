@@ -1,6 +1,6 @@
 <label
   for="{{concat 'password-' @user.id}}"
-  class="touch login-item-label"
+  class="page__user-name"
   data-test-user-name
 >
   @
@@ -11,6 +11,6 @@
   id={{concat "password-" @user.id}}
   @enter={{fn @onSubmit @user.id}}
   {{on "keyup" (fn @keyup @user.id)}}
-  class="touch login-item-password"
+  class="page__user-password"
   data-test-password
 />

@@ -1,32 +1,34 @@
 {{page-title "Reviews"}}
 
-<EntriesFilters
-  @allUsers={{this.allUsers}}
-  @allClients={{this.allClients}}
-  @allProjects={{this.allProjectsForSelectedClientIds}}
-  @selectedUserIds={{this.selectedUserIds}}
-  @selectedClientIds={{this.selectedClientIds}}
-  @selectedProjectIds={{this.selectedProjectIds}}
-  @since={{this.since}}
-  @before={{this.before}}
-  @query={{this.query}}
-  @rounding={{this.rounding}}
-  @changeSelectedUserIds={{this.changeSelectedUserIds}}
-  @changeSelectedClientIds={{this.changeSelectedClientIds}}
-  @changeSelectedProjectIds={{this.changeSelectedProjectIds}}
-  @changeSince={{this.changeSince}}
-  @changeBefore={{this.changeBefore}}
-  @changeQuery={{this.changeQuery}}
-  @changeRounding={{this.changeRounding}}
-/>
-
-{{#if this.entriesByClientAndProject}}
-  <EntriesByClientAndProject
-    @list={{this.entriesByClientAndProject}}
+<div class="page page--reviews">
+  <EntriesFilters
+    @allUsers={{this.allUsers}}
+    @allClients={{this.allClients}}
+    @allProjects={{this.allProjectsForSelectedClientIds}}
+    @selectedUserIds={{this.selectedUserIds}}
+    @selectedClientIds={{this.selectedClientIds}}
+    @selectedProjectIds={{this.selectedProjectIds}}
+    @since={{this.since}}
+    @before={{this.before}}
+    @query={{this.query}}
     @rounding={{this.rounding}}
-    @didUpdateEntry={{this.didUpdateEntry}}
-    @didDeleteEntry={{this.didDeleteEntry}}
-    @searchProjects={{this.searchProjects}}
-    @generateCSV={{this.generateCSV}}
+    @changeSelectedUserIds={{this.changeSelectedUserIds}}
+    @changeSelectedClientIds={{this.changeSelectedClientIds}}
+    @changeSelectedProjectIds={{this.changeSelectedProjectIds}}
+    @changeSince={{this.changeSince}}
+    @changeBefore={{this.changeBefore}}
+    @changeQuery={{this.changeQuery}}
+    @changeRounding={{this.changeRounding}}
   />
-{{/if}}
+
+  {{#if this.entriesByClientAndProject}}
+    <EntriesByClientAndProject
+      @list={{this.entriesByClientAndProject}}
+      @rounding={{this.rounding}}
+      @didUpdateEntry={{this.didUpdateEntry}}
+      @didDeleteEntry={{this.didDeleteEntry}}
+      @searchProjects={{this.searchProjects}}
+      @generateCSV={{this.generateCSV}}
+    />
+  {{/if}}
+</div>

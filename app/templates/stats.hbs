@@ -1,4 +1,4 @@
-<section class="stats-container">
+<div class="page page--stats">
 
   <EntriesFilters
     @allUsers={{this.allUsers}}
@@ -18,27 +18,33 @@
     @changeQuery={{this.changeQuery}}
     @changeRounding={{this.changeRounding}}
   >
-    <section class="reviews-filter reviews-filter-group no-print">
-      <div>group</div>
-      <div class="reviews-filter-header">
+    <section class="filter filter--select reviews-filter reviews-filter-group print@filter">
+      <div class="print@hidden">group</div>
+      <div class="filter__header print@hidden">
         <select
           {{on "change" this.changeGroup}}
-          class="reviews-filter-group-select"
+          class="filter__select"
           data-test-filter-group
         >
           <option value="day" selected={{this.isDayGroup}}>Day</option>
           <option value="month" selected={{this.isMonthGroup}}>Month</option>
         </select>
       </div>
+      <div class="print@only">
+        <div class="print@filter__title">Grouped by</div>
+        <div>{{if this.isDayGroup 'Day' 'Month'}}</div>
+      </div>
     </section>
   </EntriesFilters>
 
   {{#if this.statGroup}}
-    <ShowChart
-      @title={{this.statGroup.title}}
-      @scales={{this.statGroup.chartScales}}
-      @tooltip={{this.statGroup.tooltip}}
-      @data={{this.statGroup.chartData}}
-    />
+    <div class="page__chart">
+      <ShowChart
+        @title={{this.statGroup.title}}
+        @scales={{this.statGroup.chartScales}}
+        @tooltip={{this.statGroup.tooltip}}
+        @data={{this.statGroup.chartData}}
+      />
+    </div>
   {{/if}}
-</section>
+</div>

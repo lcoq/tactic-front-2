@@ -1,11 +1,11 @@
 {{page-title "Login"}}
 
-<section class="login">
-  <h1 class="login-title">Who are you ?</h1>
-  <ul class="login-list">
+<div class="page page--login">
+  <h1 class="title page__title">Who are you ?</h1>
+  <ul>
     {{#each @model as |loginUser|}}
       <li
-        class="login-item {{if loginUser.hasError 'errored'}}"
+        class="page__user {{if loginUser.hasError 'page__user--errored'}}"
         data-test-user-error
       >
         <Login::UserForm
@@ -16,5 +16,5 @@
       </li>
     {{/each}}
   </ul>
-</section>
+</div>
 {{outlet}}

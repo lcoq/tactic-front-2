@@ -1,0 +1,220 @@
+.entry {
+  $self: &;
+
+  position: relative;
+  padding: $sp-sm;
+  border-bottom: 1px solid $clr6;
+  min-width: 600px;
+  color: $clr2;
+
+  &:hover {
+    background-color: $clr7;
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+  }
+
+  &--save-errored {
+    background-color: $clr9;
+
+    &:hover {
+      background-color: $clr9;
+    }
+  }
+
+  &--deleting {
+    background-color: $clr9;
+
+    &:hover {
+      background-color: $clr9;
+    }
+  }
+
+  &--delete-errored {
+    background-color: $clr9;
+
+    &:hover {
+      background-color: $clr9;
+    }
+  }
+
+  &--pending {
+    background-color: $clr11;
+
+    &:hover {
+      background-color: $clr11;
+    }
+  }
+
+  &--editing {
+    background-color: $clr10;
+
+    &:hover {
+      background-color: $clr10;
+    }
+  }
+
+  &--editing:not(&--with-date) {
+    padding-left: 0;
+  }
+
+
+  &__actions {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(-100%, -50%);
+
+    display: flex;
+  }
+
+  &__action {
+    @include touch;
+
+    visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: content-box;
+    text-indent: -9999px;
+    white-space: nowrap;
+
+    padding: $sp-sm 0;
+
+    #{$self}:hover &,
+    #{$self}--save-errored &,
+    #{$self}--delete-errored &,
+    #{$self}--deleting &,
+    #{$self}--pending & {
+      visibility: visible;
+    }
+
+    &--retry {
+      background-color: #c62828;
+      mask: url(/assets/images/offline.svg) center / 16px no-repeat;
+      -webkit-mask: url(/assets/images/offline.svg) center / 16px no-repeat;
+
+      &:hover {
+        background-color: black;
+        mask: url(/assets/images/refresh.svg) center / 16px no-repeat;
+        -webkit-mask: url(/assets/images/refresh.svg) center / 16px no-repeat;
+      }
+    }
+
+    &--revert {
+      mask: url(/assets/images/revert.svg) center / 16px no-repeat;
+      -webkit-mask: url(/assets/images/revert.svg) center / 16px no-repeat;
+      background-color: black;
+
+      &:hover {
+        background-color: $clr20;
+      }
+    }
+
+    &--delete {
+      mask: url(/assets/images/trash.svg) center / 16px no-repeat;
+      -webkit-mask: url(/assets/images/trash.svg) center / 16px no-repeat;
+      background-color: black;
+
+      &:hover {
+        background-color: $clr20;
+      }
+    }
+
+    &--change-date {
+      mask: url(/assets/images/calendar.svg) center / 16px no-repeat;
+      -webkit-mask: url(/assets/images/calendar.svg) center / 16px no-repeat;
+      background-color: black;
+
+      &:hover {
+        background-color: $clr20;
+      }
+    }
+
+    &--restart {
+      mask: url(/assets/images/play.svg) center / 16px no-repeat;
+      -webkit-mask: url(/assets/images/play.svg) center / 16px no-repeat;
+      background-color: black;
+
+      &:hover {
+        background-color: $clr20;
+      }
+    }
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+  }
+
+  &__attr {
+    @include touch;
+
+    display: flex;
+    align-items: center;
+    min-height: $btn-size;
+    line-height: $btn-size;
+    padding: 0 $sp;
+    justify-content: center;
+    flex-wrap: nowrap;
+
+    &--title {
+      width: 60%;
+      line-height: 30px;
+      padding: 0 $sp 0 0;
+      justify-content: left;
+    }
+
+    &--date {
+      padding: 0 $sp-sm 0 0;
+      line-height: 30px;
+    }
+
+    &--project {
+      flex-direction: column;
+      position: relative;
+      width: 18%;
+      text-align: center;
+    }
+
+    &--time {
+      color: $clr5;
+      font-size: $fs-xs;
+      width: 5%;
+    }
+
+    &--duration {
+      width: 14%;
+      min-width: 80px;
+    }
+
+    &--empty {
+      font-style: italic;
+      white-space: nowrap;
+    }
+  }
+
+  &__calendar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background-color: $clr3;
+    padding: $sp-sm;
+    font-size: $fs-xs;
+  }
+
+  &__title-input {
+    @include text-input;
+
+    width: 100%;
+    padding-left: $sp-sm;
+  }
+
+  &__input {
+    @include text-input;
+
+    text-align: center;
+  }
+}

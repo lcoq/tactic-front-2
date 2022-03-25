@@ -2,11 +2,11 @@
 
 <Favicon @isStarted={{this.hasRunningEntry}} />
 
-<header class="header" data-test-header>
-  <h1 class="header__brand">Tactic</h1>
+<header class="header print@header" data-test-header>
+  <h1 class="header__brand print@header__brand">Tactic</h1>
 
   {{#if this.isAuthenticated}}
-    <nav class="header__menu menu no-print">
+    <nav class="menu print@hidden">
       <LinkTo @route="index" data-test-index-link class="menu__item">
         Timer
       </LinkTo>
@@ -21,13 +21,13 @@
       </LinkTo>
     </nav>
 
-    <div class="header__aside no-print">
+    <div class="header__aside print@hidden">
       <UserSummary
         @rounding={{this.summaryRounding}}
         @weekEntries={{this.weekEntries}}
         @monthEntries={{this.monthEntries}}
       />
-      <section class="header__aside-menu menu no-print">
+      <section class="header__aside-menu menu">
         <button
           {{on "click" this.toggleNotifications}}
           type="button"
@@ -55,6 +55,6 @@
   {{/if}}
 </header>
 
-<div class="app-content">
+<div class="layout__inner">
   {{outlet}}
 </div>

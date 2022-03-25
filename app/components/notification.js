@@ -16,9 +16,9 @@ export default class NotificationComponent extends Component {
   }
 
   get classes() {
-    const classes = [`notif__item`, `notif__item--${this.nature}`];
+    const classes = [`notif`, `notif--${this.nature}`];
     if (this.isUnread) {
-      classes.push(`notif__item--new`);
+      classes.push(`notif--new`);
     }
     return classes.join(' ');
   }

@@ -78,12 +78,13 @@ export default class ShowEntryComponent extends Component {
 
   get classNames() {
     const names = [];
-    if (this.isEditing) names.push('editing');
-    if (this.isPendingDelete) names.push('deleting');
-    if (this.isPendingSave) names.push('pending');
-    if (this.isSaveErrored) names.push('errored');
-    if (this.isDeleteErrored) names.push('errored');
-    if (this.rounding) names.push('disabled');
+    if (this.isEditing) names.push('entry--editing');
+    if (this.isPendingDelete) names.push('entry--deleting');
+    if (this.isPendingSave) names.push('entry--pending');
+    if (this.isSaveErrored) names.push('entry--save-errored');
+    if (this.isDeleteErrored) names.push('entry--delete-errored');
+    if (this.rounding) names.push('entry--disabled');
+    if (this.showDate) names.push('entry--with-date');
     return names.join(' ');
   }
 

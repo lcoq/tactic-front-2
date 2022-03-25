@@ -1,0 +1,172 @@
+.client {
+  $self: &;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: $clr3;
+  padding: 0 $sp-sm;
+
+  &:hover {
+    background-color: $clr7;
+  }
+
+  &--frozen {
+    &:hover {
+      background-color: $clr3;
+    }
+  }
+
+  &--invalid {
+    background-color: $clr9;
+
+    &:hover {
+      background-color: $clr9;
+    }
+  }
+
+  &--save-errored {
+    background-color: $clr9;
+
+    &:hover {
+      background-color: $clr9;
+    }
+  }
+
+  &--deleting {
+    background-color: $clr16;
+  }
+
+  &--delete-errored {
+    background-color: $clr16;
+
+    &:hover {
+      background-color: $clr16;
+    }
+  }
+
+  &--pending {
+    background-color: $clr11;
+
+    &:hover {
+      background-color: $clr11;
+    }
+  }
+
+  &--editing {
+    background-color: $clr10;
+    border-bottom: 2px solid $clr3;
+
+    &:hover {
+      background-color: $clr10;
+    }
+  }
+
+  &__title {
+    @include touch;
+
+    display: flex;
+    align-items: center;
+    width: 100%;
+    color: $clr4;
+
+    #{$self}--frozen & {
+      cursor: default;
+    }
+
+    &--italic {
+      font-style: italic;
+    }
+  }
+
+  &__title-txt {
+    display: flex;
+    align-items: center;
+    font-size: $fs-lg;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  &__actions {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(-100%, -50%);
+
+    display: flex;
+  }
+
+  &__action {
+    @include touch;
+
+    visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: content-box;
+    text-indent: -9999px;
+    white-space: nowrap;
+
+    #{$self}:hover &,
+    #{$self}--invalid &,
+    #{$self}--save-errored &,
+    #{$self}--delete-errored &,
+    #{$self}--deleting &,
+    #{$self}--pending &,
+    #{$self}--editing & {
+      visibility: visible;
+    }
+
+    &--retry {
+      background-color: #c62828;
+      mask: url(/assets/images/offline.svg) center / 16px no-repeat;
+      -webkit-mask: url(/assets/images/offline.svg) center / 16px no-repeat;
+
+      &:hover {
+        background-color: black;
+        mask: url(/assets/images/refresh.svg) center / 16px no-repeat;
+        -webkit-mask: url(/assets/images/refresh.svg) center / 16px no-repeat;
+      }
+    }
+
+    &--edit-invalid {
+      background-image: url('/assets/images/warn.svg');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 16px;
+    }
+
+    &--revert {
+      mask: url(/assets/images/revert.svg) center / 16px no-repeat;
+      -webkit-mask: url(/assets/images/revert.svg) center / 16px no-repeat;
+      background-color: black;
+
+      &:hover {
+        background-color: $clr20;
+      }
+    }
+
+    &--delete {
+      mask: url(/assets/images/trash.svg) center / 16px no-repeat;
+      -webkit-mask: url(/assets/images/trash.svg) center / 16px no-repeat;
+      background-color: black;
+
+      &:hover {
+        background-color: $clr20;
+      }
+    }
+  }
+
+  &__title-plus {
+    margin-right: $sp-xs;
+
+    font-weight: bold;
+    font-size: $fs-xl;
+  }
+
+  &__title-input {
+    @include text-input;
+
+    width: 100%;
+  }
+}

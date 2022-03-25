@@ -1,15 +1,15 @@
-<section class="entry-group-list">
+<section>
   {{#each this.groups as |group|}}
     <section
-      class="entry-group"
       data-test-project-group="{{or group.project.id '-1'}}"
     >
-      <header class="entry-group-header with-actions">
-        <h2 class="entry-group-header-title" data-test-project-group-name>
+      <header class="entries-header entries-header--with-actions entries-header--theme--light
+                     print@entries-header print@entries-header--theme--underline">
+        <h2 class="entries-header__title print@entries-header__title" data-test-project-group-name>
           {{if group.project.name group.project.name "No project"}}
         </h2>
         <div
-          class="entry-group-header-duration"
+          class="entries-header__duration print@entries-header__duration"
           data-test-project-group-duration
         >{{format-duration
             (if
@@ -18,17 +18,17 @@
               group.durationInSeconds
             )
           }}</div>
-        <div class="entry-group-header-actions">
+        <div class="entries-header__actions print@hidden">
           <button
             type="button"
-            class="entry-group-header-action no-print touch"
+            class="entries-header__action"
             {{on "click" (fn this.generateCSV group.project)}}
           >
             CSV
           </button>
         </div>
       </header>
-      <ul class="entry-group-item-list">
+      <ul>
         {{#each group.entries as |entry|}}
           <ShowEntry
             @entry={{entry}}

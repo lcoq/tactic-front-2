@@ -54,13 +54,13 @@ export default class ShowClientComponent extends Component {
 
   get classNames() {
     const names = [];
-    if (this.isFrozen) names.push('frozen');
-    if (this.isEditing) names.push('editing');
-    if (this.isPendingDelete) names.push('deleting');
-    if (this.isPendingSave) names.push('pending');
-    if (this.isInvalid) names.push('invalid');
-    if (this.isSaveErrored) names.push('save-errored');
-    if (this.isDeleteErrored) names.push('delete-errored');
+    if (this.isFrozen) names.push('client--frozen');
+    if (this.isEditing) names.push('client--editing');
+    if (this.isPendingDelete) names.push('client--deleting');
+    if (this.isPendingSave) names.push('client--pending');
+    if (this.isInvalid) names.push('client--invalid');
+    if (this.isSaveErrored) names.push('client--save-errored');
+    if (this.isDeleteErrored) names.push('client--delete-errored');
     return names.join(' ');
   }
 

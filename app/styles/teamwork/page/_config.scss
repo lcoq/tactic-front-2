@@ -1,0 +1,10 @@
+.page {
+  $self: &;
+
+  &--teamwork-config {
+
+    #{$self}__warning {
+      margin: $sp $sp-sm;
+    }
+  }
+}

@@ -1,36 +1,39 @@
-<section class="reviews-filters">
+<section class="filters">
 
   <EntriesFilters::User
     @all={{this.allUsers}}
     @selectedIds={{this.selectedUserIds}}
     @onChange={{this.changeSelectedUserIds}}
+    class="filters__item filters__user"
   />
 
   <EntriesFilters::Client
     @all={{this.allClients}}
     @selectedIds={{this.selectedClientIds}}
     @onChange={{this.changeSelectedClientIds}}
+    class="filters__item filters__client"
   />
 
   <EntriesFilters::Project
     @all={{this.allProjects}}
     @selectedIds={{this.selectedProjectIds}}
     @onChange={{this.changeSelectedProjectIds}}
+    class="filters__item filters__project"
   />
 
-  <section class="reviews-filter reviews-filter-from">
-    <div class="reviews-filter-from-txt no-print">from</div>
+  <section class="filter filter--calendar filters__item filters__from print@filter print@filter--date print@filter--from">
+    <div class="filter__label print@hidden">from</div>
     <div
-      class="reviews-filter-header"
+      class="filter__header print@filter__header"
       {{on "click" this.startEditSince}}
       data-test-filter-since
     >
-      <h2 class="reviews-filter-header-title">
+      <h2 class="filter__title print@filter__title">
         {{moment-format this.since "YYYY/MM/DD"}}
       </h2>
       {{#if this.isEditingSince}}
         <div
-          class="reviews-filter-from-date no-print"
+          class="filter__calendar print@hidden"
           {{datepicker this.since this.changeSince}}
           {{on-focus-out-click this.cancelEditSince}}
         ></div>
@@ -38,19 +41,19 @@
     </div>
   </section>
 
-  <section class="reviews-filter reviews-filter-to">
-    <div class="reviews-filter-to-txt no-print">to</div>
+  <section class="filter filter--calendar filters__item print@filter print@filter--date print@filter--to">
+    <div class="filter__label print@hidden">to</div>
     <div
-      class="reviews-filter-header"
+      class="filter__header print@filter__header"
       {{on "click" this.startEditBefore}}
       data-test-filter-before
     >
-      <h2 class="reviews-filter-header-title">
+      <h2 class="filter__title print@filter__title">
         {{moment-format this.before "YYYY/MM/DD"}}
       </h2>
       {{#if this.isEditingBefore}}
         <div
-          class="reviews-filter-to-date no-print"
+          class="filter__calendar print@hidden"
           {{datepicker this.before this.changeBefore}}
           {{on-focus-out-click this.cancelEditBefore}}
         ></div>
@@ -59,13 +62,13 @@
   </section>
 
   {{#if this.canRound}}
-    <section class="reviews-filter reviews-filter-rounding no-print">
-      <label class="reviews-filter-rounding-checkbox-container">
+    <section class="filter filter--checkbox filters__item print@hidden">
+      <label class="filter__inner">
         <input
           {{on "change" this.changeRounding}}
           type="checkbox"
           checked={{this.rounding}}
-          class="reviews-filter-rounding-checkbox"
+          class="filter__checkbox"
           data-test-rounding
         />
         <span>Round</span>
@@ -76,10 +79,10 @@
   {{yield}}
 </section>
 
-<section class="reviews-filters">
-  <section class="reviews-filter reviews-filter-query">
+<section class="filters">
+  <section class="filter filter--search-bar filters__item filter__query print@filter print@filter--query">
     {{#if this.query}}
-      <span class="only-print">
+      <span class="print@only print@filter__title">
         Search :
         {{this.query}}
       </span>
@@ -88,7 +91,7 @@
       value={{this.query}}
       {{on "change" this.changeQuery}}
       placeholder="Search tasks ..."
-      class="reviews-filter-query-input no-print"
+      class="filter__input print@hidden"
       data-test-filter-query
     />
   </section>

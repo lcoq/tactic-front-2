@@ -1,19 +1,19 @@
 <div
-  class="notif no-print"
+  class="notifs-list print@hidden"
   data-test-notifications-list
   {{on-focus-out-click @close}}
 >
-  <div class="notif__header">
-    <div class="notif__header-title">Notifications</div>
+  <div class="notifs-list__header">
+    <div class="notifs-list__header-title">Notifications</div>
     <button
       {{on "click" @close}}
       type="button"
-      class="notif__header-close"
+      class="notifs-list__header-close"
       data-test-notifications-close
     >×</button>
   </div>
   {{#if this.hasNotification}}
-    <ul class="notif__list">
+    <ul class="notifs-list__list">
       {{#each this.notifications as |notif|}}
         <Notification
           @notif={{notif}}
@@ -23,9 +23,9 @@
       {{/each}}
     </ul>
   {{else}}
-    <p class="notif__empty" data-test-notifications-empty>
+    <p class="notifs-list__empty" data-test-notifications-empty>
       No notification yet.
-      <i class="notif__empty-sub">Yay, you can focus on your work in the most
+      <i class="notifs-list__empty-sub">Yay, you can focus on your work in the most
         productive way !</i>
     </p>
   {{/if}}

@@ -1,0 +1,9 @@
+.page {
+  $self: &;
+
+  &--index {
+    #{$self}__entries-list {
+      margin-top: $sp-xxl;
+    }
+  }
+}

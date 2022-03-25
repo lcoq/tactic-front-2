@@ -1,0 +1,39 @@
+.page {
+  $self: &;
+
+  &--login {
+    width: 100%;
+
+    #{$self}__title {
+      margin-bottom: $sp-lg;
+    }
+
+    #{$self}__user {
+      display: flex;
+      gap: $sp;
+      line-height: 70px;
+      padding-left: $sp;
+      border-bottom: 1px solid $clr6;
+
+      cursor: pointer;
+      min-width: $btn-size;
+      min-height: $btn-size;
+
+      &:hover {
+        background-color: $clr7;
+      }
+
+      &--errored {
+        background-color: $clr9;
+      }
+    }
+
+    #{$self}__user-name {
+      flex-grow: 1;
+    }
+
+    #{$self}__user-password {
+      flex-grow: 1;
+    }
+  }
+}

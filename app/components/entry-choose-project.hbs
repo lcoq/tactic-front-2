@@ -1,24 +1,25 @@
 <div>
   <input
-    value={{this.projectName}}
+    value={{or this.nameInputValue this.projectName}}
     type="text"
     class={{this.inputClasses}}
     placeholder="Project"
     {{select-on-focus}}
     {{focus-if this.focusOnInput}}
+    {{on "focusin" this.setNameInputValue}}
     {{on "focusout" this.clearProjects}}
     {{on "keyup" this.keyPressed}}
     data-test-entry-edit-project
   />
 
   {{#if this.projects}}
-    <ul class="{{this.projectsListClasses}}">
+    <ul class="project-choices-list">
       {{#each this.projects as |project|}}
         <li
           {{on "click" (fn this.selectProject project)}}
           {{on "mouseenter" (fn this.changeHoveredProject project)}}
-          class="{{this.projectClasses}}
-            {{if (eq project this.hoveredProject) 'selected'}}"
+          class="project-choices-list__item
+            {{if (eq project this.hoveredProject) 'project-choices-list__item--selected'}}"
           data-test-entry-edit-project-choice
         >
           {{project.name}}

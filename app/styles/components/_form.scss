@@ -1,0 +1,100 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $sp-lg;
+
+  &__row {
+    display: flex;
+    align-items: baseline;
+    gap: $sp-lg;
+
+    &--single:before {
+      content: ' ';
+      display: flex;
+      flex: 1;
+    }
+  }
+
+  &__label {
+    flex: 1;
+    text-align: right;
+    color: $clr2;
+  }
+
+  &__value {
+    flex: 2;
+
+    &--password {
+      position: relative;
+    }
+  }
+
+  &__input {
+    width: 100%;
+    padding: $sp-sm $sp-sm;
+    background-color: white;
+    border: 1px solid $clr6;
+
+    &:hover {
+      border: 1px solid $clr12;
+    }
+
+    &--invalid {
+      background-color: $clr16;
+    }
+  }
+
+  &__password-toggle {
+    position: absolute;
+    right: 0;
+    top: 50%;
+
+    transform: translateY(-50%);
+    text-transform: uppercase;
+    color: $clr8;
+    font-weight: bold;
+    font-size: $fs-sm;
+    line-height: $btn-size;
+
+    cursor: pointer;
+    min-width: $btn-size;
+    min-height: $btn-size;
+
+    &:hover {
+      color: $clr4;
+    }
+  }
+
+  &__submit {
+    padding: $sp-sm $sp-lg;
+    color: white;
+    background-color: $clr13;
+
+    cursor: pointer;
+    min-width: $btn-size;
+    min-height: $btn-size;
+
+    &:hover {
+      background-color: $clr18;
+    }
+
+    &--disabled {
+      background-color: $clr6;
+      cursor: not-allowed;
+
+      &:hover {
+        background-color: $clr6;
+      }
+    }
+  }
+
+  &__error-list {
+    padding: $sp-sm;
+    color: darkred;
+    font-style: italic;
+  }
+
+  &__error {
+    padding: $sp-xs;
+  }
+}

@@ -1,13 +1,14 @@
 .header {
   display: flex;
+  align-items: center;
   width: 100%;
   height: $btn-size;
   background-color: $clr2;
   color: $clr3;
-  align-items: center;
 
   &__brand {
     margin-right: $sp-lg;
+
     padding: 0 $sp-sm 0 $sp-lg;
     font-size: $fs-xxl;
     font-weight: bold;
@@ -15,8 +16,9 @@
   }
 
   &__aside {
-    display: flex;
     margin-left: auto;
+
+    display: flex;
     align-items: center;
   }
 

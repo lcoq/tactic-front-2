@@ -1,0 +1,25 @@
+.print\@entry {
+  padding: $sp-xs;
+  margin-left: $sp-xs;
+  break-inside: avoid;
+
+  &__content {
+    display: flex;
+  }
+
+  &__attr {
+    padding-right: $sp-sm;
+
+    &--title {
+      width: 85%;
+    }
+
+    &--title-small {
+      width: 70%;
+    }
+
+    &--project {
+      width: 20%;
+    }
+  }
+}

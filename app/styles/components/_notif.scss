@@ -1,0 +1,94 @@
+.notif {
+  display: flex;
+  gap: $sp;
+  padding: $sp-lg $sp-sm $sp-lg $sp;
+  border-bottom: 1px solid $clr6;
+  border-left: 5px solid $clr10;
+
+  &:before {
+    width: 32px;
+    content: ' ';
+    display: block;
+    background-color: $clr20;
+    mask: url(/assets/images/info.svg) center / 16px no-repeat;
+    -webkit-mask: url(/assets/images/info.svg) center / 16px no-repeat;
+  }
+
+  &:hover {
+    background-color: $clr1;
+  }
+
+  &--new {
+    border-left: 5px solid $clr19;
+  }
+
+  &--warning {
+    &:before {
+      background-color: transparent;
+      mask: initial;
+      -webkit-mask: initial;
+      background-image: url('/assets/images/warn.svg');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 16px;
+    }
+  }
+
+  &--error {
+    &:before {
+      background-color: transparent;
+      mask: initial;
+      -webkit-mask: initial;
+      background-image: url('/assets/images/warn.svg');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 16px;
+    }
+  }
+
+  &__inner {
+    min-width: 0;
+    flex: 1;
+    overflow-wrap: anywhere;
+  }
+
+  &__title {
+    margin-bottom: $sp-xs;
+
+    font-weight: bold;
+  }
+
+  &__description-link {
+    color: $clr21;
+    cursor: pointer;
+  }
+
+  &__link {
+    margin: $sp-sm;
+
+    display: block;
+    color: $clr21;
+    cursor: pointer;
+  }
+
+  &__date {
+    margin-top: $sp-xxs;
+
+    color: $clr8;
+  }
+
+  &__delete {
+    min-width: $btn-size;
+    min-height: $btn-size;
+    text-indent: -9999px;
+    white-space: nowrap;
+    background-color: black;
+    mask: url(/assets/images/trash.svg) center / 16px no-repeat;
+    -webkit-mask: url(/assets/images/trash.svg) center / 16px no-repeat;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $clr20;
+    }
+  }
+}

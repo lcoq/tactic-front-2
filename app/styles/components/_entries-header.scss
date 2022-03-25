@@ -1,0 +1,127 @@
+.entries-header {
+  $self: &;
+
+  /*
+     Root group list
+       Header
+         Title
+         Duration
+         Actions
+       Root group
+         Header
+           Title
+           Duration
+           Actions
+         Group list
+           Entry group
+             Header
+               Title
+               Duration
+               Actions
+             Group item list
+   */
+
+  display: flex;
+  align-items: baseline;
+  padding: $sp-sm;
+
+  &--with-actions {
+    padding: 0 $sp-sm;
+  }
+
+  &--theme--dark {
+    background-color: $clr5;
+
+    #{$self}__title {
+      color: $clr1;
+    }
+
+    #{$self}__duration {
+      color: $clr3;
+    }
+
+    #{$self}__action {
+      color: $clr7;
+
+      &:hover {
+        color: white;
+      }
+    }
+  }
+
+  &--theme--light {
+    background-color: $clr3;
+
+    #{$self}__title {
+      color: $clr4;
+    }
+
+    #{$self}__duration {
+      color: $clr8;
+    }
+
+    #{$self}__action {
+      color: $clr4;
+
+      &:hover {
+        color: black;
+      }
+    }
+  }
+
+  &--theme--color {
+    background-color: $clr17;
+
+    #{$self}__title {
+      color: $clr4;
+    }
+
+    #{$self}__duration {
+      color: $clr5;
+    }
+
+    #{$self}__action {
+      color: $clr4;
+
+      &:hover {
+        color: black;
+      }
+    }
+  }
+
+  &--font--xl {
+    #{$self}__title {
+      font-size: $fs-xl;
+    }
+
+    #{$self}__duration {
+      font-size: $fs-lg;
+    }
+  }
+
+  &--margin--vertical {
+    margin: $sp 0;
+  }
+
+  &__title {
+    font-weight: bold;
+    font-size: $fs-lg;
+  }
+
+  &__duration {
+    margin-left: $sp;
+
+    font-weight: bold;
+    font-size: $fs-sm;
+  }
+
+  &__actions {
+    margin-left: auto;
+  }
+
+  &__action {
+    @include touch;
+
+    font-weight: bold;
+  }
+}

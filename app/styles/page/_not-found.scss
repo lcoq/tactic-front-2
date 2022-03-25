@@ -1,0 +1,32 @@
+.page {
+  $self: &;
+
+  &--not-found {
+    text-align: center;
+
+    #{$self}__title {
+      display: flex;
+      gap: $sp-xs;
+      align-items: center;
+      justify-content: center;
+      font-size: 6em;
+      font-weight: bold;
+      padding: 100px 100px 50px 100px;
+    }
+
+    #{$self}__title-icon {
+      width: 64px;
+    }
+
+    #{$self}__subtitle {
+      font-size: $fs-xxl;
+      font-weight: bold;
+      padding: $sp $sp 75px $sp;
+    }
+
+    #{$self}__description {
+      color: $clr5;
+      line-height: $fs-xl;
+    }
+  }
+}

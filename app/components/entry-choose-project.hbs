@@ -19,7 +19,10 @@
           {{on "click" (fn this.selectProject project)}}
           {{on "mouseenter" (fn this.changeHoveredProject project)}}
           class="project-choices-list__item
-            {{if (eq project this.hoveredProject) 'project-choices-list__item--selected'}}"
+            {{if
+              (eq project this.hoveredProject)
+              'project-choices-list__item--selected'
+            }}"
           data-test-entry-edit-project-choice
         >
           {{project.name}}

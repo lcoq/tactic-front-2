@@ -8,16 +8,24 @@
   <div class="filter__header">
     <h2 class="filter__title print@filter__title">Clients</h2>
     <div
-      class="filter__count  print@hidden"
+      class="filter__count print@hidden"
     >({{this.selectedIds.length}}/{{this.all.length}})</div>
   </div>
   <div class="filter__list-container">
     <ul class="filter__list">
       <li class="filter__toggle-bar print@hidden">
-        <button type="button" class="filter__toggle-button" {{on "click" this.checkAll}}>
+        <button
+          type="button"
+          class="filter__toggle-button"
+          {{on "click" this.checkAll}}
+        >
           Select all
         </button>
-        <button type="button" class="filter__toggle-button" {{on "click" this.uncheckAll}}>
+        <button
+          type="button"
+          class="filter__toggle-button"
+          {{on "click" this.uncheckAll}}
+        >
           Select none
         </button>
       </li>

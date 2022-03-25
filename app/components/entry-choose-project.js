@@ -54,7 +54,11 @@ export default class EntryChooseProjectComponent extends Component {
       this._moveHoveredProject(-1);
     } else {
       this.args.keyPressed?.();
-      this.deferer.debounce('entry-choose-project:search', this, this._searchProjects);
+      this.deferer.debounce(
+        'entry-choose-project:search',
+        this,
+        this._searchProjects
+      );
     }
   }
 

@@ -2,7 +2,6 @@
   $self: &;
 
   &--list {
-
     &:hover #{$self}__list {
       display: flex;
       flex-direction: column;
@@ -29,7 +28,6 @@
       background-color: $clr3;
       max-height: 60vh;
       overflow-y: auto;
-
     }
 
     #{$self}__item {

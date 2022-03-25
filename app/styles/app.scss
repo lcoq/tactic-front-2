@@ -44,7 +44,9 @@
 
   @import 'calendar';
 
-  .print\@only { display: none; }
+  .print\@only {
+    display: none;
+  }
 }
 
 @media print {

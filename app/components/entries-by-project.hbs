@@ -1,11 +1,13 @@
 <section>
   {{#each this.groups as |group|}}
-    <section
-      data-test-project-group="{{or group.project.id '-1'}}"
-    >
-      <header class="entries-header entries-header--with-actions entries-header--theme--light
-                     print@entries-header print@entries-header--theme--underline">
-        <h2 class="entries-header__title print@entries-header__title" data-test-project-group-name>
+    <section data-test-project-group="{{or group.project.id '-1'}}">
+      <header
+        class="entries-header entries-header--with-actions entries-header--theme--light print@entries-header print@entries-header--theme--underline"
+      >
+        <h2
+          class="entries-header__title print@entries-header__title"
+          data-test-project-group-name
+        >
           {{if group.project.name group.project.name "No project"}}
         </h2>
         <div

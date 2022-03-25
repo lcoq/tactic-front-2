@@ -42,6 +42,8 @@ module('Acceptance | Login', function (hooks) {
     assert.dom('[data-test-user-error]').hasClass('page__user--errored');
 
     await typeIn('[data-test-password]', 'new password');
-    assert.dom('[data-test-user-error]').doesNotHaveClass('page__user--errored');
+    assert
+      .dom('[data-test-user-error]')
+      .doesNotHaveClass('page__user--errored');
   });
 });

@@ -18,7 +18,9 @@
     @changeQuery={{this.changeQuery}}
     @changeRounding={{this.changeRounding}}
   >
-    <section class="filter filter--select reviews-filter reviews-filter-group print@filter">
+    <section
+      class="filter filter--select reviews-filter reviews-filter-group print@filter"
+    >
       <div class="print@hidden">group</div>
       <div class="filter__header print@hidden">
         <select
@@ -32,7 +34,7 @@
       </div>
       <div class="print@only">
         <div class="print@filter__title">Grouped by</div>
-        <div>{{if this.isDayGroup 'Day' 'Month'}}</div>
+        <div>{{if this.isDayGroup "Day" "Month"}}</div>
       </div>
     </section>
   </EntriesFilters>

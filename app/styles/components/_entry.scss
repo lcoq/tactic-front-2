@@ -149,7 +149,9 @@
   }
 
   &__attr {
-    @include touch;
+    #{$self}:not(--disabled) {
+      @include touch;
+    }
 
     display: flex;
     align-items: center;
